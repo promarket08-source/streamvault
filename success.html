@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <!-- Success State -->
+        <!-- Success State - Pack Completo -->
         <div id="successState" class="hidden">
             <div class="text-center mb-8">
                 <div class="text-6xl mb-4">🎉</div>
@@ -101,6 +101,29 @@
             </div>
         </div>
 
+        <!-- Single Pack State -->
+        <div id="singlePackState" class="hidden">
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-4">✅</div>
+                <h1 class="text-3xl font-bold text-green-400 mb-2">¡Pago Confirmado!</h1>
+                <p class="text-white/60">Tu acceso está listo</p>
+            </div>
+
+            <div class="bg-white/5 rounded-2xl p-8 text-center">
+                <p class="text-lg mb-4" id="productName">PACK</p>
+                <a id="accessLink" href="#" target="_blank" 
+                   class="inline-flex items-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-500 rounded-full text-white font-semibold text-xl transition">
+                    <i class="fas fa-external-link-alt"></i>
+                    ACCEDER A MI CONTENIDO
+                </a>
+                <p class="text-white/40 text-sm mt-4">Guarda este enlace para futuras visitas</p>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="/" class="text-green-400 hover:text-green-300">← Volver al inicio</a>
+            </div>
+        </div>
+
         <!-- Error State -->
         <div id="errorState" class="hidden text-center">
             <div class="text-6xl mb-6">❌</div>
@@ -131,15 +154,22 @@
             const data = await response.json();
             
             if (data.approved) {
-                // Mostrar enlaces
-                document.getElementById('linkPeliculas').href = data.links.peliculas;
-                document.getElementById('linkAnime').href = data.links.animeSeries;
-                document.getElementById('linkComics').href = data.links.comics;
-                document.getElementById('linkMusica').href = data.links.musica;
-                document.getElementById('linkLibros').href = data.links.libros;
-                
-                document.getElementById('loadingState').classList.add('hidden');
-                document.getElementById('successState').classList.remove('hidden');
+                // Si es pack completo, mostrar todos los enlaces
+                if (data.links) {
+                    document.getElementById('linkPeliculas').href = data.links.peliculas;
+                    document.getElementById('linkAnime').href = data.links.animeSeries;
+                    document.getElementById('linkComics').href = data.links.comics;
+                    document.getElementById('linkMusica').href = data.links.musica;
+                    document.getElementById('linkLibros').href = data.links.libros;
+                    document.getElementById('loadingState').classList.add('hidden');
+                    document.getElementById('successState').classList.remove('hidden');
+                } else {
+                    // Si es pack individual, mostrar solo ese enlace
+                    document.getElementById('loadingState').classList.add('hidden');
+                    document.getElementById('singlePackState').classList.remove('hidden');
+                    document.getElementById('productName').textContent = data.productName;
+                    document.getElementById('accessLink').href = data.link;
+                }
             } else {
                 document.getElementById('loadingState').innerHTML = `
                     <div class="text-6xl mb-4">⏳</div>

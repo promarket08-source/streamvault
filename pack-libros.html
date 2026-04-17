@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 Pack Libros & Audiolibros - StreamVault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #0a0a0a; color: #e5e5e5; }
+        .btn-buy { background: linear-gradient(135deg, #eab308, #ca8a04); transition: all 0.3s; }
+        .btn-buy:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.4); }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-black/90 border-b border-white/10 py-4 px-6">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <a href="/" class="text-xl font-bold">
+                <i class="fas fa-book text-yellow-400 mr-2"></i>StreamVault
+            </a>
+            <a href="/" class="text-white/60 hover:text-white text-sm">
+                <i class="fas fa-arrow-left mr-2"></i>Volver al catálogo
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="py-12 px-6 text-center bg-gradient-to-b from-yellow-900/20 to-transparent">
+        <div class="max-w-2xl mx-auto">
+            <div class="text-6xl mb-4">📖</div>
+            <h1 class="text-3xl font-bold mb-2">PACK LIBROS & AUDIOLIBROS</h1>
+            <p class="text-white/60 mb-4">+100 títulos - Ficción, autoayuda, desarrollo personal</p>
+            <div class="bg-white/5 inline-block rounded-xl px-6 py-3 mb-6">
+                <p class="text-4xl font-bold text-yellow-400">$2.490 CLP</p>
+                <p class="text-white/40 text-sm line-through">$5.990 CLP</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido Preview -->
+    <section class="py-8 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-book text-yellow-400"></i>
+                Libros Digitales
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm mb-6">
+                <div class="bg-white/5 p-3 rounded-lg">📕 Desarrollo Personal</div>
+                <div class="bg-white/5 p-3 rounded-lg">📕 Ficción Best Sellers</div>
+                <div class="bg-white/5 p-3 rounded-lg">📕 Autoayuda</div>
+                <div class="bg-white/5 p-3 rounded-lg">📕 Negocios y Marketing</div>
+                <div class="bg-white/5 p-3 rounded-lg">📕 Historia</div>
+                <div class="bg-white/5 p-3 rounded-lg">📕 Biografías</div>
+                <div class="bg-white/5 p-3 rounded-lg">📕 Ciencia Ficción</div>
+                <div class="bg-white/5 p-3 rounded-lg">📕 Romance</div>
+                <div class="bg-white/5 p-3 rounded-lg text-white/40">+ muchos más...</div>
+            </div>
+
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-headphones text-yellow-400"></i>
+                Audiolibros
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                <div class="bg-white/5 p-3 rounded-lg">🎧 Los 7 hábitos</div>
+                <div class="bg-white/5 p-3 rounded-lg">🎧 El poder del ahora</div>
+                <div class="bg-white/5 p-3 rounded-lg">🎧Think and Grow Rich</div>
+                <div class="bg-white/5 p-3 rounded-lg">🎧 Padre Rico Padre Pobre</div>
+                <div class="bg-white/5 p-3 rounded-lg">🎧 Como ganar amigos</div>
+                <div class="bg-white/5 p-3 rounded-lg">🎧 El monje que vendió su Ferrari</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-12 px-6 text-center border-t border-white/5">
+        <div class="max-w-md mx-auto">
+            <p class="text-white/60 mb-6">Accede instantáneamente tras el pago</p>
+            <button onclick="openCheckout()" class="btn-buy px-10 py-4 rounded-full text-white font-semibold text-lg">
+                <i class="fas fa-lock mr-2"></i>COMPRAR AHORA - $2.490
+            </button>
+            <p class="text-white/30 text-xs mt-4">Pago seguro con MercadoPago</p>
+        </div>
+    </section>
+
+    <!-- Modal Checkout -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
+        <div class="bg-gray-900 border border-white/10 rounded-2xl max-w-md w-full p-6 relative">
+            <button onclick="closeCheckout()" class="absolute top-4 right-4 text-white/40 hover:text-white text-2xl">&times;</button>
+            
+            <h3 class="text-xl font-bold mb-4 text-center">Confirmar Compra</h3>
+            
+            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-6 text-center">
+                <p class="text-sm text-white/60">PACK LIBROS & AUDIOLIBROS</p>
+                <p class="text-2xl font-bold text-yellow-400">$2.490 CLP</p>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-white/60 text-sm mb-2">Tu correo electrónico</label>
+                <input type="email" id="buyerEmail" placeholder="tucorreo@ejemplo.com" 
+                       class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-yellow-500">
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-white/60 text-sm mb-2">Tu WhatsApp</label>
+                <input type="tel" id="buyerPhone" placeholder="+56 9 1234 5678" 
+                       class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-yellow-500">
+            </div>
+            
+            <button onclick="processPayment()" class="w-full btn-buy py-4 rounded-xl text-white font-semibold flex items-center justify-center gap-2">
+                <i class="fas fa-credit-card"></i>
+                PAGAR CON MERCADO PAGO
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-6 px-6 text-center text-white/30 text-sm border-t border-white/5">
+        <p>Un proyecto de <strong>Agencia Promarket</strong> | Impulsado por Emprende Online</p>
+    </footer>
+
+    <script>
+    const PACK_DATA = {
+        id: 'pack-libros',
+        name: 'PACK LIBROS & AUDIOLIBROS',
+        price: 2490,
+        originalPrice: 5990,
+        folderId: '1eNIi91KWHTQur90rhSM5vevtIsgC_jsq',
+        description: 'Acceso a +100 libros y audiolibros'
+    };
+
+    function openCheckout() {
+        document.getElementById('checkoutModal').classList.remove('hidden');
+        document.getElementById('checkoutModal').classList.add('flex');
+    }
+
+    function closeCheckout() {
+        document.getElementById('checkoutModal').classList.add('hidden');
+        document.getElementById('checkoutModal').classList.remove('flex');
+    }
+
+    async function processPayment() {
+        const email = document.getElementById('buyerEmail').value;
+        const phone = document.getElementById('buyerPhone').value;
+        
+        if (!email || !phone) {
+            alert('Por favor completa todos los campos');
+            return;
+        }
+        
+        const btn = event.target;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        btn.disabled = true;
+        
+        try {
+            const response = await fetch('/server/api/create-preference', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email, phone,
+                    productId: PACK_DATA.id,
+                    productName: PACK_DATA.name,
+                    price: PACK_DATA.price,
+                    folderId: PACK_DATA.folderId
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.init_point) {
+                window.location.href = data.init_point;
+            } else {
+                const msg = encodeURIComponent(`Compra ${PACK_DATA.name}\n📧: ${email}\n📱: ${phone}\n💰: $${PACK_DATA.price} CLP`);
+                window.open(`https://wa.me/56964681874?text=${msg}`, '_blank');
+            }
+        } catch (error) {
+            const msg = encodeURIComponent(`Compra ${PACK_DATA.name}\n📧: ${email}\n📱: ${phone}\n💰: $${PACK_DATA.price} CLP`);
+            window.open(`https://wa.me/56964681874?text=${msg}`, '_blank');
+        }
+        
+        btn.innerHTML = '<i class="fas fa-credit-card"></i> PAGAR CON MERCADO PAGO';
+        btn.disabled = false;
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeCheckout();
+    });
+    </script>
+</body>
+</html>
