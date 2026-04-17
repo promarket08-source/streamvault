@@ -88,14 +88,14 @@
 <body class="min-h-screen">
     
     <!-- Search Bar -->
-    <div class="fixed top-16 left-0 right-0 z-40 bg-black/90 backdrop-blur-md border-b border-white/5 py-3 px-6">
+    <div class="fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 py-3 px-6 shadow-lg">
         <div class="max-w-5xl mx-auto">
             <div class="relative">
                 <input type="text" id="searchInput" placeholder="Buscar películas, series, anime, cómics..." 
-                       class="w-full bg-white/10 border border-white/10 rounded-lg px-4 py-3 pl-12 text-white placeholder-white/40 focus:outline-none focus:border-green-500"
+                       class="w-full bg-white/10 border border-white/10 rounded-lg px-4 py-3 pl-12 text-white placeholder-white/40 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
                        oninput="searchContent(this.value)">
                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
-                <span id="searchCount" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 text-sm"></span>
+                <span id="searchCount" class="absolute right-4 top-1/2 -translate-y-1/2 text-green-400 text-sm font-medium"></span>
             </div>
             <div id="searchResults" class="mt-2 hidden"></div>
         </div>
@@ -991,19 +991,22 @@
 
     <script>
     function searchContent(query) {
-        const searchInput = document.getElementById('searchInput');
         const searchCount = document.getElementById('searchCount');
-        const sections = document.querySelectorAll('section[id]');
+        const searchResults = document.getElementById('searchResults');
+        const sections = document.querySelectorAll('main section[id]');
         let totalMatches = 0;
+        const foundIn = [];
         
         if (query.length < 2) {
             sections.forEach(section => {
                 section.style.display = '';
                 section.querySelectorAll('.item-row').forEach(row => {
                     row.style.display = '';
+                    row.classList.remove('bg-green-500/20', 'border-l-4', 'border-green-400');
                 });
             });
             searchCount.textContent = '';
+            searchResults.classList.add('hidden');
             return;
         }
         
@@ -1011,6 +1014,8 @@
         const queryWords = query.split(/\s+/);
         
         sections.forEach(section => {
+            const sectionTitle = section.querySelector('h2');
+            const sectionName = sectionTitle ? sectionTitle.textContent.replace(/[^\w\s]/g, '').trim() : section.id;
             const sectionContent = section.querySelector('.grid, .space-y-1, .divide-y');
             if (!sectionContent) return;
             
@@ -1018,18 +1023,59 @@
             let sectionMatches = 0;
             
             items.forEach(item => {
-                const text = item.textContent.toLowerCase();
+                const text = item.textContent.toLowerCase().replace(/[^\w\s]/g, '');
                 const matches = queryWords.every(word => text.includes(word));
                 
-                item.style.display = matches ? '' : 'none';
-                if (matches) sectionMatches++;
+                if (matches) {
+                    item.style.display = '';
+                    item.classList.add('bg-green-500/20', 'border-l-4', 'border-green-400');
+                    sectionMatches++;
+                    
+                    if (sectionMatches === 1) {
+                        foundIn.push(sectionName);
+                    }
+                } else {
+                    item.style.display = 'none';
+                    item.classList.remove('bg-green-500/20', 'border-l-4', 'border-green-400');
+                }
             });
             
-            section.style.display = sectionMatches > 0 ? '' : 'none';
+            if (sectionMatches > 0) {
+                section.style.display = '';
+                section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                section.style.display = 'none';
+            }
+            
             totalMatches += sectionMatches;
         });
         
-        searchCount.textContent = `${totalMatches} resultado${totalMatches !== 1 ? 's' : ''}`;
+        if (totalMatches > 0) {
+            searchCount.textContent = `${totalMatches} resultado${totalMatches !== 1 ? 's' : ''} encontrado${totalMatches !== 1 ? 's' : ''}`;
+            searchResults.innerHTML = `
+                <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                    <p class="text-green-400 text-sm font-medium">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        Encontrado en: <strong>${foundIn.join(', ')}</strong>
+                    </p>
+                    <p class="text-white/50 text-xs mt-1">
+                        Haz scroll para ver los resultados destacados en verde
+                    </p>
+                </div>
+            `;
+            searchResults.classList.remove('hidden');
+        } else {
+            searchCount.textContent = '0 resultados';
+            searchResults.innerHTML = `
+                <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+                    <p class="text-red-400 text-sm">
+                        <i class="fas fa-search mr-2"></i>
+                        No se encontró "${query}" en el catálogo
+                    </p>
+                </div>
+            `;
+            searchResults.classList.remove('hidden');
+        }
     }
     
     document.addEventListener('keydown', function(e) {
@@ -1043,154 +1089,6 @@
             document.getElementById('searchInput').blur();
         }
     });
-    
-    // Precio base y descuento
-    const BASE_PRICE = 19990;
-    const DISCOUNTED_PRICE = 7990;
-    const VALID_CODE = 'PACKTODOENUNO';
-    let currentPrice = DISCOUNTED_PRICE;
-    let discountApplied = false;
-    
-    function applyDiscount() {
-        const input = document.getElementById('discountCode');
-        const message = document.getElementById('discountMessage');
-        const code = input.value.trim().toUpperCase();
-        
-        if (code === VALID_CODE) {
-            discountApplied = true;
-            currentPrice = DISCOUNTED_PRICE;
-            document.getElementById('originalPrice').style.display = 'block';
-            document.getElementById('finalPrice').textContent = '$7.990 CLP';
-            document.getElementById('finalPrice').className = 'text-4xl font-bold text-green-400 mb-2';
-            message.textContent = '¡Código aplicado! Precio especial: $7.990';
-            message.className = 'text-sm mt-2 text-green-400';
-            message.classList.remove('hidden');
-            input.disabled = true;
-            input.nextElementSibling.textContent = '✓';
-            input.nextElementSibling.className = 'px-4 py-2 bg-green-600 rounded-lg text-white';
-        } else {
-            discountApplied = false;
-            currentPrice = BASE_PRICE;
-            document.getElementById('originalPrice').style.display = 'none';
-            document.getElementById('finalPrice').textContent = '$19.990 CLP';
-            document.getElementById('finalPrice').className = 'text-4xl font-bold text-red-400 mb-2';
-            message.textContent = 'Código inválido. Precio sin descuento.';
-            message.className = 'text-sm mt-2 text-red-400';
-            message.classList.remove('hidden');
-        }
-    }
-    
-    function openCheckout() {
-        const modal = document.getElementById('checkoutModal');
-        const priceEl = document.getElementById('modalPrice');
-        const totalEl = document.getElementById('modalTotal');
-        const discountRow = document.getElementById('modalDiscountRow');
-        const discountAmount = document.getElementById('modalDiscount');
-        
-        priceEl.textContent = '$' + BASE_PRICE.toLocaleString('es-CL');
-        
-        if (discountApplied) {
-            discountRow.classList.remove('hidden');
-            discountAmount.textContent = '-$' + (BASE_PRICE - DISCOUNTED_PRICE).toLocaleString('es-CL');
-            totalEl.textContent = '$' + DISCOUNTED_PRICE.toLocaleString('es-CL') + ' CLP';
-        } else {
-            discountRow.classList.add('hidden');
-            totalEl.textContent = '$' + BASE_PRICE.toLocaleString('es-CL') + ' CLP';
-        }
-        
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
-    
-    function closeCheckout() {
-        const modal = document.getElementById('checkoutModal');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    }
-    
-    // Inicializar MercadoPago
-    const mp = new MercadoPago('TEST-b6f1c833-0f2f-4a6e-a1f4-f1bf3fc3077e', {
-        locale: 'es-CL'
-    });
-    
-    async function processPayment() {
-        const email = document.getElementById('buyerEmail').value;
-        const phone = document.getElementById('buyerPhone').value;
-        
-        if (!email || !phone) {
-            alert('Por favor completa todos los campos');
-            return;
-        }
-        
-        if (!email.includes('@')) {
-            alert('Por favor ingresa un email válido');
-            return;
-        }
-        
-        const price = discountApplied ? DISCOUNTED_PRICE : BASE_PRICE;
-        const codeUsed = discountApplied ? 'PACKTODOENUNO' : 'Sin codigo';
-        
-        // Mostrar loading
-        const btn = event.target;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-        btn.disabled = true;
-        
-        try {
-            // Llamar al backend para crear preferencia
-            const response = await fetch('/server/api/create-preference', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, phone, discountCode: codeUsed, price })
-            });
-            
-            const data = await response.json();
-            
-            if (data.init_point) {
-                // Redirigir a MercadoPago
-                window.location.href = data.init_point;
-            } else {
-                // Si no hay backend, usar botón de MercadoPago
-                document.getElementById('checkoutModal').innerHTML = `
-                    <button onclick="closeCheckout()" class="absolute top-4 right-4 text-white/40 hover:text-white text-2xl">&times;</button>
-                    <h3 class="text-xl font-bold mb-4 text-center">Pago con MercadoPago</h3>
-                    <div id="walletContainer"></div>
-                `;
-                
-                mp.bricks().create('wallet', 'walletContainer', {
-                    initialization: {
-                        preferenceId: 'YOUR_PREFERENCE_ID'
-                    },
-                    callbacks: {
-                        onReady: () => {},
-                        onError: (error) => console.error(error)
-                    }
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            // Fallback: WhatsApp
-            const message = encodeURIComponent(
-                `🎬 Nueva compra StreamVault!\n\n` +
-                `📧 Email: ${email}\n` +
-                `📱 WhatsApp: ${phone}\n` +
-                `💰 Monto: $${price.toLocaleString('es-CL')} CLP\n` +
-                `🎟️ Código: ${codeUsed}`
-            );
-            window.open(`https://wa.me/56964681874?text=${message}`, '_blank');
-            closeCheckout();
-        }
-        
-        btn.innerHTML = '<i class="fas fa-lock"></i> PAGAR CON MERCADO PAGO';
-        btn.disabled = false;
-    }
-    
-    // Cerrar modal con Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeCheckout();
-    });
-    
-    // Inicializar con precio con descuento por defecto
-    document.getElementById('originalPrice').style.display = 'block';
     </script>
 
 </body>
