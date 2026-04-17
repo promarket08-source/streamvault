@@ -382,7 +382,20 @@
     </section>
 
     <!-- Catálogo -->
-    <main class="max-w-5xl mx-auto px-6 pb-20">
+    <main class="max-w-5xl mx-auto px-6 pb-20 pt-4">
+        
+        <!-- Modal de Contenido Completo -->
+        <div id="contentModal" class="fixed inset-0 bg-black/95 z-50 hidden overflow-y-auto">
+            <div class="min-h-screen py-8 px-4">
+                <div class="max-w-4xl mx-auto bg-gray-900 border border-white/10 rounded-2xl overflow-hidden">
+                    <div class="sticky top-0 bg-gray-900 border-b border-white/10 p-4 flex items-center justify-between">
+                        <h3 id="modalTitle" class="text-xl font-bold"></h3>
+                        <button onclick="closeContentModal()" class="text-white/50 hover:text-white text-2xl">&times;</button>
+                    </div>
+                    <div id="modalContent" class="p-6"></div>
+                </div>
+            </div>
+        </div>
         
         <!-- 🎬 PELÍCULAS -->
         <section class="mb-12 fade-in">
@@ -686,8 +699,10 @@
             </div>
             
             <div class="mt-4 text-center">
-                <p class="text-white/40 text-sm">... y más de 200 películas adicionales</p>
-                <a href="https://drive.google.com/drive/folders/1cc0Z_G5RAqJneyocZ7cIyCr-H-6gIOkp" target="_blank" class="text-green-400 text-sm hover:underline">Ver todas en Drive →</a>
+                <button onclick="openContentModal('peliculas')" class="inline-flex items-center gap-2 px-6 py-3 bg-green-600/50 hover:bg-green-600 rounded-xl text-white font-medium transition">
+                    <i class="fas fa-eye"></i>
+                    VER CATÁLOGO COMPLETO (+500 películas)
+                </button>
             </div>
         </section>
 
@@ -748,8 +763,15 @@
                     <div class="item-row py-2 px-3">9-1-1 (7 temp)</div>
                     <div class="item-row py-2 px-3">Shogun (1 temp)</div>
                     <div class="item-row py-2 px-3">Fallout (1 temp)</div>
-                    <div class="item-row py-2 px-3">Avatar: The Last Airbender (1 temp)</div>
+                     <div class="item-row py-2 px-3">Avatar: The Last Airbender (1 temp)</div>
                 </div>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <button onclick="openContentModal('series')" class="inline-flex items-center gap-2 px-6 py-3 bg-teal-600/50 hover:bg-teal-600 rounded-xl text-white font-medium transition">
+                    <i class="fas fa-eye"></i>
+                    VER CATÁLOGO COMPLETO (+300 series)
+                </button>
             </div>
         </section>
 
@@ -1013,7 +1035,11 @@
                     <div class="item-row py-2 px-3">Spy x Family</div>
                     <div class="item-row py-2 px-3">My Hero Academia</div>
                     <div class="item-row py-2 px-3">Tokyo Revengers</div>
-                    <div class="item-row py-2 px-3">+900 títulos más</div>
+                    <div class="item-row py-2 px-3 bg-green-500/10 border-l-4 border-green-500">
+                        <button onclick="openContentModal('anime')" class="text-green-400 hover:text-green-300 w-full text-left">
+                            <i class="fas fa-eye mr-2"></i>Ver +900 títulos completos →
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1136,6 +1162,350 @@
     </footer>
 
     <script>
+    // Contenido completo de cada categoría
+    const fullContent = {
+        peliculas: {
+            title: '📽️ PACK PELÍCULAS - Catálogo Completo',
+            items: [
+                { name: 'Avatar (2009)', quality: '4K' },
+                { name: 'Avatar: El Camino del Agua (2022)', quality: '4K' },
+                { name: 'Avengers: Endgame (2019)', quality: '4K' },
+                { name: 'Avengers: Infinity War (2018)', quality: '4K' },
+                { name: 'Avengers: Age of Ultron (2015)', quality: 'HD' },
+                { name: 'Avengers: Los Vengadores (2012)', quality: 'HD' },
+                { name: 'Batman: El Caballero de la Noche (2008)', quality: '4K' },
+                { name: 'Batman v Superman: El Amanecer de la Justicia', quality: 'HD' },
+                { name: 'Batman Begins (2005)', quality: 'HD' },
+                { name: 'Batman Returns (1992)', quality: 'SD' },
+                { name: 'Star Wars: Episodio VII - El Despertar de la Fuerza', quality: '4K' },
+                { name: 'Star Wars: Episodio VIII - Los Últimos Jedi', quality: '4K' },
+                { name: 'Star Wars: Episodio IX - El Ascenso de Skywalker', quality: '4K' },
+                { name: 'Star Wars: Rogue One', quality: 'HD' },
+                { name: 'Star Wars: Solo - Una Historia de Star Wars', quality: 'HD' },
+                { name: 'Titanic (1997)', quality: '4K' },
+                { name: 'Jurassic Park (1993)', quality: 'HD' },
+                { name: 'Jurassic World: Dominion (2022)', quality: '4K' },
+                { name: 'Harry Potter y la Piedra Filosofal', quality: 'HD' },
+                { name: 'Harry Potter y la Cámara de Secretos', quality: 'HD' },
+                { name: 'Harry Potter y el Prisionero de Azkaban', quality: 'HD' },
+                { name: 'Harry Potter y el Cáliz de Fuego', quality: 'HD' },
+                { name: 'Harry Potter y la Orden del Fénix', quality: 'HD' },
+                { name: 'Harry Potter y el Misterio del Príncipe', quality: 'HD' },
+                { name: 'Harry Potter y las Reliquias de la Muerte Parte 1', quality: 'HD' },
+                { name: 'Harry Potter y las Reliquias de la Muerte Parte 2', quality: 'HD' },
+                { name: 'Interestelar (2014)', quality: '4K' },
+                { name: 'Matrix (1999)', quality: 'HD' },
+                { name: 'Matrix Reloaded (2003)', quality: 'HD' },
+                { name: 'Matrix Revolutions (2003)', quality: 'HD' },
+                { name: 'Matrix Resurrections (2021)', quality: '4K' },
+                { name: 'Rápidos y Furiosos 1-10 (Colección)', quality: 'HD' },
+                { name: 'Piratas del Caribe 1-5 (Colección)', quality: 'HD' },
+                { name: 'El Señor de los Anillos (Trilogía extendida)', quality: '4K' },
+                { name: 'El Hobbit (Trilogía)', quality: 'HD' },
+                { name: 'Gladiator (2000)', quality: 'HD' },
+                { name: 'El Rey León (2019)', quality: '4K' },
+                { name: 'Frozen (2013)', quality: 'HD' },
+                { name: 'Coco (2017)', quality: 'HD' },
+                { name: 'Toy Story 1-4 (Colección)', quality: 'HD' },
+                { name: 'Buscando a Nemo', quality: 'HD' },
+                { name: 'Intensamente (Inside Out)', quality: 'HD' },
+                { name: 'Capitán América: El Soldado de Invierno', quality: 'HD' },
+                { name: 'Capitán América: Civil War', quality: 'HD' },
+                { name: 'Iron Man 1-3 (Colección)', quality: 'HD' },
+                { name: 'Thor: Ragnarok', quality: '4K' },
+                { name: 'Pantera Negra (2018)', quality: '4K' },
+                { name: 'Spider-Man: Homecoming', quality: 'HD' },
+                { name: 'Spider-Man: Far From Home', quality: 'HD' },
+                { name: 'Spider-Man: No Way Home', quality: '4K' },
+                { name: 'Guardianes de la Galaxia Vol. 1', quality: 'HD' },
+                { name: 'Guardianes de la Galaxia Vol. 2', quality: 'HD' },
+                { name: 'Doctor Strange (2016)', quality: 'HD' },
+                { name: 'Doctor Strange en el Multiverso de la Locura', quality: '4K' },
+                { name: 'Black Widow (2021)', quality: '4K' },
+                { name: 'Ant-Man (2015)', quality: 'HD' },
+                { name: 'Ant-Man y la Avispa', quality: 'HD' },
+                { name: 'Shang-Chi y la Leyenda de los Diez Anillos', quality: '4K' },
+                { name: 'Eternals (2021)', quality: '4K' },
+                { name: 'Viuda Negra (Black Widow)', quality: '4K' },
+                { name: 'Falcon y el Soldado de Invierno', quality: 'HD' },
+                { name: 'Loki (Serie)', quality: 'HD' },
+                { name: 'WandaVision (Serie)', quality: 'HD' },
+                { name: 'What If...? (Serie)', quality: 'HD' },
+                { name: 'Hawkeye (Serie)', quality: 'HD' },
+                { name: 'Ms. Marvel (Serie)', quality: 'HD' },
+                { name: 'She-Hulk (Serie)', quality: 'HD' },
+                { name: 'Moon Knight (Serie)', quality: 'HD' },
+                { name: 'Y la mayoría +400 películas más...', quality: '' }
+            ]
+        },
+        anime: {
+            title: '📺 PACK ANIME & SERIES - Catálogo Completo',
+            items: [
+                { name: 'Dragon Ball Z - Saga Completa (291 episodios)', quality: 'HD' },
+                { name: 'Dragon Ball Super - Saga Completa', quality: 'HD' },
+                { name: 'Dragon Ball GT - Saga Completa', quality: 'SD' },
+                { name: 'Naruto - Saga Completa (220 episodios)', quality: 'HD' },
+                { name: 'Naruto Shippuden - Saga Completa (500 episodios)', quality: 'HD' },
+                { name: 'Boruto: Naruto Next Generations', quality: 'HD' },
+                { name: 'One Piece - Saga Completa (1000+ episodios)', quality: 'HD' },
+                { name: 'Attack on Titan (Temporadas 1-4)', quality: 'HD' },
+                { name: 'Demon Slayer - Kimetsu no Yaiba', quality: 'HD' },
+                { name: 'Demon Slayer: Mugen Train (Película)', quality: 'HD' },
+                { name: 'Demon Slayer: Temporada 2', quality: 'HD' },
+                { name: 'Jujutsu Kaisen (Temporada 1)', quality: 'HD' },
+                { name: 'Jujutsu Kaisen 0 (Película)', quality: 'HD' },
+                { name: 'Jujutsu Kaisen Temporada 2', quality: 'HD' },
+                { name: 'My Hero Academia (Temporadas 1-6)', quality: 'HD' },
+                { name: 'Black Clover (Temporadas 1-4)', quality: 'HD' },
+                { name: 'One Punch Man (Temporadas 1-2)', quality: 'HD' },
+                { name: 'Hunter x Hunter (2011) - Completo', quality: 'HD' },
+                { name: 'Fullmetal Alchemist: Brotherhood', quality: 'HD' },
+                { name: 'Fullmetal Alchemist (2003)', quality: 'SD' },
+                { name: 'Death Note', quality: 'HD' },
+                { name: 'Tokyo Revengers (Temporadas 1-2)', quality: 'HD' },
+                { name: 'Chainsaw Man', quality: 'HD' },
+                { name: 'Spy x Family (Temporadas 1-2)', quality: 'HD' },
+                { name: 'Cyberpunk: Edgerunners', quality: 'HD' },
+                { name: 'Mob Psycho 100 (Temporadas 1-2)', quality: 'HD' },
+                { name: 'Fire Force (Temporadas 1-2)', quality: 'HD' },
+                { name: 'The Eminence in Shadow', quality: 'HD' },
+                { name: 'Blue Lock', quality: 'HD' },
+                { name: 'Sword Art Online (Temporadas 1-5)', quality: 'HD' },
+                { name: 'Re:Zero (Temporadas 1-2)', quality: 'HD' },
+                { name: 'Overlord (Temporadas 1-4)', quality: 'HD' },
+                { name: 'That Time I Got Reincarnated as a Slime', quality: 'HD' },
+                { name: 'No Game No Life', quality: 'HD' },
+                { name: 'Konosuba (Temporadas 1-3)', quality: 'HD' },
+                { name: 'Vinland Saga (Temporadas 1-2)', quality: 'HD' },
+                { name: 'Tokyo Ghoul (Temporadas 1-4)', quality: 'HD' },
+                { name: 'Parasyte', quality: 'HD' },
+                { name: 'The Promised Neverland', quality: 'HD' },
+                { name: 'Dr. Stone (Temporadas 1-3)', quality: 'HD' },
+                { name: 'Assassination Classroom', quality: 'HD' },
+                { name: 'Fairy Tail (Completo)', quality: 'HD' },
+                { name: 'Soul Eater', quality: 'HD' },
+                { name: 'Bleach (Saga Completa)', quality: 'HD' },
+                { name: 'Bleach: Thousand-Year Blood War', quality: 'HD' },
+                { name: 'Inuyashiki', quality: 'HD' },
+                { name: 'Made in Abyss', quality: 'HD' },
+                { name: 'Rising of the Shield Hero', quality: 'HD' },
+                { name: 'Mushoku Tensei', quality: 'HD' },
+                { name: 'Classroom of the Elite', quality: 'HD' },
+                { name: 'Y la mayoría +250 series y anime más...', quality: '' }
+            ]
+        },
+        series: {
+            title: '📺 SERIES OCCIDENTALES - Catálogo Completo',
+            items: [
+                { name: 'Breaking Bad (Temporadas 1-5)', quality: 'HD' },
+                { name: 'Better Call Saul (Temporadas 1-6)', quality: 'HD' },
+                { name: 'Game of Thrones (Temporadas 1-8)', quality: 'HD' },
+                { name: 'House of the Dragon', quality: 'HD' },
+                { name: 'Stranger Things (Temporadas 1-4)', quality: 'HD' },
+                { name: 'The Walking Dead (Temporadas 1-11)', quality: 'HD' },
+                { name: 'Fear The Walking Dead', quality: 'HD' },
+                { name: 'Supernatural (Temporadas 1-15)', quality: 'HD' },
+                { name: 'The Office USA (Temporadas 1-9)', quality: 'HD' },
+                { name: 'Friends (Temporadas 1-10)', quality: 'HD' },
+                { name: 'La Casa de Papel / Money Heist', quality: 'HD' },
+                { name: 'El Chapo (Temporadas 1-3)', quality: 'HD' },
+                { name: 'Narcos (Temporadas 1-3)', quality: 'HD' },
+                { name: 'Narcos: México (Temporadas 1-3)', quality: 'HD' },
+                { name: 'Vis a Vis (Temporadas 1-5)', quality: 'HD' },
+                { name: 'Merlí (Temporadas 1-3)', quality: 'HD' },
+                { name: 'Dark (Temporadas 1-3)', quality: 'HD' },
+                { name: 'Squid Game', quality: 'HD' },
+                { name: 'Wednesday', quality: 'HD' },
+                { name: 'The Witcher (Temporadas 1-3)', quality: 'HD' },
+                { name: 'The Last of Us', quality: 'HD' },
+                { name: 'Peaky Blinders (Temporadas 1-6)', quality: 'HD' },
+                { name: 'Vikings (Temporadas 1-6)', quality: 'HD' },
+                { name: 'Vikings: Valhalla', quality: 'HD' },
+                { name: 'Bridgerton (Temporadas 1-3)', quality: 'HD' },
+                { name: 'The Crown (Temporadas 1-6)', quality: 'HD' },
+                { name: 'The Bear (Temporadas 1-2)', quality: 'HD' },
+                { name: 'Succession (Temporadas 1-4)', quality: 'HD' },
+                { name: 'Yellowstone (Temporadas 1-5)', quality: 'HD' },
+                { name: '1883', quality: 'HD' },
+                { name: '1923', quality: 'HD' },
+                { name: 'Y la mayoría +200 series más...', quality: '' }
+            ]
+        },
+        comics: {
+            title: '📚 PACK COMICS & MANGA - Catálogo Completo',
+            items: [
+                { name: 'Iron Man - Colección Completa Marvel', quality: 'PDF' },
+                { name: 'Spider-Man - Colección Completa Marvel', quality: 'PDF' },
+                { name: 'Avengers - Colección Completa Marvel', quality: 'PDF' },
+                { name: 'X-Men - Colección Completa Marvel', quality: 'PDF' },
+                { name: 'Captain America - Colección Marvel', quality: 'PDF' },
+                { name: 'Thor - Colección Marvel', quality: 'PDF' },
+                { name: 'Hulk - Colección Marvel', quality: 'PDF' },
+                { name: 'Batman - Colección Completa DC', quality: 'PDF' },
+                { name: 'Superman - Colección Completa DC', quality: 'PDF' },
+                { name: 'Wonder Woman - Colección DC', quality: 'PDF' },
+                { name: 'Justice League - Colección DC', quality: 'PDF' },
+                { name: 'The Flash - Colección DC', quality: 'PDF' },
+                { name: 'Green Lantern - Colección DC', quality: 'PDF' },
+                { name: 'Aquaman - Colección DC', quality: 'PDF' },
+                { name: 'One Piece - Manga Completo', quality: 'PDF' },
+                { name: 'Naruto - Manga Completo', quality: 'PDF' },
+                { name: 'Dragon Ball - Manga Completo', quality: 'PDF' },
+                { name: 'bleach - Manga Completo', quality: 'PDF' },
+                { name: 'Attack on Titan - Manga Completo', quality: 'PDF' },
+                { name: 'Demon Slayer - Manga Completo', quality: 'PDF' },
+                { name: 'Jujutsu Kaisen - Manga', quality: 'PDF' },
+                { name: 'My Hero Academia - Manga', quality: 'PDF' },
+                { name: 'Tokyo Revengers - Manga', quality: 'PDF' },
+                { name: 'Chainsaw Man - Manga', quality: 'PDF' },
+                { name: 'Spy x Family - Manga', quality: 'PDF' },
+                { name: 'Kaguya-sama: Love is War - Manga', quality: 'PDF' },
+                { name: 'Fire Force - Manga', quality: 'PDF' },
+                { name: 'Black Clover - Manga', quality: 'PDF' },
+                { name: 'Hunter x Hunter - Manga', quality: 'PDF' },
+                { name: 'JoJo Bizarre Adventure - Manga', quality: 'PDF' },
+                { name: 'Slam Dunk - Manga', quality: 'PDF' },
+                { name: 'Death Note - Manga', quality: 'PDF' },
+                { name: 'Fullmetal Alchemist - Manga', quality: 'PDF' },
+                { name: 'Vinland Saga - Manga', quality: 'PDF' },
+                { name: 'Berserk - Manga', quality: 'PDF' },
+                { name: 'Hajime no Ippo - Manga', quality: 'PDF' },
+                { name: 'Great Teacher Onizuka - Manga', quality: 'PDF' },
+                { name: 'Parasyte - Manga', quality: 'PDF' },
+                { name: 'Y la mayoría +500 comics y manga más...', quality: '' }
+            ]
+        },
+        musica: {
+            title: '🎵 PACK MÚSICA - Catálogo Completo',
+            items: [
+                { name: 'DJ Nicolas Escobar - Set Completo 1', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Set Completo 2', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Set Completo 3', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Sesiones Exclusivas 1', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Sesiones Exclusivas 2', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Remixes Personalizados 1', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Remixes Personalizados 2', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Tracks Originales 1', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Tracks Originales 2', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Edits Personalizados 1', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Edits Personalizados 2', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Playlists Premium 1', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Playlists Premium 2', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Live Sessions', quality: 'MP3' },
+                { name: 'DJ Nicolas Escobar - Bootlegs', quality: 'MP3' },
+                { name: 'Y la mayoría +50 sets y tracks más...', quality: '' }
+            ]
+        },
+        libros: {
+            title: '📖 PACK LIBROS & AUDIOLIBROS - Catálogo Completo',
+            items: [
+                { name: 'Los 7 Hábitos de la Gente Altamente Efectiva - Stephen Covey', quality: 'PDF/EPUB' },
+                { name: 'Padre Rico Padre Pobre - Robert Kiyosaki', quality: 'PDF/EPUB' },
+                { name: 'El Hombre Más Rico de Babilonia - George Clason', quality: 'PDF/EPUB' },
+                { name: 'Piense y Hágase Rico - Napoleon Hill', quality: 'PDF/EPUB' },
+                { name: 'El Poder del Ahora - Eckhart Tolle', quality: 'PDF/EPUB' },
+                { name: 'Cómo Ganar Amigos e Influir sobre las Personas - Dale Carnegie', quality: 'PDF/EPUB' },
+                { name: 'El Monje que Vendió su Ferrari - Robin Sharma', quality: 'PDF/EPUB' },
+                { name: 'Los 4 Acuerdos - Don Miguel Ruiz', quality: 'PDF/EPUB' },
+                { name: 'Inteligencia Emocional - Daniel Goleman', quality: 'PDF/EPUB' },
+                { name: 'Hábitos Atómicos - James Clear', quality: 'PDF/EPUB' },
+                { name: 'El Arte de la Guerra - Sun Tzu', quality: 'PDF/EPUB' },
+                { name: 'Think and Grow Rich - Napoleon Hill (Inglés)', quality: 'PDF/EPUB' },
+                { name: 'The 48 Laws of Power - Robert Greene', quality: 'PDF/EPUB' },
+                { name: 'Sapiens - Yuval Noah Harari', quality: 'PDF/EPUB' },
+                { name: 'El Crimen de la Guerra - Julio G. Martín', quality: 'PDF/EPUB' },
+                { name: 'La Meta - Eliyahu Goldratt', quality: 'PDF/EPUB' },
+                { name: 'El Poder de la Mente Subconsciente - Joseph Murphy', quality: 'PDF/EPUB' },
+                { name: 'El Secreto - Rhonda Byrne', quality: 'PDF/EPUB' },
+                { name: 'La Ley de la Atracción - Esther Hicks', quality: 'PDF/EPUB' },
+                { name: 'Tu Zona Genio - Alan Cohen', quality: 'PDF/EPUB' },
+                { name: 'Despertando al Gigante Interior - Tony Robbins', quality: 'PDF/EPUB' },
+                { name: 'El Mundo Amigo - Osho', quality: 'PDF/EPUB' },
+                { name: 'Millonario en 365 Días - Larry Allen', quality: 'PDF/EPUB' },
+                { name: 'Marketing de Afiliados 2024 - Guía Completa', quality: 'PDF' },
+                { name: 'E-commerce from Zero to Hero', quality: 'PDF' },
+                { name: 'Y la mayoría +80 libros más...', quality: '' }
+            ]
+        },
+        historietas: {
+            title: '📰 PACK HISTORIETAS RETRO - Catálogo Completo',
+            items: [
+                { name: 'Condorito - Colección Completa (Chile)', quality: 'PDF' },
+                { name: 'Condorito - Fascículos 1-100', quality: 'PDF' },
+                { name: 'Condorito - Mejores Historietas', quality: 'PDF' },
+                { name: 'Kaliman - Colección Completa (México)', quality: 'PDF' },
+                { name: 'Kaliman - Fascículos 1-50', quality: 'PDF' },
+                { name: 'Mortadelo - Colección (España)', quality: 'PDF' },
+                { name: 'Mortadelo y Filemón - Mejores', quality: 'PDF' },
+                { name: 'Mafalda - Colección Completa (Argentina)', quality: 'PDF' },
+                { name: 'Coringa - Historietas Clásicas', quality: 'PDF' },
+                { name: 'Súper Dinosaurio - Colección', quality: 'PDF' },
+                { name: 'El Eternauta - Colección Completa', quality: 'PDF' },
+                { name: 'Billiken - Colección Argentina', quality: 'PDF' },
+                { name: 'Mundo Infantil - Historietas Retro', quality: 'PDF' },
+                { name: 'Chiquitín - Colección', quality: 'PDF' },
+                { name: 'Petete y Gato con Botas - Colección', quality: 'PDF' },
+                { name: 'Y la mayoría +100 historietas retro más...', quality: '' }
+            ]
+        }
+    };
+    
+    function openContentModal(category) {
+        const content = fullContent[category];
+        if (!content) return;
+        
+        document.getElementById('modalTitle').textContent = content.title;
+        
+        let itemsHtml = '';
+        content.items.forEach(item => {
+            const badge = item.quality ? 
+                `<span class="quality-badge quality-${item.quality.toLowerCase().replace('/', '-')}">${item.quality}</span>` : '';
+            itemsHtml += `<div class="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg mb-1">
+                <span>${item.name}</span>
+                ${badge}
+            </div>`;
+        });
+        
+        document.getElementById('modalContent').innerHTML = `
+            <p class="text-white/50 mb-4">Total: ${content.items.length} títulos</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[60vh] overflow-y-auto pr-2">
+                ${itemsHtml}
+            </div>
+            <div class="mt-6 pt-4 border-t border-white/10 text-center">
+                <p class="text-white/70 mb-4">¿Quieres acceder a todo este contenido?</p>
+                <a href="${getPackLink(category)}" class="inline-flex items-center gap-2 px-8 py-3 bg-green-600 hover:bg-green-500 rounded-full text-white font-semibold">
+                    <i class="fas fa-shopping-cart"></i>
+                    COMPRAR PACK COMPLETO
+                </a>
+            </div>
+        `;
+        
+        document.getElementById('contentModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function getPackLink(category) {
+        const links = {
+            peliculas: 'pack-peliculas.html',
+            anime: 'pack-anime-series.html',
+            series: 'pack-anime-series.html',
+            comics: 'pack-comics.html',
+            musica: 'pack-musica.html',
+            libros: 'pack-libros.html',
+            historietas: 'pack-comics.html'
+        };
+        return links[category] || '#';
+    }
+    
+    function closeContentModal() {
+        document.getElementById('contentModal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeContentModal();
+    });
+    
     function searchContent(query) {
         const searchCount = document.getElementById('searchCount');
         const searchResults = document.getElementById('searchResults');
