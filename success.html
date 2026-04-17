@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Exitoso - StreamVault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #0a0a0a; color: #e5e5e5; }
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body class="min-h-screen p-6">
+    <div class="max-w-2xl mx-auto pt-12">
+        <!-- Loading State -->
+        <div id="loadingState" class="text-center">
+            <div class="text-6xl mb-6">⏳</div>
+            <h1 class="text-2xl font-bold text-white mb-2">Verificando tu pago...</h1>
+            <p class="text-white/50">Por favor espera mientras confirmamos tu compra</p>
+            <div class="mt-8 flex justify-center">
+                <div class="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        </div>
+
+        <!-- Success State -->
+        <div id="successState" class="hidden">
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-4">🎉</div>
+                <h1 class="text-3xl font-bold text-green-400 mb-2">¡Pago Confirmado!</h1>
+                <p class="text-white/60">Aquí están tus enlaces de acceso a StreamVault</p>
+            </div>
+
+            <div class="bg-white/5 rounded-2xl p-6 space-y-4">
+                <div class="flex items-center gap-4 p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
+                    <div class="text-3xl">📽️</div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold">Películas</h3>
+                        <p class="text-white/40 text-sm">+500 películas en 4K/HD</p>
+                    </div>
+                    <a id="linkPeliculas" href="#" target="_blank" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-white text-sm font-medium transition">
+                        <i class="fas fa-external-link-alt mr-1"></i> Acceder
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
+                    <div class="text-3xl">📺</div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold">Series y Anime</h3>
+                        <p class="text-white/40 text-sm">+300 series completas</p>
+                    </div>
+                    <a id="linkAnime" href="#" target="_blank" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white text-sm font-medium transition">
+                        <i class="fas fa-external-link-alt mr-1"></i> Acceder
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
+                    <div class="text-3xl">📚</div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold">Cómics</h3>
+                        <p class="text-white/40 text-sm">Marvel, DC, Manga y más</p>
+                    </div>
+                    <a id="linkComics" href="#" target="_blank" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-white text-sm font-medium transition">
+                        <i class="fas fa-external-link-alt mr-1"></i> Acceder
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
+                    <div class="text-3xl">🎵</div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold">Música</h3>
+                        <p class="text-white/40 text-sm">DJ Nicolas Escobar + más</p>
+                    </div>
+                    <a id="linkMusica" href="#" target="_blank" class="px-4 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white text-sm font-medium transition">
+                        <i class="fas fa-external-link-alt mr-1"></i> Acceder
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
+                    <div class="text-3xl">📖</div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold">Libros y Audiolibros</h3>
+                        <p class="text-white/40 text-sm">+100 títulos</p>
+                    </div>
+                    <a id="linkLibros" href="#" target="_blank" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg text-white text-sm font-medium transition">
+                        <i class="fas fa-external-link-alt mr-1"></i> Acceder
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <p class="text-white/40 text-sm mb-4">
+                    Guarda estos enlaces. Los necesitarás para acceder a tu contenido.
+                </p>
+                <a href="/" class="text-green-400 hover:text-green-300">
+                    ← Volver al inicio
+                </a>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden text-center">
+            <div class="text-6xl mb-6">❌</div>
+            <h1 class="text-2xl font-bold text-red-400 mb-4">Error al verificar pago</h1>
+            <p class="text-white/60 mb-6">Por favor contacta a soporte si crees que esto es un error.</p>
+            <a href="https://wa.me/56964681874?text=Error%20con%20mi%20pago%20de%20StreamVault" 
+               class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 rounded-full text-white font-semibold">
+                <i class="fab fa-whatsapp"></i> Contactar Soporte
+            </a>
+        </div>
+    </div>
+
+    <script>
+    const API_BASE = window.location.origin + '/server';
+    
+    async function verifyAndShowLinks() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment');
+        
+        if (!paymentId) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.remove('hidden');
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${API_BASE}/api/verify-payment/${paymentId}`);
+            const data = await response.json();
+            
+            if (data.approved) {
+                // Mostrar enlaces
+                document.getElementById('linkPeliculas').href = data.links.peliculas;
+                document.getElementById('linkAnime').href = data.links.animeSeries;
+                document.getElementById('linkComics').href = data.links.comics;
+                document.getElementById('linkMusica').href = data.links.musica;
+                document.getElementById('linkLibros').href = data.links.libros;
+                
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('successState').classList.remove('hidden');
+            } else {
+                document.getElementById('loadingState').innerHTML = `
+                    <div class="text-6xl mb-4">⏳</div>
+                    <h1 class="text-2xl font-bold text-yellow-400 mb-2">Pago en proceso...</h1>
+                    <p class="text-white/50">Tu pago aún se está procesando. Los enlaces aparecerán en breve.</p>
+                    <p class="text-white/30 text-sm mt-4">Si no ves los enlaces en 5 minutos, contacta a soporte.</p>
+                `;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.remove('hidden');
+        }
+    }
+    
+    verifyAndShowLinks();
+    </script>
+</body>
+</html>

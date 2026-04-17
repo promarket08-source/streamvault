@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📺 StreamVault - Catálogo de Series</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0f1a2e 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #FF1493, #FF6B9D, #C44CFF, #00D4FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .series-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .series-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(255,20,147,0.3), 0 0 60px rgba(196,76,255,0.2);
+            border-color: #FF1493;
+        }
+        
+        .series-card:hover .series-overlay {
+            opacity: 1;
+        }
+        
+        .series-card:hover .series-icon {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 30px currentColor);
+        }
+        
+        .series-icon {
+            font-size: 5rem;
+            transition: all 0.4s;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+        
+        .series-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+        }
+        
+        .genre-tag {
+            background: linear-gradient(135deg, #FF1493, #C44CFF);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00FF88, #00D4FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .filter-btn {
+            padding: 10px 24px;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(135deg, #FF1493, #C44CFF);
+            border-color: transparent;
+            transform: scale(1.05);
+        }
+        
+        .search-box {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            padding: 15px 25px;
+            padding-left: 50px;
+            transition: all 0.3s;
+        }
+        
+        .search-box:focus {
+            border-color: #FF1493;
+            box-shadow: 0 0 30px rgba(255,20,147,0.3);
+            outline: none;
+        }
+        
+        .glow-line {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #FF1493, #C44CFF, #00D4FF, transparent);
+            border-radius: 3px;
+        }
+        
+        .hero-bg {
+            background: radial-gradient(ellipse at top, rgba(255,20,147,0.2) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom, rgba(0,212,255,0.1) 0%, transparent 50%);
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .scroll-container {
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #FF1493 transparent;
+        }
+        .scroll-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: #FF1493;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-4xl">📺</span>
+                <div>
+                    <span class="text-2xl font-black gradient-text">StreamVault</span>
+                    <p class="text-xs text-white/50">Catálogo de Series</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://wa.me/56964681874" class="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full hover:bg-green-500/40 transition">
+                    <i class="fab fa-whatsapp"></i>
+                    <span class="hidden sm:inline">Contactar</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-28 pb-16 px-6 hero-bg">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500/20 to-purple-500/20 border border-pink-500/30 px-6 py-2 rounded-full mb-6">
+                <span class="floating">🔥</span>
+                <span class="font-semibold">Catálogo Exclusivo 2024-2025</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-black mb-4">
+                <span class="gradient-text">Series</span> Premium
+            </h1>
+            <p class="text-xl text-white/60 mb-8 max-w-2xl mx-auto">
+                Miles de horas de entretenimiento. Series completas con todas sus temporadas en un solo lugar.
+            </p>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                <div class="stats-card">
+                    <div class="stats-number">100+</div>
+                    <div class="text-white/60 text-sm">Series</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-number">500+</div>
+                    <div class="text-white/60 text-sm">Temporadas</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-number">10K+</div>
+                    <div class="text-white/60 text-sm">Episodios</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-number">HD</div>
+                    <div class="text-white/60 text-sm">Calidad</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-line max-w-6xl mx-auto mb-8"></div>
+
+    <!-- Search & Filter -->
+    <section class="py-8 px-6 sticky top-20 z-40 bg-black/40 backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto">
+            <!-- Search -->
+            <div class="max-w-xl mx-auto mb-6 relative">
+                <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <input type="text" id="search-input" placeholder="Buscar serie..." 
+                       class="search-box w-full text-white placeholder-white/40"
+                       oninput="filterSeries(this.value)">
+            </div>
+            
+            <!-- Genre Filter -->
+            <div class="flex gap-3 overflow-x-auto scroll-container pb-2 justify-start md:justify-center">
+                <button class="filter-btn active whitespace-nowrap" onclick="filterByGenre('all', this)">
+                    ✨ Todos
+                </button>
+                <button class="filter-btn whitespace-nowrap" onclick="filterByGenre('drama', this)">
+                    🎭 Drama
+                </button>
+                <button class="filter-btn whitespace-nowrap" onclick="filterByGenre('accion', this)">
+                    ⚡ Acción
+                </button>
+                <button class="filter-btn whitespace-nowrap" onclick="filterByGenre('comedia', this)">
+                    😂 Comedia
+                </button>
+                <button class="filter-btn whitespace-nowrap" onclick="filterByGenre('scifi', this)">
+                    🛸 Sci-Fi
+                </button>
+                <button class="filter-btn whitespace-nowrap" onclick="filterByGenre('superheroes', this)">
+                    🦸 Superhéroes
+                </button>
+                <button class="filter-btn whitespace-nowrap" onclick="filterByGenre('infantil', this)">
+                    👶 Infantil
+                </button>
+                <button class="filter-btn whitespace-nowrap" onclick="filterByGenre('latino', this)">
+                    🌎 Latino
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Series Grid -->
+    <section class="py-12 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div id="series-count" class="text-center text-white/50 mb-8">
+                Mostrando <span id="count-number" class="text-white font-bold">0</span> series
+            </div>
+            
+            <div id="series-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                <!-- Series cards will be rendered here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 px-6 bg-gradient-to-r from-pink-500/10 to-purple-500/10">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-5xl font-black mb-4">
+                ¿Quieres acceder a <span class="gradient-text">TODAS</span> estas series?
+            </h2>
+            <p class="text-xl text-white/60 mb-8">
+                Obtén acceso ilimitado por solo <span class="text-green-400 font-bold">$4.690/mes</span>
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="https://wa.me/56964681874?text=Hola!%20Quiero%20acceder%20al%20catálogo%20de%20series%20de%20StreamVault" 
+                   class="btn-primary px-8 py-4 rounded-full font-bold text-lg inline-flex items-center gap-2">
+                    <i class="fab fa-whatsapp text-xl"></i>
+                    Solicitar Acceso
+                </a>
+                <a href="#" class="btn-secondary px-8 py-4 rounded-full font-bold text-lg inline-flex items-center gap-2">
+                    <i class="fas fa-eye text-xl"></i>
+                    Ver Demo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 border-t border-white/10">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <span class="text-3xl">📺</span>
+                <span class="text-xl font-black gradient-text">StreamVault</span>
+            </div>
+            <p class="text-white/60 mb-2">Un proyecto de <strong>Agencia Promarket</strong></p>
+            <p class="text-white/40 text-sm">Impulsado por Emprende Online</p>
+            <div class="flex justify-center gap-4 mt-6">
+                <a href="https://wa.me/56964681874" class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-xl hover:scale-110 transition">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="mailto:promarket08@gmail.com" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-xl hover:scale-110 transition">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .btn-primary {
+            background: linear-gradient(135deg, #FF1493, #C44CFF);
+            color: white;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(255,20,147,0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #00D4FF, #00FF88);
+            color: #0a0a1a;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0,212,255,0.4);
+        }
+    </style>
+
+    <script>
+        // ==================== SERIES DATA ====================
+        const seriesData = [
+            // ACCIÓN / SUPERHÉROES
+            { id: 1, name: 'Arrow', icon: '🏹', genre: 'accion', seasons: 8, episodes: 170, year: '2012', description: 'Oliver Queen fights crime as the Arrow in Starling City.', genres: ['Acción', 'Drama', 'Crimen'] },
+            { id: 2, name: 'The Flash', icon: '⚡', genre: 'superheroes', seasons: 9, episodes: 180, year: '2014', description: 'Barry Allen fights crime with super speed as The Flash.', genres: ['Acción', 'Ciencia Ficción', 'Superhéroes'] },
+            { id: 3, name: 'Agents of S.H.I.E.L.D.', icon: '🛡️', genre: 'superheroes', seasons: 7, episodes: 136, year: '2013', description: 'Phil Coulson assembles a team of agents to protect the world.', genres: ['Acción', 'Aventura', 'Superhéroes'] },
+            { id: 4, name: 'Supergirl', icon: '🦸', genre: 'superheroes', seasons: 6, episodes: 126, year: '2015', description: 'Kara Zor-El fights for truth and justice as Supergirl.', genres: ['Acción', 'Ciencia Ficción', 'Superhéroes'] },
+            { id: 5, name: 'Superman & Lois', icon: '🦸', genre: 'superheroes', seasons: 3, episodes: 31, year: '2021', description: 'Clark Kent and Lois Lane navigate parenthood and journalism.', genres: ['Acción', 'Drama', 'Superhéroes'] },
+            { id: 6, name: 'The Boys', icon: '🦊', genre: 'superheroes', seasons: 3, episodes: 24, year: '2019', description: 'A group of vigilantes fight corrupt superheroes.', genres: ['Acción', 'Drama', 'Satírico'] },
+            { id: 7, name: 'Loki', icon: '⏰', genre: 'superheroes', seasons: 2, episodes: 12, year: '2021', description: 'Loki navigates time and multiverse adventures.', genres: ['Acción', 'Aventura', 'Sci-Fi'] },
+            { id: 8, name: 'WandaVision', icon: '🔮', genre: 'superheroes', seasons: 1, episodes: 9, year: '2021', description: 'Wanda Maximoff and Vision live in a sitcom world.', genres: ['Drama', 'Fantasía', 'Superhéroes'] },
+            { id: 9, name: 'Peacemaker', icon: '🕊️', genre: 'superheroes', seasons: 1, episodes: 8, year: '2022', description: 'Christopher Smith fights for peace at any cost.', genres: ['Acción', 'Comedia', 'Superhéroes'] },
+            { id: 10, name: 'Invincible', icon: '🦸', genre: 'superheroes', seasons: 1, episodes: 8, year: '2021', description: 'Mark Grayson becomes Earth's most powerful hero.', genres: ['Acción', 'Animación', 'Drama'] },
+            
+            // DRAMA
+            { id: 11, name: 'Game of Thrones', icon: '👑', genre: 'drama', seasons: 8, episodes: 73, year: '2011', description: 'Noble families fight for control of the Iron Throne.', genres: ['Drama', 'Fantasía', 'Aventura'] },
+            { id: 12, name: 'Stranger Things', icon: '🌌', genre: 'drama', seasons: 4, episodes: 34, year: '2016', description: 'Kids face supernatural forces in small-town Indiana.', genres: ['Drama', 'Terror', 'Sci-Fi'] },
+            { id: 13, name: 'Breaking Bad', icon: '⚗️', genre: 'drama', seasons: 5, episodes: 62, year: '2008', description: 'A chemistry teacher becomes a meth kingpin.', genres: ['Drama', 'Crimen', 'Thriller'] },
+            { id: 14, name: 'The Crown', icon: '👑', genre: 'drama', seasons: 5, episodes: 52, year: '2016', description: 'The reign of Queen Elizabeth II of England.', genres: ['Drama', 'Historia', 'Biografía'] },
+            { id: 15, name: 'Grey\'s Anatomy', icon: '🏥', genre: 'drama', seasons: 19, episodes: 400, year: '2005', description: 'Doctors navigate life and love at Grey Sloan Memorial.', genres: ['Drama', 'Romance', 'Médico'] },
+            { id: 16, name: 'The Good Doctor', icon: '🩺', genre: 'drama', seasons: 6, episodes: 91, year: '2017', description: 'A surgeon with autism saves lives at San Jose St. Bonaventure.', genres: ['Drama', 'Médico'] },
+            { id: 17, name: 'This Is Us', icon: '👨‍👩‍👧‍👦', genre: 'drama', seasons: 6, episodes: 106, year: '2016', description: 'The lives of the Pearson family across generations.', genres: ['Drama', 'Familia'] },
+            { id: 18, name: 'House of Dragons', icon: '🐉', genre: 'drama', seasons: 2, episodes: 18, year: '2022', description: 'Civil war erupts in House Targaryen.', genres: ['Drama', 'Fantasía', 'Aventura'] },
+            { id: 19, name: 'The Last of Us', icon: '🍄', genre: 'drama', seasons: 1, episodes: 9, year: '2023', description: 'Survivors travel through post-apocalyptic America.', genres: ['Drama', 'Acción', 'Aventura'] },
+            { id: 20, name: 'Squid Game', icon: '🦑', genre: 'drama', seasons: 2, episodes: 16, year: '2021', description: 'Contestants play deadly games for a huge prize.', genres: ['Drama', 'Terror', 'Acción'] },
+            { id: 21, name: 'The White Lotus', icon: '🏝️', genre: 'drama', seasons: 2, episodes: 14, year: '2021', description: 'Vacationers at a luxury resort reveal dark secrets.', genres: ['Drama', 'Comedia', 'Sátira'] },
+            { id: 22, name: 'Succession', icon: '🏢', genre: 'drama', seasons: 4, episodes: 45, year: '2018', description: 'A media dynasty battles for control.', genres: ['Drama', 'Comedia'] },
+            { id: 23, name: '1923', icon: '🌾', genre: 'drama', seasons: 1, episodes: 8, year: '2022', description: 'The Dutton family faces 1920s America.', genres: ['Drama', 'Western'] },
+            { id: 24, name: 'The Patient', icon: '🛏️', genre: 'drama', seasons: 1, episodes: 10, year: '2023', description: 'A therapist is held captive by a patient.', genres: ['Drama', 'Thriller'] },
+            { id: 25, name: 'Agatha: ¿Quién si no?', icon: '🔍', genre: 'drama', seasons: 1, episodes: 6, year: '2024', description: 'Agatha Harkness investigates her own death.', genres: ['Drama', 'Fantasía', 'Misterio'] },
+            
+            // COMEDIA
+            { id: 26, name: 'The Office US', icon: '💼', genre: 'comedia', seasons: 9, episodes: 201, year: '2005', description: 'Documentary-style comedy about office workers.', genres: ['Comedia'] },
+            { id: 27, name: 'Brooklyn Nine-Nine', icon: '🚔', genre: 'comedia', seasons: 8, episodes: 153, year: '2013', description: 'Detective Jake Peralta and his quirky squad.', genres: ['Comedia', 'Crimen'] },
+            { id: 28, name: 'How I Met Your Mother', icon: '💕', genre: 'comedia', seasons: 9, episodes: 208, year: '2005', description: 'Ted Mosby tells the story of how he met his kids\' mother.', genres: ['Comedia', 'Romance'] },
+            { id: 29, name: 'Friends', icon: '👯', genre: 'comedia', seasons: 10, episodes: 236, year: '1994', description: 'Six friends navigate life in New York City.', genres: ['Comedia', 'Romance'] },
+            { id: 30, name: 'The Big Bang Theory', icon: '🧪', genre: 'comedia', seasons: 12, episodes: 279, year: '2007', description: 'Geniuses and their social lives at Caltech.', genres: ['Comedia'] },
+            { id: 31, name: 'Modern Family', icon: '👨‍👩‍👧‍👦', genre: 'comedia', seasons: 11, episodes: 261, year: '2009', description: 'Three related families navigate parenthood.', genres: ['Comedia', 'Familia'] },
+            { id: 32, name: 'Schitt\'s Creek', icon: '🏰', genre: 'comedia', seasons: 6, episodes: 80, year: '2015', description: 'A wealthy family moves to a small town.', genres: ['Comedia'] },
+            { id: 33, name: 'Ted Lasso', icon: '⚽', genre: 'comedia', seasons: 3, episodes: 34, year: '2020', description: 'An American football coach leads a UK soccer team.', genres: ['Comedia', 'Deporte'] },
+            { id: 34, name: 'Only Murders in the Building', icon: '🔎', genre: 'comedia', seasons: 3, episodes: 30, year: '2021', description: 'True crime podcast fans become suspects.', genres: ['Comedia', 'Misterio'] },
+            { id: 35, name: 'The Bear', icon: '🐻', genre: 'comedia', seasons: 2, episodes: 21, year: '2022', description: 'A chef returns home to run his family\'s restaurant.', genres: ['Comedia', 'Drama'] },
+            { id: 36, name: 'El Chavo del 8', icon: '👨‍🦱', genre: 'latino', seasons: 8, episodes: 300, year: '1972', description: 'Las aventuras cómicas del vecindario más querido de Latinoamérica.', genres: ['Comedia', 'Latino'] },
+            { id: 37, name: '31 Minutos', icon: '📺', genre: 'latino', seasons: 3, episodes: 75, year: '2002', description: 'El noticiero infantil más surrealista de Chile.', genres: ['Comedia', 'Infantil', 'Latino'] },
+            { id: 38, name: 'Yo Soy Betty, la Fea', icon: '👩‍💼', genre: 'latino', seasons: 1, episodes: 169, year: '1999', description: 'Una inteligente经理 manager in a fashion company.', genres: ['Comedia', 'Romance', 'Latino'] },
+            { id: 39, name: 'La Casa de Papel', icon: '🎭', genre: 'drama', seasons: 5, episodes: 41, year: '2017', description: 'The heist of the Royal Mint of Spain.', genres: ['Drama', 'Acción', 'Thriller'] },
+            { id: 40, name: 'Rebelde', icon: '🎤', genre: 'latino', seasons: 4, episodes: 440, year: '2004', description: 'Students at an elite boarding school form a band.', genres: ['Drama', 'Musical', 'Latino'] },
+            { id: 41, name: 'Caras de Água', icon: '🌊', genre: 'latino', seasons: 1, episodes: 8, year: '2020', description: 'Brazilian drama series.', genres: ['Drama', 'Latino'] },
+            { id: 42, name: 'El Chapo', icon: '🔪', genre: 'drama', seasons: 3, episodes: 45, year: '2017', description: 'The rise and fall of El Chapo.', genres: ['Drama', 'Crimen', 'Latino'] },
+            { id: 43, name: 'Narcos', icon: '💰', genre: 'drama', seasons: 3, episodes: 45, year: '2015', description: 'The drug trade in Colombia and Mexico.', genres: ['Drama', 'Crimen'] },
+            
+            // CIENCIA FICCIÓN / FANTASÍA
+            { id: 44, name: 'Star Trek', icon: '🚀', genre: 'scifi', seasons: 6, episodes: 79, year: '1966', description: 'Captain Kirk and the USS Enterprise explore the galaxy.', genres: ['Ciencia Ficción', 'Aventura'] },
+            { id: 45, name: 'Star Trek: Discovery', icon: '🌟', genre: 'scifi', seasons: 5, episodes: 65, year: '2017', description: 'New crews discover new worlds aboard the Discovery.', genres: ['Ciencia Ficción', 'Aventura'] },
+            { id: 46, name: 'Star Trek: Picard', icon: '⭐', genre: 'scifi', seasons: 3, episodes: 30, year: '2020', description: 'Jean-Luc Picard returns for new adventures.', genres: ['Ciencia Ficción', 'Aventura'] },
+            { id: 47, name: 'Star Trek: Strange New Worlds', icon: '🛸', genre: 'scifi', seasons: 2, episodes: 20, year: '2022', description: 'Captain Pike\'s missions before Kirk.', genres: ['Ciencia Ficción', 'Aventura'] },
+            { id: 48, name: 'The Expanse', icon: '🌑', genre: 'scifi', seasons: 6, episodes: 63, year: '2015', description: 'Space exploration and political intrigue in 23rd century.', genres: ['Ciencia Ficción', 'Drama'] },
+            { id: 49, name: 'Lost in Space', icon: '🪐', genre: 'scifi', seasons: 3, episodes: 34, year: '2018', description: 'The Robinson family survives in deep space.', genres: ['Ciencia Ficción', 'Aventura'] },
+            { id: 50, name: 'Doctor Who', icon: '⏱️', genre: 'scifi', seasons: 13, episodes: 873, year: '1963', description: 'The Doctor travels through time and space.', genres: ['Ciencia Ficción', 'Aventura', 'Fantasía'] },
+            { id: 51, name: 'Westworld', icon: '🤖', genre: 'scifi', seasons: 4, episodes: 36, year: '2016', description: 'Artificial beings in a Wild West theme park.', genres: ['Ciencia Ficción', 'Drama', 'Western'] },
+            { id: 52, name: 'Ozone', icon: '🌌', genre: 'scifi', seasons: 1, episodes: 8, year: '2023', description: 'Sci-fi thriller series.', genres: ['Ciencia Ficción', 'Thriller'] },
+            { id: 53, name: 'The Mandalorian', icon: '🌌', genre: 'scifi', seasons: 3, episodes: 24, year: '2019', description: 'A bounty hunter in the Star Wars universe.', genres: ['Ciencia Ficción', 'Acción', 'Aventura'] },
+            { id: 54, name: 'Andor', icon: '🔴', genre: 'scifi', seasons: 1, episodes: 12, year: '2022', description: 'Cassian Andor\'s journey before Rogue One.', genres: ['Ciencia Ficción', 'Drama', 'Acción'] },
+            { id: 55, name: 'Obi-Wan Kenobi', icon: '⚔️', genre: 'scifi', seasons: 1, episodes: 6, year: '2022', description: 'Obi-Wan\'s hidden life after Revenge of the Sith.', genres: ['Ciencia Ficción', 'Acción', 'Aventura'] },
+            { id: 56, name: 'Ahsoka', icon: '🌟', genre: 'scifi', seasons: 1, episodes: 8, year: '2023', description: 'Ahsoka Tano searches for Thrawn.', genres: ['Ciencia Ficción', 'Acción', 'Aventura'] },
+            { id: 57, name: 'Foundation', icon: '📚', genre: 'scifi', seasons: 2, episodes: 20, year: '2021', description: 'Mathematician predicts the fall of the galactic empire.', genres: ['Ciencia Ficción', 'Drama'] },
+            { id: 58, name: 'The Wheel of Time', icon: '🌀', genre: 'scifi', seasons: 2, episodes: 16, year: '2021', description: 'Magic users fight The Dark One.', genres: ['Fantasía', 'Aventura', 'Drama'] },
+            { id: 59, name: 'Shadow and Bone', icon: '⚡', genre: 'scifi', seasons: 2, episodes: 15, year: '2021', description: 'A soldier and a mapmaker save the world.', genres: ['Fantasía', 'Drama', 'Acción'] },
+            { id: 60, name: 'The Witcher', icon: '🗡️', genre: 'scifi', seasons: 3, episodes: 24, year: '2019', description: 'Geralt of Rivia hunts monsters.', genres: ['Fantasía', 'Acción', 'Drama'] },
+            { id: 61, name: 'House of the Dragon', icon: '🐉', genre: 'scifi', seasons: 2, episodes: 18, year: '2022', description: 'The Targaryen civil war.', genres: ['Fantasía', 'Drama', 'Acción'] },
+            { id: 62, name: 'Percy Jackson', icon: '🔱', genre: 'scifi', seasons: 1, episodes: 8, year: '2024', description: 'Demigods at Camp Half-Blood.', genres: ['Fantasía', 'Aventura', 'Acción'] },
+            
+            // TERROR / MISTERIO
+            { id: 63, name: 'Stranger Things', icon: '🌌', genre: 'drama', seasons: 4, episodes: 34, year: '2016', description: 'Kids face supernatural forces.', genres: ['Drama', 'Terror', 'Sci-Fi'] },
+            { id: 64, name: 'The Haunting of Hill House', icon: '🏚️', genre: 'terror', seasons: 1, episodes: 10, year: '2018', description: 'A family haunted by their past.', genres: ['Terror', 'Drama'] },
+            { id: 65, name: 'Midnight Mass', icon: '⛪', genre: 'terror', seasons: 1, episodes: 7, year: '2021', description: 'A small town experiences supernatural events.', genres: ['Terror', 'Drama', 'Fantasía'] },
+            { id: 66, name: 'The Haunting of Bly Manor', icon: '👻', genre: 'terror', seasons: 1, episodes: 9, year: '2020', description: 'A nanny in an English manor.', genres: ['Terror', 'Drama', 'Romance'] },
+            { id: 67, name: 'The Outsider', icon: '🔍', genre: 'terror', seasons: 1, episodes: 10, year: '2020', description: 'Detectives investigate a supernatural murder.', genres: ['Terror', 'Drama', 'Crimen'] },
+            { id: 68, name: 'American Horror Story', icon: '🎃', genre: 'terror', seasons: 10, episodes: 103, year: '2011', description: 'Anthology horror series.', genres: ['Terror', 'Drama'] },
+            { id: 69, name: 'Penny Dreadful', icon: '🧛', genre: 'terror', seasons: 3, episodes: 27, year: '2014', description: 'Classic horror characters in Victorian London.', genres: ['Terror', 'Drama', 'Fantasía'] },
+            { id: 70, name: 'The Walking Dead', icon: '🧟', genre: 'terror', seasons: 11, episodes: 177, year: '2010', description: 'Survivors of a zombie apocalypse.', genres: ['Terror', 'Drama', 'Acción'] },
+            { id: 71, name: 'Fear the Walking Dead', icon: '🦠', genre: 'terror', seasons: 8, episodes: 113, year: '2015', description: 'Zombie outbreak in Mexico.', genres: ['Terror', 'Drama', 'Acción'] },
+            { id: 72, name: 'The Last of Us', icon: '🍄', genre: 'terror', seasons: 1, episodes: 9, year: '2023', description: 'Survivors in post-apocalyptic world.', genres: ['Drama', 'Acción', 'Terror'] },
+            
+            // ANIMACIÓN
+            { id: 73, name: 'Los Simpsons', icon: '👨‍👩‍👧', genre: 'infantil', seasons: 35, episodes: 750, year: '1989', description: 'The dysfunctional Simpson family.', genres: ['Animación', 'Comedia'] },
+            { id: 74, name: 'Futurama', icon: '🚀', genre: 'infantil', seasons: 7, episodes: 140, year: '1999', description: 'A pizza delivery guy in the year 3000.', genres: ['Animación', 'Comedia', 'Sci-Fi'] },
+            { id: 75, name: 'Family Guy', icon: '🚗', genre: 'infantil', seasons: 22, episodes: 417, year: '1999', description: 'Peter Griffin and his family.', genres: ['Animación', 'Comedia'] },
+            { id: 76, name: 'South Park', icon: '🧣', genre: 'infantil', seasons: 26, episodes: 356, year: '1997', description: 'Four boys in South Park, Colorado.', genres: ['Animación', 'Comedia'] },
+            { id: 77, name: 'Rick and Morty', icon: '🛸', genre: 'infantil', seasons: 7, episodes: 72, year: '2013', description: 'A scientist and his grandson travel universes.', genres: ['Animación', 'Comedia', 'Sci-Fi'] },
+            { id: 78, name: 'BoJack Horseman', icon: '🐴', genre: 'infantil', seasons: 6, episodes: 77, year: '2014', description: 'A washed-up horse actor.', genres: ['Animación', 'Comedia', 'Drama'] },
+            { id: 79, name: 'Arcane', icon: '⚡', genre: 'infantil', seasons: 1, episodes: 9, year: '2021', description: 'League of Legends origin story.', genres: ['Animación', 'Acción', 'Drama'] },
+            { id: 80, name: 'Adventure Time', icon: '🍭', genre: 'infantil', seasons: 10, episodes: 283, year: '2010', description: 'Finn and Jake in the Land of Ooo.', genres: ['Animación', 'Aventura', 'Comedia'] },
+            { id: 81, name: 'Gravity Falls', icon: '🌲', genre: 'infantil', seasons: 2, episodes: 40, year: '2012', description: 'Twins discover a strange town.', genres: ['Animación', 'Misterio', 'Comedia'] },
+            { id: 82, name: 'Oye Arnold!', icon: '🗼', genre: 'infantil', seasons: 5, episodes: 100, year: '1996', description: 'A football-headed boy in the city.', genres: ['Animación', 'Comedia'] },
+            
+            // INFANTIL / FAMILIA
+            { id: 83, name: 'Malcolm in the Middle', icon: '👦', genre: 'infantil', seasons: 7, episodes: 151, year: '2000', description: 'A genius boy in a chaotic family.', genres: ['Comedia', 'Familia'] },
+            { id: 84, name: 'Modern Family', icon: '👨‍👩‍👧‍👦', genre: 'infantil', seasons: 11, episodes: 261, year: '2009', description: 'Three families navigate parenthood.', genres: ['Comedia', 'Familia'] },
+            { id: 85, name: 'The Fresh Prince', icon: '🎤', genre: 'comedia', seasons: 6, episodes: 148, year: '1990', description: 'A teen from Philly moves to Bel-Air.', genres: ['Comedia'] },
+            { id: 86, name: 'Full House', icon: '🏠', genre: 'infantil', seasons: 8, episodes: 192, year: '1987', description: 'A widowed father raises his kids with help.', genres: ['Comedia', 'Familia'] },
+            
+            // CRIMEN / POLICÍACA
+            { id: 87, name: 'CSI: Las Vegas', icon: '🔬', genre: 'drama', seasons: 15, episodes: 337, year: '2000', description: 'Forensic investigators solve crimes.', genres: ['Drama', 'Crimen'] },
+            { id: 88, name: 'Criminal Minds', icon: '🧠', genre: 'drama', seasons: 15, episodes: 324, year: '2005', description: 'FBI profiling unit hunts serial killers.', genres: ['Drama', 'Crimen', 'Thriller'] },
+            { id: 89, name: 'The Mentalist', icon: '🔍', genre: 'drama', seasons: 7, episodes: 151, year: '2008', description: 'A consultant helps police solve crimes.', genres: ['Drama', 'Crimen'] },
+            { id: 90, name: 'Hawaii Five-0', icon: '🌴', genre: 'drama', seasons: 10, episodes: 240, year: '2010', description: 'Police in Hawaii solve crimes.', genres: ['Drama', 'Acción', 'Crimen'] },
+            { id: 91, name: 'Chicago P.D.', icon: '🚓', genre: 'drama', seasons: 10, episodes: 205, year: '2014', description: 'Chicago Police Unit 21.', genres: ['Drama', 'Acción', 'Crimen'] },
+            { id: 92, name: 'Chicago Fire', icon: '🚒', genre: 'drama', seasons: 12, episodes: 252, year: '2012', description: 'Chicago Firehouse 81.', genres: ['Drama', 'Acción'] },
+            { id: 93, name: 'NCIS', icon: '⚓', genre: 'drama', seasons: 21, episodes: 467, year: '2003', description: 'Naval Criminal Investigative Service.', genres: ['Drama', 'Acción', 'Crimen'] },
+            { id: 94, name: 'Blue Bloods', icon: '🚔', genre: 'drama', seasons: 14, episodes: 304, year: '2010', description: 'The Reagan family in the NYPD.', genres: ['Drama', 'Crimen'] },
+            { id: 95, name: 'Bones', icon: '🦴', genre: 'drama', seasons: 12, episodes: 246, year: '2005', description: 'An anthropologist solves murders.', genres: ['Drama', 'Crimen'] },
+            { id: 96, name: 'Scorpion', icon: '🦂', genre: 'drama', seasons: 4, episodes: 93, year: '2014', description: 'A genius leads a team of experts.', genres: ['Drama', 'Acción'] },
+            { id: 97, name: 'Reacher', icon: '💪', genre: 'drama', seasons: 2, episodes: 16, year: '2022', description: 'A military police officer hunts criminals.', genres: ['Drama', 'Acción', 'Crimen'] },
+            { id: 98, name: 'Reacher', icon: '🔍', genre: 'drama', seasons: 2, episodes: 16, year: '2022', description: 'Jack Reacher investigates crimes.', genres: ['Drama', 'Acción'] },
+            
+            // VARIOS
+            { id: 99, name: 'The Bear', icon: '🐻', genre: 'comedia', seasons: 2, episodes: 21, year: '2022', description: 'A chef runs his family\'s restaurant.', genres: ['Comedia', 'Drama'] },
+            { id: 100, name: 'The Old Man', icon: '🕵️', genre: 'drama', seasons: 1, episodes: 10, year: '2023', description: 'A retired CIA operative is hunted.', genres: ['Drama', 'Acción', 'Thriller'] },
+            { id: 101, name: 'Shrinking', icon: '🛋️', genre: 'comedia', seasons: 1, episodes: 10, year: '2023', description: 'A therapist breaks rules after tragedy.', genres: ['Comedia', 'Drama'] },
+            { id: 102, name: 'Slow Horses', icon: '🥒', genre: 'drama', seasons: 3, episodes: 18, year: '2022', description: 'British intelligence rejects in MI5.', genres: ['Drama', 'Thriller'] },
+            { id: 103, name: 'Silo', icon: '🏗️', genre: 'scifi', seasons: 1, episodes: 10, year: '2023', description: '10,000 people live in an underground silo.', genres: ['Ciencia Ficción', 'Drama', 'Misterio'] },
+            { id: 104, name: 'See', icon: '👁️', genre: 'scifi', seasons: 3, episodes: 26, year: '2019', description: 'A world where humans lost their sight.', genres: ['Ciencia Ficción', 'Drama', 'Acción'] },
+            { id: 105, name: 'Reacher', icon: '👊', genre: 'drama', seasons: 2, episodes: 16, year: '2022', description: 'Jack Reacher in new investigations.', genres: ['Drama', 'Acción'] },
+            { id: 106, name: 'Lupin', icon: '🎩', genre: 'drama', seasons: 3, episodes: 17, year: '2021', description: 'A man seeks justice using Lupin stories.', genres: ['Drama', 'Crimen'] },
+            { id: 107, name: 'The Gentlemen', icon: '🎩', genre: 'drama', seasons: 1, episodes: 8, year: '2024', description: 'Aristocrat inherits a marijuana empire.', genres: ['Drama', 'Comedia', 'Crimen'] },
+            { id: 108, name: 'A Man Called Otto', icon: '🏠', genre: 'drama', seasons: 1, episodes: 10, year: '2024', description: 'A widower finds new purpose.', genres: ['Drama', 'Comedia'] },
+            { id: 109, name: 'Presumed Innocent', icon: '⚖️', genre: 'drama', seasons: 1, episodes: 7, year: '2024', description: 'A prosecutor\'s wife is murdered.', genres: ['Drama', 'Thriller'] },
+            { id: 110, name: 'Presumed Innocent', icon: '🔎', genre: 'drama', seasons: 1, episodes: 7, year: '2024', description: 'Mystery in the legal world.', genres: ['Drama', 'Misterio'] },
+            
+            // SERIES LATINAS / RETRO
+            { id: 111, name: 'El Chavo del Ocho', icon: '👨‍🦱', genre: 'latino', seasons: 8, episodes: 300, year: '1972', description: 'Las aventuras del vecindario más querido.', genres: ['Comedia', 'Latino', 'Clásico'] },
+            { id: 112, name: 'El Chapulín Colorado', icon: '🔴', genre: 'latino', seasons: 9, episodes: 270, year: '1968', description: 'El superhéroe más grande de México.', genres: ['Comedia', 'Acción', 'Latino'] },
+            { id: 113, name: 'El Increible Mundo de Gumball', icon: '🐱', genre: 'infantil', seasons: 6, episodes: 120, year: '2011', description: 'A cat with a fish in a chaotic world.', genres: ['Animación', 'Comedia'] },
+            { id: 114, name: 'Dinosaurios', icon: '🦕', genre: 'latino', seasons: 4, episodes: 130, year: '1994', description: 'A dinosaur family in modern society.', genres: ['Comedia', 'Latino'] },
+            { id: 115, name: 'ALF', icon: '👽', genre: 'comedia', seasons: 4, episodes: 103, year: '1986', description: 'An alien lives with a family.', genres: ['Comedia', 'Ciencia Ficción'] },
+            { id: 116, name: 'Power Rangers', icon: '⚡', genre: 'infantil', seasons: 30, episodes: 1000, year: '1993', description: 'Teen heroes fight villains.', genres: ['Acción', 'Infantil'] },
+            { id: 117, name: 'Tomates Asesinos', icon: '🍅', genre: 'comedia', seasons: 1, episodes: 8, year: '2024', description: 'Comedy series about killer tomatoes.', genres: ['Comedia', 'Terror'] },
+            { id: 118, name: 'So Help Me Todd', icon: '👨‍💼', genre: 'comedia', seasons: 2, episodes: 26, year: '2022', description: 'A PI works with her mother.', genres: ['Comedia', 'Drama'] },
+            { id: 119, name: '9-1-1', icon: '🚨', genre: 'drama', seasons: 7, episodes: 124, year: '2018', description: 'Emergency responders in LA.', genres: ['Drama', 'Acción'] },
+            { id: 120, name: '9-1-1: Lone Star', icon: '🌟', genre: 'drama', seasons: 4, episodes: 58, year: '2020', description: 'Emergency responders in Texas.', genres: ['Drama', 'Acción'] },
+            { id: 121, name: 'The Rookie', icon: '👮', genre: 'drama', seasons: 6, episodes: 105, year: '2018', description: 'A rookie cop in LA.', genres: ['Drama', 'Acción', 'Crimen'] },
+            { id: 122, name: 'S.W.A.T.', icon: '🚔', genre: 'drama', seasons: 7, episodes: 148, year: '2017', description: 'SWAT team in Los Angeles.', genres: ['Drama', 'Acción', 'Crimen'] },
+            { id: 123, name: 'The Lincoln Lawyer', icon: '⚖️', genre: 'drama', seasons: 3, episodes: 30, year: '2022', description: 'A lawyer operates from his car.', genres: ['Drama', 'Crimen'] },
+            { id: 124, name: 'City on a Hill', icon: '🏙️', genre: 'drama', seasons: 3, episodes: 32, year: '2019', description: 'Boston in the 1990s.', genres: ['Drama', 'Crimen'] },
+            { id: 125, name: 'Your Honor', icon: '⚖️', genre: 'drama', seasons: 2, episodes: 20, year: '2020', description: 'A judge covers for his son.', genres: ['Drama', 'Crimen'] },
+            { id: 126, name: 'Billions', icon: '💰', genre: 'drama', seasons: 7, episodes: 84, year: '2016', description: 'Wall Street vs. law enforcement.', genres: ['Drama'] },
+            { id: 127, name: 'Yellowstone', icon: '🏔️', genre: 'drama', seasons: 5, episodes: 53, year: '2018', description: 'A ranching family in Montana.', genres: ['Drama', 'Western'] },
+            { id: 128, name: 'Mayor of Kingstown', icon: '🏢', genre: 'drama', seasons: 2, episodes: 20, year: '2021', description: 'A town where everything is connected to prison.', genres: ['Drama', 'Crimen'] },
+            { id: 129, name: 'Lawmen: Bass Reeves', icon: '🤠', genre: 'drama', seasons: 1, episodes: 8, year: '2024', description: 'The first Black deputy US Marshal.', genres: ['Drama', 'Western'] },
+            { id: 130, name: 'Special Ops: Lioness', icon: '🦁', genre: 'drama', seasons: 1, episodes: 10, year: '2023', description: 'Female CIA operatives.', genres: ['Drama', 'Acción'] },
+            
+            // HOGAR
+            { id: 131, name: 'Shark Tank', icon: '🦈', genre: 'comedia', seasons: 15, episodes: 300, year: '2009', description: 'Entrepreneurs pitch to investors.', genres: ['Reality', 'Negocios'] },
+            { id: 132, name: 'MasterChef', icon: '👨‍🍳', genre: 'comedia', seasons: 14, episodes: 200, year: '2010', description: 'Home cooks compete.', genres: ['Reality', 'Competencia'] },
+            { id: 133, name: 'Top Chef', icon: '🍴', genre: 'comedia', seasons: 20, episodes: 250, year: '2004', description: 'Professional chefs compete.', genres: ['Reality', 'Competencia'] },
+            { id: 134, name: 'Hell\'s Kitchen', icon: '🔥', genre: 'comedia', seasons: 22, episodes: 300, year: '2005', description: 'Chefs compete in Gordon Ramsay\'s kitchen.', genres: ['Reality', 'Competencia'] },
+            { id: 135, name: 'The Great British Bake Off', icon: '🎂', genre: 'comedia', seasons: 14, episodes: 120, year: '2010', description: 'Bakers compete in Britain.', genres: ['Reality', 'Competencia'] },
+            
+            // AÑOS RECIENTES
+            { id: 136, name: 'The Night Agent', icon: '📞', genre: 'drama', seasons: 1, episodes: 10, year: '2023', description: 'A low-level FBI employee answers a phone.', genres: ['Drama', 'Thriller'] },
+            { id: 137, name: 'The Night Agent', icon: '🔐', genre: 'drama', seasons: 1, episodes: 10, year: '2023', description: 'Conspiracy thriller.', genres: ['Drama', 'Acción'] },
+            { id: 138, name: 'Special Ops: Lioness', icon: '💪', genre: 'drama', seasons: 1, episodes: 10, year: '2023', description: 'CIA undercover operations.', genres: ['Drama', 'Acción'] },
+            { id: 139, name: 'One Day', icon: '📅', genre: 'drama', seasons: 1, episodes: 14, year: '2024', description: 'Two people meet on the same day each year.', genres: ['Drama', 'Romance'] },
+            { id: 140, name: 'Griselda', icon: '👩‍👧', genre: 'drama', seasons: 1, episodes: 6, year: '2024', description: 'The rise of a drug empire.', genres: ['Drama', 'Crimen'] },
+            { id: 141, name: 'Shogun', icon: '⚔️', genre: 'drama', seasons: 1, episodes: 10, year: '2024', description: 'Feudal Japan epic.', genres: ['Drama', 'Acción', 'Aventura'] },
+            { id: 142, name: 'Avatar: The Last Airbender', icon: '🌏', genre: 'infantil', seasons: 1, episodes: 8, year: '2024', description: 'A boy must master the elements.', genres: ['Animación', 'Acción', 'Aventura'] },
+            { id: 143, name: 'Fallout', icon: '☢️', genre: 'scifi', seasons: 1, episodes: 8, year: '2024', description: 'Post-apocalyptic survival.', genres: ['Ciencia Ficción', 'Acción', 'Aventura'] },
+            { id: 144, name: 'The Regime', icon: '🏛️', genre: 'drama', seasons: 1, episodes: 6, year: '2024', description: 'European palace politics.', genres: ['Drama', 'Comedia'] },
+            { id: 145, name: 'X-Men \'97', icon: '🔴', genre: 'infantil', seasons: 1, episodes: 10, year: '2024', description: 'Mutants in the 1990s.', genres: ['Animación', 'Acción', 'Superhéroes'] },
+            { id: 146, name: 'Renaciendo', icon: '🎬', genre: 'drama', seasons: 1, episodes: 8, year: '2024', description: 'Korean drama.', genres: ['Drama', 'Romance'] },
+            { id: 147, name: 'Cruz', icon: '✝️', genre: 'drama', seasons: 1, episodes: 10, year: '2024', description: 'Drama series.', genres: ['Drama'] },
+            { id: 148, name: 'Doctor Elise', icon: '👩‍⚕️', genre: 'drama', seasons: 1, episodes: 12, year: '2024', description: 'Korean fantasy romance.', genres: ['Drama', 'Romance', 'Fantasía'] },
+            { id: 149, name: 'My Demon', icon: '😈', genre: 'drama', seasons: 1, episodes: 16, year: '2023', description: 'Demon meets human.', genres: ['Drama', 'Romance', 'Fantasía'] },
+            { id: 150, name: 'A Virtuous Business', icon: '💄', genre: 'drama', seasons: 1, episodes: 12, year: '2024', description: 'Korean period drama.', genres: ['Drama', 'Comedia'] }
+        ];
+
+        let currentGenre = 'all';
+        let searchQuery = '';
+
+        // ==================== RENDER ====================
+        function renderSeries() {
+            const grid = document.getElementById('series-grid');
+            const countNumber = document.getElementById('count-number');
+            
+            let filtered = seriesData;
+            
+            if (currentGenre !== 'all') {
+                filtered = filtered.filter(s => s.genre === currentGenre);
+            }
+            
+            if (searchQuery) {
+                filtered = filtered.filter(s => 
+                    s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    s.description.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            }
+            
+            countNumber.textContent = filtered.length;
+            
+            grid.innerHTML = filtered.map(series => `
+                <div class="series-card" onclick="showSeriesDetail(${series.id})">
+                    <div class="aspect-square relative flex flex-col items-center justify-center p-6 bg-gradient-to-br from-white/5 to-transparent">
+                        <div class="series-icon">${series.icon}</div>
+                        <div class="series-overlay">
+                            <div class="mb-2">
+                                ${series.genres.slice(0, 2).map(g => `<span class="genre-tag mr-1 mb-1">${g}</span>`).join('')}
+                            </div>
+                            <h3 class="font-bold text-lg mb-1">${series.name}</h3>
+                            <p class="text-white/70 text-sm">${series.seasons} temp • ${series.episodes} eps</p>
+                            <div class="flex items-center gap-2 mt-2 text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <span class="text-sm">${series.year}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterByGenre(genre, btn) {
+            currentGenre = genre;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderSeries();
+        }
+
+        function filterSeries(query) {
+            searchQuery = query;
+            renderSeries();
+        }
+
+        function showSeriesDetail(id) {
+            const series = seriesData.find(s => s.id === id);
+            if (!series) return;
+            
+            alert(`📺 ${series.name}\n\n${series.description}\n\n📊 Temporadas: ${series.seasons}\n📽️ Episodios: ${series.episodes}\n🎭 Géneros: ${series.genres.join(', ')}\n📅 Año: ${series.year}\n\n💬 Contacta para más información: wa.me/56964681874`);
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', renderSeries);
+    </script>
+</body>
+</html>

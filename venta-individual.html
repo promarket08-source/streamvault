@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📦 Pack Todo en Uno - Venta Individual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #39FF14;
+            --cyan: #00F5FF;
+            --dark: #0A0A0B;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: #fff;
+        }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        .gradient-text {
+            background: linear-gradient(90deg, var(--neon-green), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow { box-shadow: 0 0 30px rgba(57, 255, 20, 0.3); }
+        .scroll-area { max-height: 500px; overflow-y: auto; }
+        .scroll-area::-webkit-scrollbar { width: 6px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: #39FF14; border-radius: 3px; }
+        .item-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(57, 255, 20, 0.2);
+            transition: all 0.3s ease;
+        }
+        .item-card:hover { border-color: var(--neon-green); transform: translateY(-2px); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.open { max-height: 5000px; }
+        .category-section {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            border: 1px solid rgba(57, 255, 20, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-green-500/20 bg-black/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <a href="index.html" class="w-12 h-12 rounded-xl bg-gradient-to-r from-green-500 to-cyan-500 flex items-center justify-center">
+                        <span class="text-2xl">📦</span>
+                    </a>
+                    <div>
+                        <h1 class="font-headline text-2xl font-bold gradient-text">Venta Individual</h1>
+                        <p class="text-xs text-gray-400">Busca y compra exactamente lo que quieres</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition">
+                        ← Pack Completo
+                    </a>
+                    <a href="https://wa.me/56964681874" target="_blank" class="px-4 py-2 bg-green-500 text-black font-bold rounded-lg hover:bg-green-400 transition">
+                        💬 WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero con Buscador -->
+    <section class="py-12 bg-gradient-to-r from-green-900/20 to-cyan-900/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-8">
+                <h2 class="font-headline text-3xl md:text-4xl font-bold mb-2">
+                    Busca <span class="gradient-text">exactamente</span> lo que quieres
+                </h2>
+                <p class="text-gray-400">Escribe el nombre de una película, serie o anime</p>
+            </div>
+            
+            <!-- Buscador Principal -->
+            <div class="max-w-2xl mx-auto mb-8">
+                <div class="relative">
+                    <input type="text" id="buscador" placeholder="Ej: Terminator, Dragon Ball, Barrabases..." 
+                           oninput="buscar(this.value)"
+                           class="w-full px-6 py-5 bg-white/5 border-2 border-green-500/50 rounded-2xl text-white text-lg placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20">
+                    <span class="absolute right-6 top-1/2 -translate-y-1/2 text-2xl">🔍</span>
+                </div>
+            </div>
+            
+            <!-- Categorías rápidas -->
+            <div class="flex flex-wrap justify-center gap-3">
+                <button onclick="buscar('terminator')" class="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition text-sm">🎬 Terminator</button>
+                <button onclick="buscar('dragon ball')" class="px-4 py-2 bg-orange-500/20 text-orange-400 rounded-lg hover:bg-orange-500/30 transition text-sm">🐉 Dragon Ball</button>
+                <button onclick="buscar('naruto')" class="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition text-sm">🍥 Naruto</button>
+                <button onclick="buscar('barrabases')" class="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition text-sm">⚽ Barrabases</button>
+                <button onclick="buscar('avatar')" class="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition text-sm">🧿 Avatar</button>
+                <button onclick="buscar('avengers')" class="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition text-sm">🦸 Avengers</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resultados / Lista Completa -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div id="resultado-busqueda" class="hidden mb-8"></div>
+            <div id="lista-completa"></div>
+        </div>
+    </section>
+
+    <!-- Modal de Compra -->
+    <div id="modal-compra" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-[#111] border border-green-500/30 rounded-2xl p-8 max-w-md w-full">
+            <div class="text-center mb-6">
+                <span class="text-5xl mb-4 block">🛒</span>
+                <h3 class="font-headline text-2xl font-bold gradient-text mb-2">Solicitar</h3>
+                <p id="modal-item-nombre" class="text-white text-lg font-bold"></p>
+            </div>
+            
+            <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4 mb-6 text-center">
+                <p class="text-gray-400 text-sm mb-1">Precio especial:</p>
+                <p id="modal-item-precio" class="text-3xl font-bold text-green-400"></p>
+            </div>
+            
+            <form onsubmit="enviarPedido(event)">
+                <input type="text" id="cliente-nombre" placeholder="Tu nombre" required
+                       class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg mb-3 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none">
+                <input type="email" id="cliente-email" placeholder="Tu email" required
+                       class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg mb-3 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none">
+                <input type="tel" id="cliente-whatsapp" placeholder="WhatsApp" required
+                       class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg mb-4 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none">
+                
+                <button type="submit" class="w-full py-4 bg-gradient-to-r from-green-500 to-cyan-500 text-black font-bold rounded-xl text-lg hover:scale-105 transition glow">
+                    💬 Enviar por WhatsApp
+                </button>
+            </form>
+            
+            <button onclick="cerrarModal()" class="w-full mt-3 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition">
+                Cancelar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos completa de contenido individual
+        const baseDatos = {
+            peliculas: {
+                nombre: '🎬 Películas',
+                items: [
+                    { nombre: 'Terminator 1 (1984)', precio: 2000 },
+                    { nombre: 'Terminator 2 (1991)', precio: 2000 },
+                    { nombre: 'Terminator 3 (2003)', precio: 2000 },
+                    { nombre: 'Terminator 4 (2009)', precio: 2000 },
+                    { nombre: 'Terminator 5 Genisys (2015)', precio: 2000 },
+                    { nombre: 'Terminator 6 Dark Fate (2019)', precio: 2000 },
+                    { nombre: 'Pack Completo Terminator (1-6)', precio: 5000 },
+                    { nombre: 'Avatar (2009)', precio: 2000 },
+                    { nombre: 'Avatar 2 The Way of Water (2022)', precio: 2000 },
+                    { nombre: 'Pack Avatar (1-2)', precio: 3000 },
+                    { nombre: 'Avengers Los Vengadores (2012)', precio: 2000 },
+                    { nombre: 'Avengers Era de Ultrón (2015)', precio: 2000 },
+                    { nombre: 'Avengers Infinity War (2018)', precio: 2000 },
+                    { nombre: 'Avengers Endgame (2019)', precio: 2000 },
+                    { nombre: 'Avengers Kang Dynasty (2025)', precio: 2000 },
+                    { nombre: 'Pack Completo Avengers', precio: 5000 },
+                    { nombre: 'Bad Boys 1 (1995)', precio: 2000 },
+                    { nombre: 'Bad Boys 2 (2003)', precio: 2000 },
+                    { nombre: 'Bad Boys 3 for Life (2020)', precio: 2000 },
+                    { nombre: 'Bad Boys 4 Hasta la Muerte (2024)', precio: 2000 },
+                    { nombre: 'Pack Bad Boys (1-4)', precio: 4000 },
+                    { nombre: 'Rapidos y Furiosos 1 (2001)', precio: 2000 },
+                    { nombre: 'Rapidos y Furiosos 2 (2003)', precio: 2000 },
+                    { nombre: 'Rapidos y Furiosos 3 (2006)', precio: 2000 },
+                    { nombre: 'Rapidos y Furiosos 4 (2009)', precio: 2000 },
+                    { nombre: 'Rapidos y Furiosos 5 (2011)', precio: 2000 },
+                    { nombre: 'Rapidos y Furiosos 6 (2013)', precio: 2000 },
+                    { nombre: 'Rapidos y Furiosos 7 (2015)', precio: 2000 },
+                    { nombre: 'Rapidos y Furiosos 8 (2017)', precio: 2000 },
+                    { nombre: 'Rapidos y Furiosos 9 (2021)', precio: 2000 },
+                    { nombre: 'Rapidos y Furiosos 10 (2023)', precio: 2000 },
+                    { nombre: 'Pack Rapidos y Furiosos (1-10)', precio: 8000 },
+                    { nombre: 'Star Wars Episodio 1 (1999)', precio: 2000 },
+                    { nombre: 'Star Wars Episodio 2 (2002)', precio: 2000 },
+                    { nombre: 'Star Wars Episodio 3 (2005)', precio: 2000 },
+                    { nombre: 'Star Wars Episodio 4 (1977)', precio: 2000 },
+                    { nombre: 'Star Wars Episodio 5 (1980)', precio: 2000 },
+                    { nombre: 'Star Wars Episodio 6 (1983)', precio: 2000 },
+                    { nombre: 'Star Wars Episodio 7 (2015)', precio: 2000 },
+                    { nombre: 'Star Wars Episodio 8 (2017)', precio: 2000 },
+                    { nombre: 'Star Wars Episodio 9 (2019)', precio: 2000 },
+                    { nombre: 'Pack Star Wars Clásica (1-6)', precio: 5000 },
+                    { nombre: 'Pack Star Wars Nueva (7-9)', precio: 4000 },
+                    { nombre: 'El Hobbit 1 Un Viaje Inesperado (2012)', precio: 2000 },
+                    { nombre: 'El Hobbit 2 La Desolación (2013)', precio: 2000 },
+                    { nombre: 'El Hobbit 3 La Batalla de los 5 Ejércitos (2014)', precio: 2000 },
+                    { nombre: 'Pack El Hobbit Extended (1-3)', precio: 4000 },
+                    { nombre: 'El Señor de los Anillos 1 La Comunidad del Anillo (2001)', precio: 2000 },
+                    { nombre: 'El Señor de los Anillos 2 Las Dos Torres (2002)', precio: 2000 },
+                    { nombre: 'El Señor de los Anillos 3 El Retorno del Rey (2003)', precio: 2000 },
+                    { nombre: 'Pack Señor de los Anillos Extended (1-3)', precio: 4000 },
+                    { nombre: 'Jurassic Park 1 (1993)', precio: 2000 },
+                    { nombre: 'Jurassic Park 2 El Mundo Perdido (1997)', precio: 2000 },
+                    { nombre: 'Jurassic Park 3 (2001)', precio: 2000 },
+                    { nombre: 'Jurassic World 1 (2015)', precio: 2000 },
+                    { nombre: 'Jurassic World 2 (2018)', precio: 2000 },
+                    { nombre: 'Jurassic World Dominion (2022)', precio: 2000 },
+                    { nombre: 'Pack Jurassic Park/World (1-6)', precio: 5000 },
+                    { nombre: 'Spider-Man Homecoming (2017)', precio: 2000 },
+                    { nombre: 'Spider-Man Far From Home (2019)', precio: 2000 },
+                    { nombre: 'Spider-Man No Way Home (2021)', precio: 2000 },
+                    { nombre: 'Spider-Man Across the Spider-Verse (2023)', precio: 2000 },
+                    { nombre: 'Spider-Man Into the Spider-Verse (2018)', precio: 2000 },
+                    { nombre: 'Pack Spider-Man Tom Holland', precio: 4000 },
+                    { nombre: 'X-Men 1 (2000)', precio: 2000 },
+                    { nombre: 'X-Men 2 (2003)', precio: 2000 },
+                    { nombre: 'X-Men 3 La Batalla Final (2006)', precio: 2000 },
+                    { nombre: 'X-Men Origins Wolverine (2009)', precio: 2000 },
+                    { nombre: 'X-Men Primera Generación (2011)', precio: 2000 },
+                    { nombre: 'X-Men Days of Future Past (2014)', precio: 2000 },
+                    { nombre: 'X-Men Apocalipsis (2016)', precio: 2000 },
+                    { nombre: 'X-Men Dark Phoenix (2019)', precio: 2000 },
+                    { nombre: 'Pack X-Men Completo', precio: 8000 },
+                    { nombre: 'Transformers 1 (2007)', precio: 2000 },
+                    { nombre: 'Transformers 2 La Venganza de los Caídos (2009)', precio: 2000 },
+                    { nombre: 'Transformers 3 El Lado Oscuro de la Luna (2011)', precio: 2000 },
+                    { nombre: 'Transformers 4 La Era de la Extinción (2014)', precio: 2000 },
+                    { nombre: 'Transformers 5 El Último Caballero (2017)', precio: 2000 },
+                    { nombre: 'Transformers 6 Bumblebee (2018)', precio: 2000 },
+                    { nombre: 'Transformers 7 Rise of the Beasts (2023)', precio: 2000 },
+                    { nombre: 'Pack Transformers (1-7)', precio: 6000 },
+                    { nombre: 'Creed 1 (2015)', precio: 2000 },
+                    { nombre: 'Creed 2 (2018)', precio: 2000 },
+                    { nombre: 'Creed 3 (2023)', precio: 2000 },
+                    { nombre: 'Pack Creed (1-3)', precio: 3000 },
+                    { nombre: 'John Wick 1 (2014)', precio: 2000 },
+                    { nombre: 'John Wick 2 (2017)', precio: 2000 },
+                    { nombre: 'John Wick 3 Parabellum (2019)', precio: 2000 },
+                    { nombre: 'John Wick 4 (2023)', precio: 2000 },
+                    { nombre: 'Pack John Wick (1-4)', precio: 4000 },
+                    { nombre: 'Busqueda Implacable 1 (2008)', precio: 2000 },
+                    { nombre: 'Busqueda Implacable 2 (2012)', precio: 2000 },
+                    { nombre: 'Busqueda Implacable 3 (2014)', precio: 2000 },
+                    { nombre: 'Pack Busqueda Implacable (1-3)', precio: 3000 },
+                    { nombre: 'Indiana Jones 1 Raiders (1981)', precio: 2000 },
+                    { nombre: 'Indiana Jones 2 Templo de la Perdición (1984)', precio: 2000 },
+                    { nombre: 'Indiana Jones 3 Última Cruzada (1989)', precio: 2000 },
+                    { nombre: 'Indiana Jones 4 Crystal Skull (2008)', precio: 2000 },
+                    { nombre: 'Indiana Jones 5 Dial of Destiny (2023)', precio: 2000 },
+                    { nombre: 'Pack Indiana Jones (1-5)', precio: 5000 },
+                    { nombre: 'Iron Man 1 (2008)', precio: 2000 },
+                    { nombre: 'Iron Man 2 (2010)', precio: 2000 },
+                    { nombre: 'Iron Man 3 (2013)', precio: 2000 },
+                    { nombre: 'Pack Iron Man (1-3)', precio: 3000 },
+                    { nombre: 'Thor 1 (2011)', precio: 2000 },
+                    { nombre: 'Thor 2 El Mundo Oscuro (2013)', precio: 2000 },
+                    { nombre: 'Thor 3 Ragnarok (2017)', precio: 2000 },
+                    { nombre: 'Thor 4 Love and Thunder (2022)', precio: 2000 },
+                    { nombre: 'Pack Thor (1-4)', precio: 4000 },
+                    { nombre: 'Capitán América 1 El Primer Vengador (2011)', precio: 2000 },
+                    { nombre: 'Capitán América 2 Soldado de Invierno (2014)', precio: 2000 },
+                    { nombre: 'Capitán América 3 Civil War (2016)', precio: 2000 },
+                    { nombre: 'Pack Capitán América (1-3)', precio: 3000 },
+                    { nombre: 'Guardianes de la Galaxia 1 (2014)', precio: 2000 },
+                    { nombre: 'Guardianes de la Galaxia 2 (2017)', precio: 2000 },
+                    { nombre: 'Guardianes de la Galaxia 3 (2023)', precio: 2000 },
+                    { nombre: 'Pack Guardianes (1-3)', precio: 3000 },
+                    { nombre: 'Black Panther 1 (2018)', precio: 2000 },
+                    { nombre: 'Black Panther 2 Wakanda Forever (2022)', precio: 2000 },
+                    { nombre: 'Pack Black Panther (1-2)', precio: 3000 },
+                    { nombre: 'Capitana Marvel (2019)', precio: 2000 },
+                    { nombre: 'Ant-Man 1 (2015)', precio: 2000 },
+                    { nombre: 'Ant-Man 2 Quantumania (2023)', precio: 2000 },
+                    { nombre: 'Pack Ant-Man (1-2)', precio: 3000 },
+                    { nombre: 'Doctor Strange 1 (2016)', precio: 2000 },
+                    { nombre: 'Doctor Strange 2 Multiverse of Madness (2022)', precio: 2000 },
+                    { nombre: 'Pack Doctor Strange (1-2)', precio: 3000 },
+                    { nombre: 'Pantera Negra 1 (2018)', precio: 2000 },
+                    { nombre: 'Pantera Negra 2 (2022)', precio: 2000 },
+                    { nombre: 'Eternals (2021)', precio: 2000 },
+                    { nombre: 'Shang-Chi (2021)', precio: 2000 },
+                    { nombre: 'Black Widow (2021)', precio: 2000 },
+                    { nombre: 'Deadpool 1 (2016)', precio: 2000 },
+                    { nombre: 'Deadpool 2 (2018)', precio: 2000 },
+                    { nombre: 'Deadpool 3 (2024)', precio: 2000 },
+                    { nombre: 'Pack Deadpool (1-3)', precio: 3000 },
+                    { nombre: 'Venom 1 (2018)', precio: 2000 },
+                    { nombre: 'Venom 2 Let There Be Carnage (2021)', precio: 2000 },
+                    { nombre: 'Venom 3 (2024)', precio: 2000 },
+                    { nombre: 'Pack Venom (1-3)', precio: 3000 },
+                    { nombre: 'Aquaman 1 (2018)', precio: 2000 },
+                    { nombre: 'Aquaman 2 (2023)', precio: 2000 },
+                    { nombre: 'Pack Aquaman (1-2)', precio: 3000 },
+                    { nombre: 'Mujer Maravilla 1 (2017)', precio: 2000 },
+                    { nombre: 'Mujer Maravilla 1984 (2020)', precio: 2000 },
+                    { nombre: 'Pack Mujer Maravilla (1-2)', precio: 3000 },
+                    { nombre: 'Batman 1 (1989)', precio: 2000 },
+                    { nombre: 'Batman Returns (1992)', precio: 2000 },
+                    { nombre: 'Batman Forever (1995)', precio: 2000 },
+                    { nombre: 'Batman Begins (2005)', precio: 2000 },
+                    { nombre: 'Batman El Caballero de la Noche (2008)', precio: 2000 },
+                    { nombre: 'Batman El Caballero de la Noche Asciende (2012)', precio: 2000 },
+                    { nombre: 'Batman v Superman (2016)', precio: 2000 },
+                    { nombre: 'The Batman (2022)', precio: 2000 },
+                    { nombre: 'Pack Batman Completo', precio: 8000 },
+                    { nombre: 'Superman 1 (1978)', precio: 2000 },
+                    { nombre: 'Superman 2 (1980)', precio: 2000 },
+                    { nombre: 'Superman 3 (1983)', precio: 2000 },
+                    { nombre: 'Superman Returns (2006)', precio: 2000 },
+                    { nombre: 'Man of Steel (2013)', precio: 2000 },
+                    { nombre: 'Superman Batman Public Enemies (2009)', precio: 2000 },
+                    { nombre: 'Pack Superman Completo', precio: 5000 },
+                    { nombre: 'Sonic 1 (2020)', precio: 2000 },
+                    { nombre: 'Sonic 2 (2022)', precio: 2000 },
+                    { nombre: 'Sonic 3 (2024)', precio: 2000 },
+                    { nombre: 'Pack Sonic (1-3)', precio: 3000 },
+                    { nombre: 'Shrek 1 (2001)', precio: 2000 },
+                    { nombre: 'Shrek 2 (2004)', precio: 2000 },
+                    { nombre: 'Shrek 3 (2007)', precio: 2000 },
+                    { nombre: 'Shrek 4 Shrek Forever After (2010)', precio: 2000 },
+                    { nombre: 'Pack Shrek (1-4)', precio: 4000 },
+                    { nombre: 'Toy Story 1 (1995)', precio: 2000 },
+                    { nombre: 'Toy Story 2 (1999)', precio: 2000 },
+                    { nombre: 'Toy Story 3 (2010)', precio: 2000 },
+                    { nombre: 'Toy Story 4 (2019)', precio: 2000 },
+                    { nombre: 'Pack Toy Story (1-4)', precio: 4000 },
+                    { nombre: 'Frozen 1 (2013)', precio: 2000 },
+                    { nombre: 'Frozen 2 (2019)', precio: 2000 },
+                    { nombre: 'Pack Frozen (1-2)', precio: 3000 },
+                    { nombre: 'Kung Fu Panda 1 (2008)', precio: 2000 },
+                    { nombre: 'Kung Fu Panda 2 (2011)', precio: 2000 },
+                    { nombre: 'Kung Fu Panda 3 (2016)', precio: 2000 },
+                    { nombre: 'Kung Fu Panda 4 (2024)', precio: 2000 },
+                    { nombre: 'Pack Kung Fu Panda (1-4)', precio: 4000 },
+                    { nombre: 'Ice Age 1 (2002)', precio: 2000 },
+                    { nombre: 'Ice Age 2 (2006)', precio: 2000 },
+                    { nombre: 'Ice Age 3 (2009)', precio: 2000 },
+                    { nombre: 'Ice Age 4 (2012)', precio: 2000 },
+                    { nombre: 'Ice Age Collision Course (2016)', precio: 2000 },
+                    { nombre: 'Pack Ice Age (1-5)', precio: 5000 },
+                    { nombre: 'Cars 1 (2006)', precio: 2000 },
+                    { nombre: 'Cars 2 (2011)', precio: 2000 },
+                    { nombre: 'Cars 3 (2017)', precio: 2000 },
+                    { nombre: 'Pack Cars (1-3)', precio: 3000 },
+                    { nombre: 'Hotel Transylvania 1 (2012)', precio: 2000 },
+                    { nombre: 'Hotel Transylvania 2 (2015)', precio: 2000 },
+                    { nombre: 'Hotel Transylvania 3 (2018)', precio: 2000 },
+                    { nombre: 'Hotel Transylvania 4 (2022)', precio: 2000 },
+                    { nombre: 'Pack Hotel Transylvania (1-4)', precio: 4000 },
+                    { nombre: 'Minions 1 (2015)', precio: 2000 },
+                    { nombre: 'Minions 2 (2022)', precio: 2000 },
+                    { nombre: 'Gru 1 Mi Villano Favorito (2010)', precio: 2000 },
+                    { nombre: 'Gru 2 (2013)', precio: 2000 },
+                    { nombre: 'Gru 3 (2017)', precio: 2000 },
+                    { nombre: 'Pack Gru/Minions', precio: 5000 },
+                    { nombre: 'Mi Pobre Angelito 1 (1990)', precio: 2000 },
+                    { nombre: 'Mi Pobre Angelito 2 (1992)', precio: 2000 },
+                    { nombre: 'Mi Pobre Angelito 2021', precio: 2000 },
+                    { nombre: 'Pack Mi Pobre Angelito (1-3)', precio: 3000 },
+                    { nombre: 'Regreso al Futuro 1 (1985)', precio: 2000 },
+                    { nombre: 'Regreso al Futuro 2 (1989)', precio: 2000 },
+                    { nombre: 'Regreso al Futuro 3 (1990)', precio: 2000 },
+                    { nombre: 'Pack Regreso al Futuro (1-3)', precio: 3000 },
+                    { nombre: 'Harry Potter 1 Piedra Filosofal (2001)', precio: 2000 },
+                    { nombre: 'Harry Potter 2 Cámara Secreta (2002)', precio: 2000 },
+                    { nombre: 'Harry Potter 3 Prisionero de Azkaban (2004)', precio: 2000 },
+                    { nombre: 'Harry Potter 4 Caliz de Fuego (2005)', precio: 2000 },
+                    { nombre: 'Harry Potter 5 Orden del Fénix (2007)', precio: 2000 },
+                    { nombre: 'Harry Potter 6 Príncipe Mestizo (2009)', precio: 2000 },
+                    { nombre: 'Harry Potter 7-1 Reliquias de la Muerte (2010)', precio: 2000 },
+                    { nombre: 'Harry Potter 7-2 Reliquias de la Muerte (2011)', precio: 2000 },
+                    { nombre: 'Pack Harry Potter Completo (1-8)', precio: 8000 },
+                    { nombre: 'Gladiator 1 (2000)', precio: 2000 },
+                    { nombre: 'Gladiator 2 (2024)', precio: 2000 },
+                    { nombre: 'Oppenheimer (2023)', precio: 2000 },
+                    { nombre: 'Interstellar (2014)', precio: 2000 },
+                    { nombre: 'Dunkerque (2017)', precio: 2000 },
+                    { nombre: 'Tenet (2020)', precio: 2000 },
+                    { nombre: 'Batman El Caballero de la Noche (2008)', precio: 2000 },
+                    { nombre: 'Batman El Caballero de la Noche Asciende (2012)', precio: 2000 },
+                    { nombre: 'Joker (2019)', precio: 2000 },
+                    { nombre: 'Joker Folie à Deux (2024)', precio: 2000 },
+                    { nombre: 'Logan (2017)', precio: 2000 },
+                    { nombre: 'Deadpool (2016)', precio: 2000 },
+                    { nombre: 'Coco (2017)', precio: 2000 },
+                    { nombre: 'Encanto (2021)', precio: 2000 },
+                    { nombre: 'Moana (2016)', precio: 2000 },
+                    { nombre: 'Soul (2020)', precio: 2000 },
+                    { nombre: 'Luca (2021)', precio: 2000 },
+                    { nombre: 'Turning Red (2022)', precio: 2000 },
+                    { nombre: 'Lightyear (2022)', precio: 2000 },
+                    { nombre: 'Elemental (2023)', precio: 2000 },
+                    { nombre: 'Wish (2023)', precio: 2000 },
+                    { nombre: 'Aladdin (1992)', precio: 2000 },
+                    { nombre: 'Aladdin Live Action (2019)', precio: 2000 },
+                    { nombre: 'La Bella y la Bestia (1991)', precio: 2000 },
+                    { nombre: 'La Bella y la Bestia Live Action (2017)', precio: 2000 },
+                    { nombre: 'El Rey León (1994)', precio: 2000 },
+                    { nombre: 'El Rey León Live Action (2019)', precio: 2000 },
+                    { nombre: 'Mulan Live Action (2020)', precio: 2000 },
+                    { nombre: 'Peter Pan (1953)', precio: 2000 },
+                    { nombre: 'Peter Pan Live Action (2023)', precio: 2000 },
+                    { nombre: 'Dumbo (1941)', precio: 2000 },
+                    { nombre: 'Dumbo Live Action (2019)', precio: 2000 },
+                    { nombre: 'Pinocho (1940)', precio: 2000 },
+                    { nombre: 'Pinocho Live Action (2022)', precio: 2000 },
+                    { nombre: 'Alicia en el País de las Maravillas (1951)', precio: 2000 },
+                    { nombre: 'Alicia Live Action (2010)', precio: 2000 },
+                    { nombre: 'Mulán (1998)', precio: 2000 },
+                    { nombre: 'Buscando a Nemo (2003)', precio: 2000 },
+                    { nombre: 'Buscando a Dory (2016)', precio: 2000 },
+                    { nombre: 'Los Increíbles 1 (2004)', precio: 2000 },
+                    { nombre: 'Los Increíbles 2 (2018)', precio: 2000 },
+                    { nombre: 'Ratatouille (2007)', precio: 2000 },
+                    { nombre: 'Monstruos SA (2001)', precio: 2000 },
+                    { nombre: 'Universidade de Monstruos (2013)', precio: 2000 },
+                    { nombre: 'Up (2009)', precio: 2000 },
+                    { nombre: 'Valiente (2012)', precio: 2000 },
+                    { nombre: 'WALL-E (2008)', precio: 2000 },
+                    { nombre: 'Intensamente (2015)', precio: 2000 },
+                    { nombre: 'Intensamente 2 (2024)', precio: 2000 },
+                    { nombre: 'El Camino Hacia El Dorado (2000)', precio: 2000 },
+                    { nombre: 'Atlantis El Imperio Perdido (2001)', precio: 2000 },
+                    { nombre: 'Treasure Planet (2002)', precio: 2000 },
+                    { nombre: 'Meet the Robinsons (2007)', precio: 2000 },
+                    { nombre: 'Bolt (2008)', precio: 2000 },
+                    { nombre: 'Enredados (2010)', precio: 2000 },
+                    { nombre: 'Winnie the Pooh (2011)', precio: 2000 },
+                    { nombre: 'Big Hero 6 (2014)', precio: 2000 },
+                    { nombre: 'Zootopia (2016)', precio: 2000 },
+                    { nombre: 'Ralph Breaks the Internet (2018)', precio: 2000 },
+                    { nombre: 'Onward (2020)', precio: 2000 },
+                    { nombre: 'Resident Evil 1 (2002)', precio: 2000 },
+                    { nombre: 'Resident Evil 2 Apocalipsis (2004)', precio: 2000 },
+                    { nombre: 'Resident Evil 3 Extinción (2007)', precio: 2000 },
+                    { nombre: 'Resident Evil 4 afterlife (2010)', precio: 2000 },
+                    { nombre: 'Resident Evil 5 Retribution (2012)', precio: 2000 },
+                    { nombre: 'Resident Evil 6 The Final Chapter (2016)', precio: 2000 },
+                    { nombre: 'Resident Evil Welcome to Raccoon City (2021)', precio: 2000 },
+                    { nombre: 'Pack Resident Evil (1-7)', precio: 6000 },
+                    { nombre: 'Alien 1 (1979)', precio: 2000 },
+                    { nombre: 'Alien 2 (1986)', precio: 2000 },
+                    { nombre: 'Alien 3 (1992)', precio: 2000 },
+                    { nombre: 'Alien 4 Resurrection (1997)', precio: 2000 },
+                    { nombre: 'Alien vs Predator 1 (2004)', precio: 2000 },
+                    { nombre: 'Alien vs Predator 2 (2007)', precio: 2000 },
+                    { nombre: 'Alien Prometheus (2012)', precio: 2000 },
+                    { nombre: 'Alien Covenant (2017)', precio: 2000 },
+                    { nombre: 'Pack Alien Completo', precio: 8000 },
+                    { nombre: 'Godzilla 1 (2014)', precio: 2000 },
+                    { nombre: 'Godzilla 2 King of Monsters (2019)', precio: 2000 },
+                    { nombre: 'Godzilla vs Kong (2021)', precio: 2000 },
+                    { nombre: 'Godzilla x Kong (2024)', precio: 2000 },
+                    { nombre: 'Pack Godzilla/Kong', precio: 4000 },
+                    { nombre: 'Saw 1 (2004)', precio: 2000 },
+                    { nombre: 'Saw 2 (2005)', precio: 2000 },
+                    { nombre: 'Saw 3 (2006)', precio: 2000 },
+                    { nombre: 'Saw 4 (2007)', precio: 2000 },
+                    { nombre: 'Saw 5 (2008)', precio: 2000 },
+                    { nombre: 'Saw 6 (2009)', precio: 2000 },
+                    { nombre: 'Saw 7 3D (2010)', precio: 2000 },
+                    { nombre: 'Pack Saw (1-7)', precio: 6000 },
+                    { nombre: 'Jurasic Park (1993)', precio: 2000 },
+                    { nombre: 'Jurasic Park 2 The Lost World (1997)', precio: 2000 },
+                    { nombre: 'Jurasic Park 3 (2001)', precio: 2000 },
+                    { nombre: 'Jurasic World 1 (2015)', precio: 2000 },
+                    { nombre: 'Jurasic World 2 Fallen Kingdom (2018)', precio: 2000 },
+                    { nombre: 'Jurasic World 3 Dominion (2022)', precio: 2000 },
+                    { nombre: 'Pack Jurasic Park/World', precio: 5000 }
+                ]
+            },
+            anime: {
+                nombre: '🍜 Anime',
+                items: [
+                    { nombre: 'Dragon Ball (001-153)', precio: 5000 },
+                    { nombre: 'Dragon Ball Z (001-291)', precio: 5000 },
+                    { nombre: 'Dragon Ball Super (001-131)', precio: 5000 },
+                    { nombre: 'Dragon Ball GT', precio: 3000 },
+                    { nombre: 'Pack Completo Dragon Ball (DB+DBZ+DBS+GT)', precio: 12000 },
+                    { nombre: 'Naruto Clásico (001-220)', precio: 5000 },
+                    { nombre: 'Naruto Shippuden (001-500)', precio: 8000 },
+                    { nombre: 'Pack Completo Naruto', precio: 10000 },
+                    { nombre: 'One Piece (001-1100+)', precio: 15000 },
+                    { nombre: 'Sailor Moon (001-200+)', precio: 5000 },
+                    { nombre: 'Sailor Moon R', precio: 3000 },
+                    { nombre: 'Sailor Moon S', precio: 3000 },
+                    { nombre: 'Sailor Moon SuperS', precio: 3000 },
+                    { nombre: 'Sailor Moon Stars', precio: 3000 },
+                    { nombre: 'Pack Completo Sailor Moon', precio: 8000 },
+                    { nombre: 'Ataque a los Titanes (001-87)', precio: 4000 },
+                    { nombre: 'Ataque a los Titanes Temporada Final', precio: 4000 },
+                    { nombre: 'Pack Ataque a los Titanes', precio: 6000 },
+                    { nombre: 'Demon Slayer Kimetsu no Yaiba (001-55)', precio: 4000 },
+                    { nombre: 'Demon Slayer Mugen Train (Película)', precio: 2000 },
+                    { nombre: 'Demon Slayer Temporada 3', precio: 4000 },
+                    { nombre: 'Pack Demon Slayer', precio: 8000 },
+                    { nombre: 'One Punch Man (001-24)', precio: 3000 },
+                    { nombre: 'One Punch Man Temporada 2', precio: 3000 },
+                    { nombre: 'Pack One Punch Man', precio: 4000 },
+                    { nombre: 'Yu-Gi-Oh! (001-224)', precio: 4000 },
+                    { nombre: 'Yu-Gi-Oh! GX', precio: 4000 },
+                    { nombre: 'Yu-Gi-Oh! 5Ds', precio: 4000 },
+                    { nombre: 'Pack Yu-Gi-Oh!', precio: 10000 },
+                    { nombre: 'Pokémon Original (001-276)', precio: 5000 },
+                    { nombre: 'Pokémon Advanced (277-316)', precio: 3000 },
+                    { nombre: 'Pokémon Diamond & Pearl', precio: 4000 },
+                    { nombre: 'Pokémon XY', precio: 4000 },
+                    { nombre: 'Pokémon Sun & Moon', precio: 4000 },
+                    { nombre: 'Pokémon Viajes', precio: 4000 },
+                    { nombre: 'Pack Completo Pokémon', precio: 15000 },
+                    { nombre: 'Los Simpsons (Temporada 1-35+)', precio: 8000 },
+                    { nombre: 'South Park (Temporada 1-26+)', precio: 8000 },
+                    { nombre: 'Futurama (Temporada 1-10)', precio: 6000 },
+                    { nombre: 'Thundercats (001-100+)', precio: 3000 },
+                    { nombre: 'Los Caballeros del Zodiaco (001-114)', precio: 4000 },
+                    { nombre: 'Los Caballeros del Zodiaco Hades', precio: 3000 },
+                    { nombre: 'Pack Completo Saint Seiya', precio: 6000 },
+                    { nombre: 'Los Super Campeones (001-128)', precio: 4000 },
+                    { nombre: 'Dragon Ball Z Kai (001-167)', precio: 5000 },
+                    { nombre: 'Boruto Naruto Next Generations', precio: 6000 },
+                    { nombre: 'My Hero Academia (001-150+)', precio: 5000 },
+                    { nombre: 'Jujutsu Kaisen (001-50+)', precio: 4000 },
+                    { nombre: 'Chainsaw Man (001-24)', precio: 3000 },
+                    { nombre: 'Spy x Family (001-50+)', precio: 4000 },
+                    { nombre: 'Tokyo Revengers (001-50+)', precio: 4000 },
+                    { nombre: 'Kimetsu no Yaiba Muzan Arc', precio: 4000 },
+                    { nombre: 'Bleach (001-366)', precio: 6000 },
+                    { nombre: 'Bleach Thousand-Year Blood War', precio: 4000 },
+                    { nombre: 'Fullmetal Alchemist (001-51)', precio: 4000 },
+                    { nombre: 'Fullmetal Alchemist Brotherhood (001-64)', precio: 4000 },
+                    { nombre: 'Pack Fullmetal Alchemist', precio: 6000 },
+                    { nombre: 'Death Note (001-37)', precio: 3000 },
+                    { nombre: 'Code Geass (001-50)', precio: 4000 },
+                    { nombre: 'Attack on Titan (001-87)', precio: 4000 },
+                    { nombre: 'Hunter x Hunter (001-148)', precio: 5000 },
+                    { nombre: 'Black Clover (001-170+)', precio: 5000 },
+                    { nombre: 'Fire Force (001-50+)', precio: 4000 },
+                    { nombre: 'The Promised Neverland (001-50)', precio: 3000 },
+                    { nombre: 'Mob Psycho 100 (001-50+)', precio: 3000 },
+                    { nombre: 'Haikyu!! (001-100+)', precio: 4000 },
+                    { nombre: 'Dr. Stone (001-50+)', precio: 4000 },
+                    { nombre: 'Violet Evergarden (001-50+)', precio: 3000 },
+                    { nombre: 'Re:Zero (001-50+)', precio: 4000 },
+                    { nombre: 'Shield Hero (001-50+)', precio: 4000 },
+                    { nombre: 'Sword Art Online (001-100+)', precio: 5000 },
+                    { nombre: 'Overlord (001-50+)', precio: 4000 },
+                    { nombre: 'No Game No Life', precio: 2000 },
+                    { nombre: 'Konosuba', precio: 2000 },
+                    { nombre: 'That Time I Got Reincarnated as a Slime', precio: 4000 },
+                    { nombre: 'Beastars (001-50+)', precio: 3000 },
+                    { nombre: 'Vivy Fluorite Eye Song', precio: 2000 },
+                    { nombre: 'Wonder Egg Priority', precio: 2000 },
+                    { nombre: '86 Eighty Six', precio: 3000 },
+                    { nombre: 'Vivy Fluorite Eyes Song', precio: 2000 },
+                    { nombre: 'Wonder Egg Priority', precio: 2000 },
+                    { nombre: 'Ranking of Kings', precio: 2000 },
+                    { nombre: 'Mushoku Tensei', precio: 4000 },
+                    { nombre: 'Shikizakura', precio: 2000 }
+                ]
+            },
+            series: {
+                nombre: '📺 Series',
+                items: [
+                    { nombre: '31 Minutos (Temporada 1-3)', precio: 3000 },
+                    { nombre: 'El Chavo del 8 (Temp 1-8 Completa)', precio: 5000 },
+                    { nombre: 'El Chavo del 8 (Temp 1-4)', precio: 3000 },
+                    { nombre: 'El Chavo del 8 (Temp 5-8)', precio: 3000 },
+                    { nombre: 'Alf (001-99)', precio: 3000 },
+                    { nombre: 'Los Simuladores', precio: 3000 },
+                    { nombre: 'Casados con Hijos', precio: 3000 },
+                    { nombre: 'Mi Suculentina', precio: 2000 },
+                    { nombre: 'Peter Pie', precio: 2000 },
+                    { nombre: '31 Minutos (2003)', precio: 3000 },
+                    { nombre: '31 Minutos (Temporada 2)', precio: 3000 },
+                    { nombre: '31 Minutos (Temporada 3)', precio: 3000 },
+                    { nombre: 'Los Superagentes', precio: 2000 },
+                    { nombre: 'Zoolander', precio: 2000 },
+                    { nombre: 'Puppy', precio: 2000 },
+                    { nombre: 'Quillo', precio: 2000 },
+                    { nombre: 'Joker', precio: 2000 },
+                    { nombre: 'Barrabases (001-130)', precio: 5000 },
+                    { nombre: 'Pinky y Cerebro (001-65)', precio: 3000 },
+                    { nombre: 'Pinky y Cerebro Especiais', precio: 2000 },
+                    { nombre: 'Alf (001-99)', precio: 3000 },
+                    { nombre: 'Dinosaurios (001-65)', precio: 3000 },
+                    { nombre: 'Power Rangers (001-50+)', precio: 3000 },
+                    { nombre: 'Beverly Hills 90210 (001-296)', precio: 8000 },
+                    { nombre: 'ER Sala de Urgencias (001-331)', precio: 10000 },
+                    { nombre: 'Flash (2014) (001-180+)', precio: 6000 },
+                    { nombre: 'Star Trek La Serie Original', precio: 4000 },
+                    { nombre: 'Star Trek The Next Generation', precio: 8000 },
+                    { nombre: 'Star Trek Deep Space Nine', precio: 8000 },
+                    { nombre: 'Star Trek Voyager', precio: 8000 },
+                    { nombre: 'Star Trek Enterprise', precio: 6000 },
+                    { nombre: 'Pack Star Trek Completo', precio: 20000 },
+                    { nombre: 'Shogun (Miniserie 1980)', precio: 3000 },
+                    { nombre: 'Taken (Abducidos) (2002)', precio: 3000 },
+                    { nombre: 'Cosmicos Un Viaje Personal (1980)', precio: 3000 },
+                    { nombre: 'Cuentos de la Cripta (1989)', precio: 4000 },
+                    { nombre: 'Historias Asombrosas (1985)', precio: 4000 },
+                    { nombre: 'La Isla de la Fantasía (1978)', precio: 4000 },
+                    { nombre: 'La Mujer Maravilla (1975)', precio: 4000 },
+                    { nombre: 'Los Invencibles de Nemesis', precio: 3000 },
+                    { nombre: 'Batman (1966)', precio: 3000 },
+                    { nombre: 'El Auto Fantástico', precio: 3000 },
+                    { nombre: 'Mork y Mindy', precio: 3000 },
+                    { nombre: 'Mr. Ed', precio: 3000 },
+                    { nombre: 'Manimal', precio: 2000 },
+                    { nombre: 'V (Invasión Extraterrestre)', precio: 3000 },
+                    { nombre: 'El Septimo Cielo', precio: 5000 },
+                    { nombre: 'Matrimonio con Hijos', precio: 4000 },
+                    { nombre: 'Las Chicas Gilmore', precio: 6000 },
+                    { nombre: 'Ned el Suplente', precio: 3000 },
+                    { nombre: 'Sliders (Viajeros)', precio: 4000 },
+                    { nombre: 'Columbo', precio: 5000 },
+                    { nombre: 'Dra. Quinn', precio: 5000 },
+                    { nombre: 'El Tunel del Tiempo', precio: 3000 },
+                    { nombre: 'Tigres Voladores', precio: 2000 },
+                    { nombre: 'Gasparín y sus Amigos', precio: 3000 },
+                    { nombre: 'Thundercats (1985)', precio: 3000 },
+                    { nombre: 'Thundercats (2011)', precio: 3000 },
+                    { nombre: 'Hechizada', precio: 4000 },
+                    { nombre: 'Embrujadas', precio: 4000 },
+                    { nombre: 'Brujas de East End', precio: 3000 },
+                    { nombre: 'Charmed', precio: 5000 },
+                    { nombre: 'Buffy Cazavampiros', precio: 5000 },
+                    { nombre: 'Angel', precio: 4000 },
+                    { nombre: 'Sobrenatural', precio: 8000 },
+                    { nombre: 'Supernatural (001-327)', precio: 10000 },
+                    { nombre: 'Teen Wolf', precio: 5000 },
+                    { nombre: 'The Vampire Diaries', precio: 6000 },
+                    { nombre: 'The Originals', precio: 5000 },
+                    { nombre: 'Legacies', precio: 4000 },
+                    { nombre: 'Teen Wolf MTV', precio: 5000 },
+                    { nombre: 'Dragon Ball Z Kai (001-167)', precio: 5000 },
+                    { nombre: 'Yo Soy Betty la Fea (001-169)', precio: 4000 },
+                    { nombre: 'Malcolm (001-150+)', precio: 4000 },
+                    { nombre: 'The Good Doctor (001-100+)', precio: 5000 },
+                    { nombre: 'The Walking Dead', precio: 8000 },
+                    { nombre: 'Fear The Walking Dead', precio: 6000 },
+                    { nombre: 'The Last of Us', precio: 4000 },
+                    { nombre: 'Juego de Tronos (001-73)', precio: 5000 },
+                    { nombre: 'House of the Dragon', precio: 4000 },
+                    { nombre: 'Vikings', precio: 6000 },
+                    { nombre: 'Vikings Valhalla', precio: 4000 },
+                    { nombre: 'The Witcher', precio: 4000 },
+                    { nombre: 'El Señor de los Anillos Los Anillos de Poder', precio: 4000 },
+                    { nombre: 'Halo', precio: 3000 },
+                    { nombre: 'Foundation', precio: 3000 },
+                    { nombre: 'Westworld', precio: 4000 },
+                    { nombre: 'Stranger Things (001-32+)', precio: 5000 },
+                    { nombre: 'Dark (001-26)', precio: 4000 },
+                    { nombre: 'Black Mirror', precio: 4000 },
+                    { nombre: 'Altered Carbon', precio: 3000 },
+                    { nombre: 'The Expanse', precio: 5000 },
+                    { nombre: 'For All Mankind', precio: 4000 },
+                    { nombre: 'See', precio: 3000 },
+                    { nombre: 'The Last Man on Earth', precio: 3000 },
+                    { nombre: 'The 100', precio: 5000 },
+                    { nombre: 'The OA', precio: 2000 },
+                    { nombre: 'Fringe', precio: 5000 },
+                    { nombre: 'Continuum', precio: 3000 },
+                    { nombre: 'Travelers', precio: 3000 },
+                    { nombre: 'Alcatraz', precio: 2000 },
+                    { nombre: 'Under the Dome', precio: 3000 },
+                    { nombre: '12 Monkeys', precio: 4000 },
+                    { nombre: 'Continuum', precio: 3000 },
+                    { nombre: 'The Lost Room', precio: 2000 },
+                    { nombre: 'Persons Unknown', precio: 2000 }
+                ]
+            },
+            historietas: {
+                nombre: '📖 Historietas',
+                items: [
+                    { nombre: 'Colección Barrabases (130+ números)', precio: 4000 },
+                    { nombre: 'Colección Kaliman (300+ números)', precio: 5000 },
+                    { nombre: 'Colección Chanoc (200+ números)', precio: 4000 },
+                    { nombre: 'Colección Condorito (500+ números)', precio: 6000 },
+                    { nombre: 'Colección Memin Pinguin (200+ números)', precio: 4000 },
+                    { nombre: 'Colección La Familia Burron (500+ números)', precio: 6000 },
+                    { nombre: 'Colección Mampato (300+ números)', precio: 5000 },
+                    { nombre: 'Colección 5 x El Infinito', precio: 3000 },
+                    { nombre: 'Colección Batman Novaro', precio: 5000 },
+                    { nombre: 'Colección Superman Novaro', precio: 5000 },
+                    { nombre: 'Colección El Santo', precio: 5000 },
+                    { nombre: 'Colección Tarzan Novaro', precio: 4000 },
+                    { nombre: 'Colección El Capitán Trueno', precio: 5000 },
+                    { nombre: 'Colección Nippur de Lagash', precio: 5000 },
+                    { nombre: 'Colección Thor', precio: 4000 },
+                    { nombre: 'Colección Conan El Bárbaro', precio: 5000 },
+                    { nombre: 'Colección Mortadelo y Filemón', precio: 5000 },
+                    { nombre: 'Colección Mafalda', precio: 3000 },
+                    { nombre: 'Colección Creepy', precio: 5000 },
+                    { nombre: 'Colección Cucalón', precio: 4000 },
+                    { nombre: 'Colección Tío Rico', precio: 3000 },
+                    { nombre: 'Colección El Peneca', precio: 4000 },
+                    { nombre: 'Colección Nipper', precio: 4000 },
+                    { nombre: 'Colección Antología', precio: 3000 },
+                    { nombre: 'Colección Chamacos', precio: 4000 },
+                    { nombre: 'Colección Los Pitufos', precio: 4000 },
+                    { nombre: 'Colección Richi', precio: 3000 },
+                    { nombre: 'Colección Súper Diccionario', precio: 2000 },
+                    { nombre: 'Colección Elfab', precio: 3000 },
+                    { nombre: 'Colección Yeru', precio: 3000 },
+                    { nombre: 'Colección Caballo', precio: 3000 },
+                    { nombre: 'Colección Zeta', precio: 3000 },
+                    { nombre: 'Colección Jockey', precio: 3000 },
+                    { nombre: 'Colección Lote', precio: 3000 },
+                    { nombre: 'Colección Rabanito', precio: 3000 },
+                    { nombre: 'Colección Mago', precio: 3000 },
+                    { nombre: 'Colección Kronen', precio: 3000 },
+                    { nombre: 'Colección BLive', precio: 3000 },
+                    { nombre: 'Colección Fierro', precio: 4000 },
+                    { nombre: 'Colección Complot', precio: 3000 },
+                    { nombre: 'Colección Custer', precio: 3000 },
+                    { nombre: 'Colección Bull', precio: 3000 },
+                    { nombre: 'Colección Rocky', precio: 3000 },
+                    { nombre: 'Colección Torpedo', precio: 4000 },
+                    { nombre: 'Colección Jazén', precio: 3000 },
+                    { nombre: 'Colección Halcones', precio: 3000 },
+                    { nombre: 'Colección Halcones de la Muerte', precio: 3000 },
+                    { nombre: 'Colección Corsario', precio: 3000 },
+                    { nombre: 'Colección Vikingo', precio: 3000 },
+                    { nombre: 'Colección Espartano', precio: 3000 },
+                    { nombre: 'Colección Merlin', precio: 3000 },
+                    { nombre: 'Colección Astérix', precio: 4000 },
+                    { nombre: 'Colección Lucky Luke', precio: 4000 },
+                    { nombre: 'Colección Tintín', precio: 5000 },
+                    { nombre: 'Colección Spirou', precio: 4000 },
+                    { nombre: 'Colección Johan', precio: 3000 },
+                    { nombre: 'Colección Peyo', precio: 3000 },
+                    { nombre: 'Colección Los Pitufos', precio: 4000 },
+                    { nombre: 'Colección Bom', precio: 3000 },
+                    { nombre: 'Colección Magnus', precio: 3000 },
+                    { nombre: 'Colección Martín', precio: 3000 },
+                    { nombre: 'Colección Relleno', precio: 3000 },
+                    { nombre: 'Colección Dientes', precio: 3000 },
+                    { nombre: 'Colección Muerte Lenta', precio: 3000 },
+                    { nombre: 'Colección Terremoto', precio: 3000 },
+                    { nombre: 'Colección Golpe', precio: 3000 },
+                    { nombre: 'Colección Tiro', precio: 3000 },
+                    { nombre: 'Colección Impacto', precio: 3000 },
+                    { nombre: 'Colección Mortaja', precio: 3000 },
+                    { nombre: 'Colección Anaconda', precio: 3000 },
+                    { nombre: 'Colección Puma', precio: 3000 },
+                    { nombre: 'Colección Dragón', precio: 3000 },
+                    { nombre: 'Colección Halcón', precio: 3000 },
+                    { nombre: 'Colección Lobos', precio: 3000 },
+                    { nombre: 'Colección Coyote', precio: 3000 },
+                    { nombre: 'Colección Demonios', precio: 3000 },
+                    { nombre: 'Colección Demon', precio: 3000 },
+                    { nombre: 'Colección Terror', precio: 4000 },
+                    { nombre: 'Colección Horror', precio: 4000 },
+                    { nombre: 'Colección miedo', precio: 3000 },
+                    { nombre: 'Colección Pesadilla', precio: 3000 },
+                    { nombre: 'Colección Vampirella', precio: 4000 },
+                    { nombre: 'Colección Vampirella Special', precio: 3000 },
+                    { nombre: 'Colección Creepy', precio: 5000 },
+                    { nombre: 'Colección Eerie', precio: 4000 },
+                    { nombre: 'Colección 2000 AD', precio: 4000 },
+                    { nombre: 'Colección Judge Dredd', precio: 4000 },
+                    { nombre: 'Colección Strontium Dog', precio: 3000 },
+                    { nombre: 'Colección ABC', precio: 3000 },
+                    { nombre: 'Colección Metal Hurlant', precio: 3000 },
+                    { nombre: 'Colección Heavy Metal', precio: 4000 },
+                    { nombre: 'Colección Cortocircuito', precio: 3000 },
+                    { nombre: 'Colección C和尚', precio: 3000 },
+                    { nombre: 'Colección Komandok', precio: 3000 },
+                    { nombre: 'Colección Kronos', precio: 3000 },
+                    { nombre: 'Colección Vampus', precio: 3000 },
+                    { nombre: 'Colección Drácula', precio: 3000 },
+                    { nombre: 'Colección Frankenstein', precio: 3000 },
+                    { nombre: 'Colección Momias', precio: 3000 },
+                    { nombre: 'Colección Momia', precio: 3000 },
+                    { nombre: 'Colección Lobizón', precio: 3000 },
+                    { nombre: 'Colección Licántropo', precio: 3000 },
+                    { nombre: 'Colección Zombi', precio: 3000 },
+                    { nombre: 'Colección Zombies', precio: 3000 },
+                    { nombre: 'Colección Infectados', precio: 3000 },
+                    { nombre: 'Colección Pandemia', precio: 3000 },
+                    { nombre: 'Colección Virus', precio: 3000 },
+                    { nombre: 'Colección Epidemia', precio: 3000 },
+                    { nombre: 'Colección Plaga', precio: 3000 },
+                    { nombre: 'Colección Horda', precio: 3000 },
+                    { nombre: 'Colección Bunker', precio: 3000 },
+                    { nombre: 'Colección Búnker', precio: 3000 },
+                    { nombre: 'Colección Refugio', precio: 3000 },
+                    { nombre: 'Colección Última Esperanza', precio: 3000 },
+                    { nombre: 'Colección Fin del Mundo', precio: 3000 },
+                    { nombre: 'Colección Apocalipsis', precio: 3000 },
+                    { nombre: 'Colección Aftermath', precio: 3000 },
+                    { nombre: 'Colección Survivors', precio: 3000 },
+                    { nombre: 'Colección The Walking Dead', precio: 4000 },
+                    { nombre: 'Colección Walking Dead', precio: 4000 },
+                    { nombre: 'Colección Comics Marvel', precio: 6000 },
+                    { nombre: 'Colección Comics DC', precio: 6000 },
+                    { nombre: 'Colección Comics independientes', precio: 5000 },
+                    { nombre: 'Colección Manga', precio: 5000 },
+                    { nombre: 'Colección Manga Shonen', precio: 5000 },
+                    { nombre: 'Colección Manga Seinen', precio: 5000 },
+                    { nombre: 'Colección Manga Shojo', precio: 4000 },
+                    { nombre: 'Colección Manga Kodomo', precio: 4000 },
+                    { nombre: 'Colección Comics Chinos', precio: 4000 },
+                    { nombre: 'Colección Comics Coreanos', precio: 4000 },
+                    { nombre: 'Colección Comics Japoneses', precio: 5000 },
+                    { nombre: 'Colección Comics Europeos', precio: 5000 },
+                    { nombre: 'Colección Comics Franceses', precio: 4000 },
+                    { nombre: 'Colección Comics Belgas', precio: 4000 },
+                    { nombre: 'Colección Comics Italianos', precio: 4000 },
+                    { nombre: 'Colección Comics Españoles', precio: 4000 },
+                    { nombre: 'Colección Comics Mexicanos', precio: 4000 },
+                    { nombre: 'Colección Comics Argentinos', precio: 4000 },
+                    { nombre: 'Colección Comics Chilenos', precio: 4000 },
+                    { nombre: 'Colección Comics Colombianos', precio: 4000 },
+                    { nombre: 'Colección Comics Peruanos', precio: 4000 },
+                    { nombre: 'Colección Comics Venezolanos', precio: 4000 },
+                    { nombre: 'Colección Comics Brasileños', precio: 4000 },
+                    { nombre: 'Colección Comics Indonesios', precio: 4000 }
+                ]
+            },
+            albums: {
+                nombre: '💾 Álbumes',
+                items: [
+                    { nombre: 'Álbum 31 Minutos', precio: 2000 },
+                    { nombre: 'Álbum Alas de Chile', precio: 2000 },
+                    { nombre: 'Álbum Club Nintendo', precio: 2000 },
+                    { nombre: 'Álbum Animal Planet', precio: 2000 },
+                    { nombre: 'Álbum Animales', precio: 2000 },
+                    { nombre: 'Álbum Arturo Prat', precio: 2000 },
+                    { nombre: 'Álbum Avatar', precio: 2000 },
+                    { nombre: 'Álbum Basuritas', precio: 2000 },
+                    { nombre: 'Álbum Batman', precio: 2000 },
+                    { nombre: 'Álbum Caballeros del Zodiaco', precio: 2000 },
+                    { nombre: 'Álbum Candy', precio: 2000 },
+                    { nombre: 'Álbum Chavo del 8', precio: 2000 },
+                    { nombre: 'Álbum Civilizaciones', precio: 2000 },
+                    { nombre: 'Álbum Cowboy', precio: 2000 },
+                    { nombre: 'Álbum Digimon', precio: 2000 },
+                    { nombre: 'Álbum Dragon Ball', precio: 2000 },
+                    { nombre: 'Álbum Fútbol', precio: 2000 },
+                    { nombre: 'Álbum Mazinger Z', precio: 2000 },
+                    { nombre: 'Álbum Mitos y Leyendas', precio: 2000 },
+                    { nombre: 'Álbum Pokemon', precio: 2000 },
+                    { nombre: 'Álbum Robotech', precio: 2000 },
+                    { nombre: 'Álbum Sailor Moon', precio: 2000 },
+                    { nombre: 'Pack 10 Álbumes a elección', precio: 10000 },
+                    { nombre: 'Pack 20 Álbumes a elección', precio: 15000 }
+                ]
+            },
+            musica: {
+                nombre: '🎵 Música',
+                items: [
+                    { nombre: 'Pack Mix DJ Nicolas Escobar (100+ mixes)', precio: 5000 },
+                    { nombre: 'Classic Project Discoteque Vol 1-21', precio: 4000 },
+                    { nombre: 'Bonus Project Vol 1-15', precio: 3000 },
+                    { nombre: 'Classic Project HD Vol 1-12', precio: 4000 },
+                    { nombre: 'Classic Project Vinilo Vol 1-3', precio: 2000 },
+                    { nombre: 'Pack Karaoke 500+ canciones', precio: 3000 },
+                    { nombre: 'Karaoke V1', precio: 2000 },
+                    { nombre: 'Karaoke V2', precio: 2000 },
+                    { nombre: 'Eurodance Megamix', precio: 2000 },
+                    { nombre: '80s Megamix', precio: 2000 },
+                    { nombre: '90s Hits Mix', precio: 2000 },
+                    { nombre: 'Reggaeton Old School Mix', precio: 2000 },
+                    { nombre: 'Bachatas Mix', precio: 2000 },
+                    { nombre: 'Salsa Mix', precio: 2000 },
+                    { nombre: 'Cumbia Mix', precio: 2000 },
+                    { nombre: 'Merengue Mix', precio: 2000 },
+                    { nombre: 'Rock 80s 90s Mix', precio: 2000 },
+                    { nombre: 'Pop Latino Mix', precio: 2000 },
+                    { nombre: 'Electrónica Mix', precio: 2000 }
+                ]
+            },
+            libros: {
+                nombre: '📚 Libros',
+                items: [
+                    { nombre: 'Pack 400 Libros Emprendimiento y Finanzas', precio: 5000 },
+                    { nombre: 'Pack 100 Libros Marketing Digital', precio: 4000 },
+                    { nombre: 'Pack 50 Libros Desarrollo Personal', precio: 3000 },
+                    { nombre: 'Pack 50 Libros Liderazgo', precio: 3000 },
+                    { nombre: 'Pack 30 Libros Ventas', precio: 2000 },
+                    { nombre: 'Pack 20 Libros Productividad', precio: 2000 },
+                    { nombre: 'Pack Lectoescritura Infantil (17 libros)', precio: 2000 },
+                    { nombre: 'Pack Abecedario y Vocales', precio: 1000 },
+                    { nombre: 'Pack Matemáticas Infantiles', precio: 1000 },
+                    { nombre: 'Pack Dibujos para Colorear', precio: 1000 }
+                ]
+            },
+            juegos: {
+                nombre: '🎮 Juegos',
+                items: [
+                    { nombre: 'Pack 1000 Juegos Super Nintendo', precio: 3000 },
+                    { nombre: 'Pack 1000 Juegos NES', precio: 3000 },
+                    { nombre: 'Pack Juegos PC Varios', precio: 3000 },
+                    { nombre: 'Pack Completo Juegos Retro', precio: 5000 }
+                ]
+            },
+            imagenes: {
+                nombre: '🖼️ Imágenes',
+                items: [
+                    { nombre: 'Pack Imágenes Abstractas VIP', precio: 2000 },
+                    { nombre: 'Pack Imágenes Animales', precio: 2000 },
+                    { nombre: 'Pack Imágenes Anime', precio: 2000 },
+                    { nombre: 'Pack Imágenes Frases', precio: 2000 },
+                    { nombre: 'Pack Imágenes Navidad', precio: 2000 },
+                    { nombre: 'Pack Imágenes Fútbol', precio: 2000 },
+                    { nombre: 'Pack Imágenes Ciudades', precio: 2000 },
+                    { nombre: 'Pack Imágenes Flores', precio: 2000 },
+                    { nombre: 'Pack Imágenes Premium', precio: 3000 },
+                    { nombre: 'Pack Imágenes Retro', precio: 2000 },
+                    { nombre: 'Pack Imágenes Mockups', precio: 2000 },
+                    { nombre: 'Pack Imágenes Completo (40+ carpetas)', precio: 5000 }
+                ]
+            },
+            papercraft: {
+                nombre: '📦 Papercraft',
+                items: [
+                    { nombre: 'Pack Dibujos Animados Papercraft', precio: 2000 },
+                    { nombre: 'Pack Oso Freddy Papercraft', precio: 2000 },
+                    { nombre: 'Pack Superhéroes Papercraft', precio: 2000 },
+                    { nombre: 'Pack Mario Bros Papercraft', precio: 2000 },
+                    { nombre: 'Pack Dragones Papercraft', precio: 2000 },
+                    { nombre: 'Pack Terror Papercraft', precio: 2000 },
+                    { nombre: 'Pack Animales Papercraft', precio: 2000 },
+                    { nombre: 'Pack Ciencia Ficción Papercraft', precio: 2000 },
+                    { nombre: 'Pack Origami', precio: 2000 },
+                    { nombre: 'Pack Papercraft Completo (12 categorías)', precio: 5000 }
+                ]
+            },
+            plantillas: {
+                nombre: '📋 Plantillas',
+                items: [
+                    { nombre: 'Pack 11.000 Plantillas Sublimación', precio: 5000 },
+                    { nombre: 'Plantillas Cojines', precio: 2000 },
+                    { nombre: 'Plantillas Tazas', precio: 2000 },
+                    { nombre: 'Plantillas Poleras', precio: 2000 },
+                    { nombre: 'Plantillas Lanyards', precio: 2000 },
+                    { nombre: 'Plantillas Mascarillas', precio: 2000 },
+                    { nombre: 'Plantillas Mockups', precio: 2000 }
+                ]
+            }
+        };
+
+        let resultadosBusqueda = [];
+
+        function buscar(texto) {
+            const contenedor = document.getElementById('resultado-busqueda');
+            const listaCompleta = document.getElementById('lista-completa');
+            
+            if (texto.length < 2) {
+                contenedor.classList.add('hidden');
+                contenedor.innerHTML = '';
+                listaCompleta.classList.remove('hidden');
+                return;
+            }
+            
+            listaCompleta.classList.add('hidden');
+            contenedor.classList.remove('hidden');
+            
+            const textoLower = texto.toLowerCase();
+            resultadosBusqueda = [];
+            
+            Object.keys(baseDatos).forEach(categoria => {
+                baseDatos[categoria].items.forEach(item => {
+                    if (item.nombre.toLowerCase().includes(textoLower)) {
+                        resultadosBusqueda.push({
+                            ...item,
+                            categoria: baseDatos[categoria].nombre
+                        });
+                    }
+                });
+            });
+            
+            if (resultadosBusqueda.length === 0) {
+                contenedor.innerHTML = `
+                    <div class="bg-white/5 rounded-2xl p-12 text-center">
+                        <span class="text-6xl mb-4 block">😕</span>
+                        <h3 class="text-xl font-bold text-white mb-2">No encontrado</h3>
+                        <p class="text-gray-400">No hay resultados para "<span class="text-green-400">${texto}</span>"</p>
+                        <p class="text-gray-500 text-sm mt-2">¿Quieres algo específico? Escríbenos por WhatsApp</p>
+                        <a href="https://wa.me/56964681874?text=Hola!%20Quiero%20solicitar:%20${encodeURIComponent(texto)}" 
+                           target="_blank" 
+                           class="inline-block mt-4 px-6 py-3 bg-green-500 text-black font-bold rounded-lg hover:bg-green-400 transition">
+                            💬 Preguntar por WhatsApp
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            contenedor.innerHTML = `
+                <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4 mb-6">
+                    <p class="text-green-400 font-bold">🔍 ${resultadosBusqueda.length} resultado(s) para "<span class="text-white">${texto}</span>"</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    ${resultadosBusqueda.map(item => crearCard(item)).join('')}
+                </div>
+            `;
+        }
+
+        function crearCard(item) {
+            return `
+                <div class="item-card rounded-xl p-4">
+                    <div class="flex items-start justify-between mb-2">
+                        <span class="text-lg">${item.categoria}</span>
+                        <span class="text-xl font-bold text-green-400">$${item.precio.toLocaleString('es-CL')}</span>
+                    </div>
+                    <h4 class="font-bold text-white mb-3 text-sm leading-tight">${item.nombre}</h4>
+                    <button onclick="comprar('${item.nombre.replace(/'/g, "\\'")}', ${item.precio}, '${item.categoria}')" 
+                            class="w-full py-2 bg-gradient-to-r from-green-500 to-cyan-500 text-black font-bold rounded-lg text-sm hover:scale-105 transition">
+                        🛒 Comprar
+                    </button>
+                </div>
+            `;
+        }
+
+        function comprar(nombre, precio, categoria) {
+            document.getElementById('modal-item-nombre').textContent = nombre;
+            document.getElementById('modal-item-precio').textContent = '$' + precio.toLocaleString('es-CL') + ' CLP';
+            document.getElementById('modal-compra').classList.remove('hidden');
+            document.getElementById('modal-compra').classList.add('flex');
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal-compra').classList.add('hidden');
+            document.getElementById('modal-compra').classList.remove('flex');
+        }
+
+        function enviarPedido(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('cliente-nombre').value;
+            const email = document.getElementById('cliente-email').value;
+            const whatsapp = document.getElementById('cliente-whatsapp').value;
+            const item = document.getElementById('modal-item-nombre').textContent;
+            const precio = document.getElementById('modal-item-precio').textContent;
+            
+            const mensaje = `🛒 *NUEVO PEDIDO*%0A%0A📦 *Producto:* ${item}%0A💰 *Precio:* ${precio}%0A%0A👤 *Datos del cliente:*%0ANombre: ${nombre}%0AEmail: ${email}%0AWhatsApp: ${whatsapp}`;
+            
+            window.open(`https://wa.me/56964681874?text=${mensaje}`, '_blank');
+            cerrarModal();
+        }
+
+        function renderizarListaCompleta() {
+            const contenedor = document.getElementById('lista-completa');
+            let html = '';
+            
+            Object.keys(baseDatos).forEach(categoria => {
+                const data = baseDatos[categoria];
+                html += `
+                    <div class="category-section rounded-2xl p-6 mb-8">
+                        <div class="flex items-center justify-between mb-4 cursor-pointer" onclick="toggleSection(this)">
+                            <h3 class="font-headline text-xl font-bold flex items-center gap-2">
+                                ${data.nombre}
+                                <span class="text-sm text-gray-500">(${data.items.length} items)</span>
+                            </h3>
+                            <span class="text-2xl transition-transform">▼</span>
+                        </div>
+                        <div class="collapsible-content open">
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                ${data.items.map(item => crearCard(item)).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            contenedor.innerHTML = html;
+        }
+
+        function toggleSection(element) {
+            const content = element.nextElementSibling;
+            const arrow = element.querySelector('span');
+            content.classList.toggle('open');
+            arrow.style.transform = content.classList.contains('open') ? 'rotate(0deg)' : 'rotate(-90deg)';
+        }
+
+        renderizarListaCompleta();
+    </script>
+</body>
+</html>

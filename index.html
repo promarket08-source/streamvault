@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 StreamVault - Catálogo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body {
+            background: #0a0a0a;
+            color: #e5e5e5;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .category-header {
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .category-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 100%;
+            border-radius: 3px;
+        }
+        
+        .category-header.peliculas::before { background: #FF6B6B; }
+        .category-header.series::before { background: #4ECDC4; }
+        .category-header.anime::before { background: #FFE66D; }
+        
+        .item-row {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 0.8rem;
+        }
+        
+        .item-row:hover {
+            background: rgba(255,255,255,0.02);
+        }
+        
+        .btn-buy {
+            background: linear-gradient(135deg, #10b981, #059669);
+            transition: all 0.3s;
+        }
+        
+        .btn-buy:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+        
+        .quality-badge {
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .quality-4k { background: #9333ea; }
+        .quality-hd { background: #3b82f6; }
+        .quality-sd { background: #6b7280; }
+        
+        .search-highlight {
+            background: rgba(16, 185, 129, 0.3);
+            border-radius: 2px;
+        }
+        
+        .no-results {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    
+    <!-- Search Bar -->
+    <div class="fixed top-16 left-0 right-0 z-40 bg-black/90 backdrop-blur-md border-b border-white/5 py-3 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="relative">
+                <input type="text" id="searchInput" placeholder="Buscar películas, series, anime, cómics..." 
+                       class="w-full bg-white/10 border border-white/10 rounded-lg px-4 py-3 pl-12 text-white placeholder-white/40 focus:outline-none focus:border-green-500"
+                       oninput="searchContent(this.value)">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <span id="searchCount" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 text-sm"></span>
+            </div>
+            <div id="searchResults" class="mt-2 hidden"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🎬</span>
+                <span class="text-xl font-semibold tracking-tight">StreamVault</span>
+            </div>
+            <a href="https://wa.me/56964681874" class="text-sm text-white/50 hover:text-white transition">
+                Contactar →
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="pt-28 pb-12 px-6 text-center">
+        <div class="max-w-2xl mx-auto">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                <span class="text-green-400">PACK COMPLETO</span>
+            </h1>
+            <p class="text-4xl md:text-5xl font-bold text-white mb-2">$7.990 CLP</p>
+            <p class="text-white/50 text-sm mb-6">Acceso a TODOS los enlaces de Google Drive</p>
+            <a href="https://wa.me/56964681874?text=Hola!%20Quiero%20comprar%20el%20PACK%20COMPLETO%20de%20StreamVault%20por%20$7.990%20CLP" 
+               class="btn-buy inline-flex items-center gap-2 px-8 py-3 rounded-full text-white font-semibold">
+                <i class="fab fa-whatsapp"></i>
+                COMPRAR PACK
+            </a>
+        </div>
+    </section>
+
+    <!-- Catálogo -->
+    <main class="max-w-5xl mx-auto px-6 pb-20">
+        
+        <!-- 🎬 PELÍCULAS -->
+        <section class="mb-12 fade-in">
+            <div class="category-header peliculas mb-4">
+                <h2 class="text-xl font-bold">🎬 Películas</h2>
+                <p class="text-xs text-white/40">280+ películas en HD y 4K | Link: drive.google.com</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-0 text-xs">
+                <!-- Columna 1 -->
+                <div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Avatar (2009)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Avatar: Way of Water (2022)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Avengers: Endgame (2019)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Avengers: Infinity War (2018)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Avengers: Los Vengadores (2012)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Avengers: Era de Ultrón (2015)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Oppenheimer (2023)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Dune: Parte 1 (2021)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Dune: Parte 2 (2024)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Interestelar</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Barbie (2023)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Deadpool & Wolverine (2024)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Gladiator 2 (2024)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Aquaman (2018)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Batman: El Caballero de la Noche (2008)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Batman: El Caballero Asciende (2012)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Batman Begins (2005)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Batman vs Superman (2016)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Capitán América: Civil War (2016)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Capitán América: El Primer Vengador (2011)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Capitán América: Soldado del Invierno (2014)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Capitán América: Un Nuevo Mundo (2025)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Ant-Man (2015)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Ant-Man y la Avispa: Quantumania (2023)</span>
+                        <span class="quality-badge quality-4k">4K</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Shazam! La Furia de los Dioses (2023)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Bad Boys: Hasta la Muerte (2024)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Bad Boys for Life (2020)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Búsqueda Implacable 1, 2 y 3</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Mufasa: El Rey León (2024)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>El Rey León (1994)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>El Señor de los Anillos ( trilogia)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Harry Potter ( saga 8 películas)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Star Wars ( saga 9 películas)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Creed 1 y 2</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                </div>
+                
+                <!-- Columna 2 -->
+                <div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Aladdin (1992)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Aladdin (2019)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Cars 1, 2 y 3</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Kung Fu Panda 1, 2, 3 y 4</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Cómo Entrenar a tu Dragón (2025)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Bob Esponja: La Película</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Ice Age 1, 2, 3 y 4</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Hotel Transylvania 1, 2, 3 y 4</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Mi Villano Favorito / Gru 1, 2 y 3</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Encanto (2021)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Coco (2017)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Bee Movie</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Buscando a Nemo</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Charlie y la Fábrica de Chocolate</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Dr. Dolittle 1 y 2</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Bruce Almighty</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>28 Días</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>A Prueba de Fuego</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Ahora Me Ves 1 y 2</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Pixels</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Comando Especial 1 y 2</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Assassin's Creed</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Equalizer 1 y 2</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>The Amazing Spider-Man 1 y 2</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Borderlands (2024)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Argylle (2024)</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Asalto al Poder</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Bird Box</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Cuarto de Guerra</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Colegas en el Bosque</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Scooby-Doo y Krypto al Rescate</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>¿Conoces a Joe Black?</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Año Uno</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Avalon High</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Alvin y las Ardillas 2</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Angry Birds 2</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                    <div class="item-row py-2 px-3 flex justify-between">
+                        <span>Amigos Imaginarios</span>
+                        <span class="quality-badge quality-hd">HD</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <p class="text-white/40 text-sm">... y más de 200 películas adicionales</p>
+                <a href="https://drive.google.com/drive/folders/1cc0Z_G5RAqJneyocZ7cIyCr-H-6gIOkp" target="_blank" class="text-green-400 text-sm hover:underline">Ver todas en Drive →</a>
+            </div>
+        </section>
+
+        <!-- 📺 SERIES -->
+        <section class="mb-12 fade-in">
+            <div class="category-header series mb-4">
+                <h2 class="text-xl font-bold">📺 Series</h2>
+                <p class="text-xs text-white/40">100+ series completas | Link: drive.google.com</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div>
+                    <div class="item-row py-2 px-3">El Chavo del 8 (8 temp)</div>
+                    <div class="item-row py-2 px-3">31 Minutos (3 temp)</div>
+                    <div class="item-row py-2 px-3">Stranger Things (4 temp)</div>
+                    <div class="item-row py-2 px-3">Game of Thrones (8 temp)</div>
+                    <div class="item-row py-2 px-3">The Flash (9 temp)</div>
+                    <div class="item-row py-2 px-3">Arrow (8 temp)</div>
+                    <div class="item-row py-2 px-3">Agents of S.H.I.E.L.D. (7 temp)</div>
+                    <div class="item-row py-2 px-3">Supergirl (6 temp)</div>
+                    <div class="item-row py-2 px-3">Superman & Lois (3 temp)</div>
+                    <div class="item-row py-2 px-3">The Boys (3 temp)</div>
+                    <div class="item-row py-2 px-3">Loki (2 temp)</div>
+                    <div class="item-row py-2 px-3">WandaVision (1 temp)</div>
+                    <div class="item-row py-2 px-3">The Good Doctor (6 temp)</div>
+                    <div class="item-row py-2 px-3">Grey's Anatomy (19 temp)</div>
+                    <div class="item-row py-2 px-3">The Office US (9 temp)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Friends (10 temp)</div>
+                    <div class="item-row py-2 px-3">Breaking Bad (5 temp)</div>
+                    <div class="item-row py-2 px-3">Squid Game (2 temp)</div>
+                    <div class="item-row py-2 px-3">The Last of Us (1 temp)</div>
+                    <div class="item-row py-2 px-3">House of the Dragon (2 temp)</div>
+                    <div class="item-row py-2 px-3">Yellowstone (5 temp)</div>
+                    <div class="item-row py-2 px-3">1923 (1 temp)</div>
+                    <div class="item-row py-2 px-3">Peacemaker (1 temp)</div>
+                    <div class="item-row py-2 px-3">Star Trek (varias)</div>
+                    <div class="item-row py-2 px-3">The Expanse (6 temp)</div>
+                    <div class="item-row py-2 px-3">Lost in Space (3 temp)</div>
+                    <div class="item-row py-2 px-3">Doctor Who</div>
+                    <div class="item-row py-2 px-3">Westworld (4 temp)</div>
+                    <div class="item-row py-2 px-3">Foundation (2 temp)</div>
+                    <div class="item-row py-2 px-3">The Walking Dead (11 temp)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">NCIS (21 temp)</div>
+                    <div class="item-row py-2 px-3">CSI Las Vegas (15 temp)</div>
+                    <div class="item-row py-2 px-3">Criminal Minds (15 temp)</div>
+                    <div class="item-row py-2 px-3">Chicago P.D. (10 temp)</div>
+                    <div class="item-row py-2 px-3">Chicago Fire (12 temp)</div>
+                    <div class="item-row py-2 px-3">Hawaii Five-0 (10 temp)</div>
+                    <div class="item-row py-2 px-3">Bones (12 temp)</div>
+                    <div class="item-row py-2 px-3">Scorpion (4 temp)</div>
+                    <div class="item-row py-2 px-3">Reacher (2 temp)</div>
+                    <div class="item-row py-2 px-3">S.W.A.T. (7 temp)</div>
+                    <div class="item-row py-2 px-3">The Rookie (6 temp)</div>
+                    <div class="item-row py-2 px-3">9-1-1 (7 temp)</div>
+                    <div class="item-row py-2 px-3">Shogun (1 temp)</div>
+                    <div class="item-row py-2 px-3">Fallout (1 temp)</div>
+                    <div class="item-row py-2 px-3">Avatar: The Last Airbender (1 temp)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🐉 ANIME -->
+        <section class="mb-12 fade-in">
+            <div class="category-header anime mb-4">
+                <h2 class="text-xl font-bold">🐉 Anime</h2>
+                <p class="text-xs text-white/40">Dragon Ball, Naruto, One Piece y más | Link: drive.google.com</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div>
+                    <div class="item-row py-2 px-3">Dragon Ball Z (291 episodios)</div>
+                    <div class="item-row py-2 px-3">Dragon Ball Super (131 eps)</div>
+                    <div class="item-row py-2 px-3">Naruto (220 episodios)</div>
+                    <div class="item-row py-2 px-3">Naruto Shippuden (500 eps)</div>
+                    <div class="item-row py-2 px-3">Boruto (200+ eps)</div>
+                    <div class="item-row py-2 px-3">One Piece (1100+ eps)</div>
+                    <div class="item-row py-2 px-3">Attack on Titan (87 eps)</div>
+                    <div class="item-row py-2 px-3">Demon Slayer (55 eps)</div>
+                    <div class="item-row py-2 px-3">Sailor Moon (200 eps)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Pokémon (276+ eps)</div>
+                    <div class="item-row py-2 px-3">One Punch Man (24+12 eps)</div>
+                    <div class="item-row py-2 px-3">Caballeros del Zodiaco (114 eps)</div>
+                    <div class="item-row py-2 px-3">My Hero Academia (100+ eps)</div>
+                    <div class="item-row py-2 px-3">7 Pecados Capitales (24+24 eps)</div>
+                    <div class="item-row py-2 px-3">Jujutsu Kaisen</div>
+                    <div class="item-row py-2 px-3">Chainsaw Man</div>
+                    <div class="item-row py-2 px-3">Blue Lock</div>
+                    <div class="item-row py-2 px-3">Spy x Family</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Tokyo Revengers</div>
+                    <div class="item-row py-2 px-3">Black Clover</div>
+                    <div class="item-row py-2 px-3">Hunter x Hunter</div>
+                    <div class="item-row py-2 px-3">Fullmetal Alchemist</div>
+                    <div class="item-row py-2 px-3">Death Note</div>
+                    <div class="item-row py-2 px-3">Cowboy Bebop</div>
+                    <div class="item-row py-2 px-3">Cyberpunk: Edgerunners</div>
+                    <div class="item-row py-2 px-3">Violet Evergarden</div>
+                    <div class="item-row py-2 px-3">Attack on Titan (Final)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 👨‍👩‍👧 DIBUJOS -->
+        <section class="mb-12 fade-in">
+            <div class="category-header series mb-4">
+                <h2 class="text-xl font-bold">👨‍👩‍👧 Dibujos Animados</h2>
+                <p class="text-xs text-white/40">Clásicos de tu infancia | Link: drive.google.com</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div>
+                    <div class="item-row py-2 px-3">Tom y Jerry</div>
+                    <div class="item-row py-2 px-3">Looney Tunes</div>
+                    <div class="item-row py-2 px-3">Pinky y Cerebro</div>
+                    <div class="item-row py-2 px-3">Thundercats (1080p)</div>
+                    <div class="item-row py-2 px-3">Family Guy (22 temp)</div>
+                    <div class="item-row py-2 px-3">Los Simpsons (35 temp)</div>
+                    <div class="item-row py-2 px-3">Bob Esponja (13 temp)</div>
+                    <div class="item-row py-2 px-3">Coraje el Perro Cobarde</div>
+                    <div class="item-row py-2 px-3">Oye Arnold!</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">South Park (26 temp)</div>
+                    <div class="item-row py-2 px-3">Rick and Morty (7 temp)</div>
+                    <div class="item-row py-2 px-3">Adventure Time</div>
+                    <div class="item-row py-2 px-3">Gravity Falls</div>
+                    <div class="item-row py-2 px-3">Teen Titans Go!</div>
+                    <div class="item-row py-2 px-3">Power Rangers (30 temp)</div>
+                    <div class="item-row py-2 px-3">Meteoro</div>
+                    <div class="item-row py-2 px-3">Los Picapiedra</div>
+                    <div class="item-row py-2 px-3">Futurama</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">ALF (4 temp)</div>
+                    <div class="item-row py-2 px-3">Dinosaurios (4 temp)</div>
+                    <div class="item-row py-2 px-3">Malcolm in the Middle</div>
+                    <div class="item-row py-2 px-3">Modern Family</div>
+                    <div class="item-row py-2 px-3">The Fresh Prince</div>
+                    <div class="item-row py-2 px-3">Full House</div>
+                    <div class="item-row py-2 px-3">Scooby-Doo</div>
+                    <div class="item-row py-2 px-3">Garfield</div>
+                    <div class="item-row py-2 px-3">Peanuts / Charlie Brown</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 📚 CÓMICS -->
+        <section class="mb-12 fade-in">
+            <div class="category-header anime mb-4">
+                <h2 class="text-xl font-bold">📚 Cómics y Historietas</h2>
+                <p class="text-xs text-white/40">70,000+ cómics digitales | Link: drive.google.com</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div>
+                    <div class="item-row py-2 px-3">Marvel Comics (25,000+)</div>
+                    <div class="item-row py-2 px-3">DC Comics (20,000+)</div>
+                    <div class="item-row py-2 px-3">Condorito (800+)</div>
+                    <div class="item-row py-2 px-3">Kaliman - El Hombre Increíble (300+)</div>
+                    <div class="item-row py-2 px-3">Barrabases (500+)</div>
+                    <div class="item-row py-2 px-3">Memin Pinguin (500+)</div>
+                    <div class="item-row py-2 px-3">Mortadelo y Filemón (200+)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Mafalda (300+)</div>
+                    <div class="item-row py-2 px-3">Tintín (100+)</div>
+                    <div class="item-row py-2 px-3">Asterix (50+)</div>
+                    <div class="item-row py-2 px-3">Chespirito (200+)</div>
+                    <div class="item-row py-2 px-3">Sandman (75+)</div>
+                    <div class="item-row py-2 px-3">Godzilla (50+)</div>
+                    <div class="item-row py-2 px-3">El Chapulín Colorado</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Cómics Vintage Colección (70,000+)</div>
+                    <div class="item-row py-2 px-3">Archie Comics</div>
+                    <div class="item-row py-2 px-3">Colecciones Novaro</div>
+                    <div class="item-row py-2 px-3">Bruguera Comics</div>
+                    <div class="item-row py-2 px-3">Zorro</div>
+                    <div class="item-row py-2 px-3">Conan El Bárbaro</div>
+                    <div class="item-row py-2 px-3">Agatha Christie Comics</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🎵 MÚSICA -->
+        <section class="mb-12 fade-in">
+            <div class="category-header series mb-4">
+                <h2 class="text-xl font-bold">🎵 Música y DJ Sets</h2>
+                <p class="text-xs text-white/40">DJ Nicolas Escobar, Karaoke, Mixes | Link: drive.google.com</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div>
+                    <div class="item-row py-2 px-3">DJ Nicolas Escobar Sets (100+)</div>
+                    <div class="item-row py-2 px-3">Karaoke Completo (500+)</div>
+                    <div class="item-row py-2 px-3">80s Megamix (50+)</div>
+                    <div class="item-row py-2 px-3">Classic Project DJ (21+)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">DJ Sets HD (12+)</div>
+                    <div class="item-row py-2 px-3">MegaMixes MP3 (50+)</div>
+                    <div class="item-row py-2 px-3">Disco 70s-80s-90s</div>
+                    <div class="item-row py-2 px-3">Rock Clásico MP3 (500+)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Electrónica / EDM</div>
+                    <div class="item-row py-2 px-3">Reggaetón / Trap</div>
+                    <div class="item-row py-2 px-3">Pop Latino</div>
+                    <div class="item-row py-2 px-3">Vallenato / Cumbia</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 📖 LIBROS -->
+        <section class="mb-12 fade-in">
+            <div class="category-header anime mb-4">
+                <h2 class="text-xl font-bold">📖 Libros y Audiolibros</h2>
+                <p class="text-xs text-white/40">Finanzas, Autoayuda, Arquitectura | Link: drive.google.com</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div>
+                    <div class="item-row py-2 px-3">Finanzas Personales (100+)</div>
+                    <div class="item-row py-2 px-3">Autoayuda / Desarrollo Personal (100+)</div>
+                    <div class="item-row py-2 px-3">Audiolibros (1800+)</div>
+                    <div class="item-row py-2 px-3">Arquitectura (100+)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Ocultismo / Sabiduría (100+)</div>
+                    <div class="item-row py-2 px-3">Cocina Keto (40+)</div>
+                    <div class="item-row py-2 px-3">Medicina Alternativa (50+)</div>
+                    <div class="item-row py-2 px-3">Negocios / Emprendimiento (100+)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Idiomas (30+)</div>
+                    <div class="item-row py-2 px-3">Arte / Pintura (50+)</div>
+                    <div class="item-row py-2 px-3">Libros Infantiles (200+)</div>
+                    <div class="item-row py-2 px-3">Historia / Biografías (50+)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🎓 CURSOS -->
+        <section class="mb-12 fade-in">
+            <div class="category-header series mb-4">
+                <h2 class="text-xl font-bold">🎓 Cursos en Video</h2>
+                <p class="text-xs text-white/40">Tarot, Celulares, Sanación, Excel | Link: drive.google.com</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div>
+                    <div class="item-row py-2 px-3">Pack Tarot Completo</div>
+                    <div class="item-row py-2 px-3">Reparación de Celulares</div>
+                    <div class="item-row py-2 px-3">Pack Sanación Holística (15+)</div>
+                    <div class="item-row py-2 px-3">Crochet / Amigurumis</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Excel Completo</div>
+                    <div class="item-row py-2 px-3">Illustrator</div>
+                    <div class="item-row py-2 px-3">AutoCAD</div>
+                    <div class="item-row py-2 px-3">Macramé</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Cocina Profesional</div>
+                    <div class="item-row py-2 px-3">Programación (Python, JS)</div>
+                    <div class="item-row py-2 px-3">Fotografía</div>
+                    <div class="item-row py-2 px-3">Edición de Video</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🎮 JUEGOS -->
+        <section class="mb-12 fade-in">
+            <div class="category-header anime mb-4">
+                <h2 class="text-xl font-bold">🎮 Juegos Retro y PC</h2>
+                <p class="text-xs text-white/40">NES, SNES, PC Games</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div>
+                    <div class="item-row py-2 px-3">1000 Juegos NES + Emulador</div>
+                    <div class="item-row py-2 px-3">1000 Juegos SNES</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Juegos PC Variados</div>
+                    <div class="item-row py-2 px-3">500 Juegos GameBoy</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">300+ Juegos PS1/PS2</div>
+                    <div class="item-row py-2 px-3">Nintendo Switch (Roms)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 📱 MANGAS -->
+        <section class="mb-12 fade-in">
+            <div class="category-header series mb-4">
+                <h2 class="text-xl font-bold">📱 Mangas en Español</h2>
+                <p class="text-xs text-white/40">1000+ títulos | Link: drive.google.com</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div>
+                    <div class="item-row py-2 px-3">Dragon Ball (completo)</div>
+                    <div class="item-row py-2 px-3">Naruto (completo)</div>
+                    <div class="item-row py-2 px-3">One Piece (completo)</div>
+                    <div class="item-row py-2 px-3">Demon Slayer (completo)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Attack on Titan (completo)</div>
+                    <div class="item-row py-2 px-3">Jujutsu Kaisen</div>
+                    <div class="item-row py-2 px-3">Chainsaw Man</div>
+                    <div class="item-row py-2 px-3">Blue Lock</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Spy x Family</div>
+                    <div class="item-row py-2 px-3">My Hero Academia</div>
+                    <div class="item-row py-2 px-3">Tokyo Revengers</div>
+                    <div class="item-row py-2 px-3">+900 títulos más</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🎁 EXTRAS -->
+        <section class="mb-12 fade-in">
+            <div class="category-header anime mb-4">
+                <h2 class="text-xl font-bold">🎁 Extras y Plantillas</h2>
+                <p class="text-xs text-white/40">Agendas, Sublimación, Imágenes | Link: drive.google.com</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div>
+                    <div class="item-row py-2 px-3">Agendas 2025 (20+)</div>
+                    <div class="item-row py-2 px-3">Plantillas Sublimación (50+)</div>
+                    <div class="item-row py-2 px-3">Imágenes Cuadros (5000+)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Papercraft (100+)</div>
+                    <div class="item-row py-2 px-3">Wallpapers 4K (1000+)</div>
+                    <div class="item-row py-2 px-3">Plantillas PPT (200+)</div>
+                </div>
+                <div>
+                    <div class="item-row py-2 px-3">Mockups PSD (100+)</div>
+                    <div class="item-row py-2 px-3">Sound Effects (500+)</div>
+                    <div class="item-row py-2 px-3">Fuentes / Fonts</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CTA Final -->
+    <section class="py-16 px-6 text-center border-t border-white/5 bg-gradient-to-t from-black/50 to-transparent">
+        <div class="max-w-xl mx-auto">
+            <h2 class="text-2xl font-bold mb-2">PACK COMPLETO</h2>
+            <div id="priceContainer">
+                <p id="originalPrice" class="text-2xl text-white/40 line-through mb-1">$19.990 CLP</p>
+                <p id="finalPrice" class="text-4xl font-bold text-green-400 mb-2">$7.990 CLP</p>
+            </div>
+            <p class="text-white/50 text-sm mb-4">Acceso a TODOS los enlaces de Drive</p>
+            
+            <!-- Código de descuento -->
+            <div class="mb-6">
+                <p class="text-white/40 text-xs mb-2">¿Tienes código de descuento?</p>
+                <div class="flex items-center justify-center gap-2 max-w-sm mx-auto">
+                    <input type="text" id="discountCode" placeholder="Ingresa tu código" 
+                           class="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-green-500 text-center uppercase">
+                    <button onclick="applyDiscount()" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-white font-medium transition">
+                        Aplicar
+                    </button>
+                </div>
+                <p id="discountMessage" class="text-sm mt-2 hidden"></p>
+            </div>
+            
+            <button onclick="openCheckout()" class="btn-buy inline-flex items-center gap-2 px-10 py-4 rounded-full text-white font-semibold text-lg">
+                <i class="fab fa-whatsapp text-xl"></i>
+                COMPRAR AHORA
+            </button>
+        </div>
+    </section>
+
+    <!-- Modal de Checkout -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
+        <div class="bg-gray-900 border border-white/10 rounded-2xl max-w-md w-full p-6 relative">
+            <button onclick="closeCheckout()" class="absolute top-4 right-4 text-white/40 hover:text-white text-2xl">&times;</button>
+            
+            <h3 class="text-xl font-bold mb-4 text-center">Confirmar Compra</h3>
+            
+            <div class="space-y-3 mb-6">
+                <div class="flex justify-between text-sm">
+                    <span class="text-white/60">PACK COMPLETO StreamVault</span>
+                    <span id="modalPrice">$7.990</span>
+                </div>
+                <div id="modalDiscountRow" class="flex justify-between text-sm text-green-400 hidden">
+                    <span>Descuento aplicado</span>
+                    <span id="modalDiscount">-$12.000</span>
+                </div>
+                <div class="border-t border-white/10 pt-3 flex justify-between font-bold">
+                    <span>Total a pagar</span>
+                    <span id="modalTotal" class="text-green-400">$7.990 CLP</span>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-white/60 text-sm mb-2">Tu correo electrónico</label>
+                <input type="email" id="buyerEmail" placeholder="tucorreo@ejemplo.com" 
+                       class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-green-500">
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-white/60 text-sm mb-2">Tu WhatsApp</label>
+                <input type="tel" id="buyerPhone" placeholder="+56 9 1234 5678" 
+                       class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-green-500">
+            </div>
+            
+            <button onclick="processPayment()" class="w-full btn-buy py-4 rounded-xl text-white font-semibold text-lg flex items-center justify-center gap-2">
+                <i class="fas fa-lock"></i>
+                PAGAR CON MERCADO PAGO
+            </button>
+            
+            <p class="text-center text-white/30 text-xs mt-4">
+                Pago seguro procesado por Mercado Pago
+            </p>
+        </div>
+    </div>
+
+    <!-- Modo Prueba (visible solo para testing) -->
+    <div class="fixed bottom-4 right-4 bg-yellow-500/90 text-black text-xs p-3 rounded-lg max-w-xs" id="testMode">
+        <p class="font-bold mb-1">🧪 MODO PRUEBA</p>
+        <p>Tarjetas de test:</p>
+        <p>Visa: 4509 9535 6623 3704</p>
+        <p>MC: 5031 4332 1540 6351</p>
+        <p>CVV: 123 | Venc: cualquiera</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-6 px-6 text-center text-white/30 text-sm border-t border-white/5">
+        <p>Un proyecto de <strong>Agencia Promarket</strong> | Impulsado por Emprende Online</p>
+    </footer>
+
+    <script>
+    function searchContent(query) {
+        const searchInput = document.getElementById('searchInput');
+        const searchCount = document.getElementById('searchCount');
+        const sections = document.querySelectorAll('section[id]');
+        let totalMatches = 0;
+        
+        if (query.length < 2) {
+            sections.forEach(section => {
+                section.style.display = '';
+                section.querySelectorAll('.item-row').forEach(row => {
+                    row.style.display = '';
+                });
+            });
+            searchCount.textContent = '';
+            return;
+        }
+        
+        query = query.toLowerCase().trim();
+        const queryWords = query.split(/\s+/);
+        
+        sections.forEach(section => {
+            const sectionContent = section.querySelector('.grid, .space-y-1, .divide-y');
+            if (!sectionContent) return;
+            
+            const items = sectionContent.querySelectorAll('.item-row');
+            let sectionMatches = 0;
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                const matches = queryWords.every(word => text.includes(word));
+                
+                item.style.display = matches ? '' : 'none';
+                if (matches) sectionMatches++;
+            });
+            
+            section.style.display = sectionMatches > 0 ? '' : 'none';
+            totalMatches += sectionMatches;
+        });
+        
+        searchCount.textContent = `${totalMatches} resultado${totalMatches !== 1 ? 's' : ''}`;
+    }
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+            e.preventDefault();
+            document.getElementById('searchInput').focus();
+        }
+        if (e.key === 'Escape') {
+            document.getElementById('searchInput').value = '';
+            searchContent('');
+            document.getElementById('searchInput').blur();
+        }
+    });
+    
+    // Precio base y descuento
+    const BASE_PRICE = 19990;
+    const DISCOUNTED_PRICE = 7990;
+    const VALID_CODE = 'PACKTODOENUNO';
+    let currentPrice = DISCOUNTED_PRICE;
+    let discountApplied = false;
+    
+    function applyDiscount() {
+        const input = document.getElementById('discountCode');
+        const message = document.getElementById('discountMessage');
+        const code = input.value.trim().toUpperCase();
+        
+        if (code === VALID_CODE) {
+            discountApplied = true;
+            currentPrice = DISCOUNTED_PRICE;
+            document.getElementById('originalPrice').style.display = 'block';
+            document.getElementById('finalPrice').textContent = '$7.990 CLP';
+            document.getElementById('finalPrice').className = 'text-4xl font-bold text-green-400 mb-2';
+            message.textContent = '¡Código aplicado! Precio especial: $7.990';
+            message.className = 'text-sm mt-2 text-green-400';
+            message.classList.remove('hidden');
+            input.disabled = true;
+            input.nextElementSibling.textContent = '✓';
+            input.nextElementSibling.className = 'px-4 py-2 bg-green-600 rounded-lg text-white';
+        } else {
+            discountApplied = false;
+            currentPrice = BASE_PRICE;
+            document.getElementById('originalPrice').style.display = 'none';
+            document.getElementById('finalPrice').textContent = '$19.990 CLP';
+            document.getElementById('finalPrice').className = 'text-4xl font-bold text-red-400 mb-2';
+            message.textContent = 'Código inválido. Precio sin descuento.';
+            message.className = 'text-sm mt-2 text-red-400';
+            message.classList.remove('hidden');
+        }
+    }
+    
+    function openCheckout() {
+        const modal = document.getElementById('checkoutModal');
+        const priceEl = document.getElementById('modalPrice');
+        const totalEl = document.getElementById('modalTotal');
+        const discountRow = document.getElementById('modalDiscountRow');
+        const discountAmount = document.getElementById('modalDiscount');
+        
+        priceEl.textContent = '$' + BASE_PRICE.toLocaleString('es-CL');
+        
+        if (discountApplied) {
+            discountRow.classList.remove('hidden');
+            discountAmount.textContent = '-$' + (BASE_PRICE - DISCOUNTED_PRICE).toLocaleString('es-CL');
+            totalEl.textContent = '$' + DISCOUNTED_PRICE.toLocaleString('es-CL') + ' CLP';
+        } else {
+            discountRow.classList.add('hidden');
+            totalEl.textContent = '$' + BASE_PRICE.toLocaleString('es-CL') + ' CLP';
+        }
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+    
+    function closeCheckout() {
+        const modal = document.getElementById('checkoutModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+    
+    // Inicializar MercadoPago
+    const mp = new MercadoPago('TEST-b6f1c833-0f2f-4a6e-a1f4-f1bf3fc3077e', {
+        locale: 'es-CL'
+    });
+    
+    async function processPayment() {
+        const email = document.getElementById('buyerEmail').value;
+        const phone = document.getElementById('buyerPhone').value;
+        
+        if (!email || !phone) {
+            alert('Por favor completa todos los campos');
+            return;
+        }
+        
+        if (!email.includes('@')) {
+            alert('Por favor ingresa un email válido');
+            return;
+        }
+        
+        const price = discountApplied ? DISCOUNTED_PRICE : BASE_PRICE;
+        const codeUsed = discountApplied ? 'PACKTODOENUNO' : 'Sin codigo';
+        
+        // Mostrar loading
+        const btn = event.target;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        btn.disabled = true;
+        
+        try {
+            // Llamar al backend para crear preferencia
+            const response = await fetch('/server/api/create-preference', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, phone, discountCode: codeUsed, price })
+            });
+            
+            const data = await response.json();
+            
+            if (data.init_point) {
+                // Redirigir a MercadoPago
+                window.location.href = data.init_point;
+            } else {
+                // Si no hay backend, usar botón de MercadoPago
+                document.getElementById('checkoutModal').innerHTML = `
+                    <button onclick="closeCheckout()" class="absolute top-4 right-4 text-white/40 hover:text-white text-2xl">&times;</button>
+                    <h3 class="text-xl font-bold mb-4 text-center">Pago con MercadoPago</h3>
+                    <div id="walletContainer"></div>
+                `;
+                
+                mp.bricks().create('wallet', 'walletContainer', {
+                    initialization: {
+                        preferenceId: 'YOUR_PREFERENCE_ID'
+                    },
+                    callbacks: {
+                        onReady: () => {},
+                        onError: (error) => console.error(error)
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            // Fallback: WhatsApp
+            const message = encodeURIComponent(
+                `🎬 Nueva compra StreamVault!\n\n` +
+                `📧 Email: ${email}\n` +
+                `📱 WhatsApp: ${phone}\n` +
+                `💰 Monto: $${price.toLocaleString('es-CL')} CLP\n` +
+                `🎟️ Código: ${codeUsed}`
+            );
+            window.open(`https://wa.me/56964681874?text=${message}`, '_blank');
+            closeCheckout();
+        }
+        
+        btn.innerHTML = '<i class="fas fa-lock"></i> PAGAR CON MERCADO PAGO';
+        btn.disabled = false;
+    }
+    
+    // Cerrar modal con Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeCheckout();
+    });
+    
+    // Inicializar con precio con descuento por defecto
+    document.getElementById('originalPrice').style.display = 'block';
+    </script>
+
+</body>
+</html>

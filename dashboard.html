@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Centro de Comando - Pack Todo en Uno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --neon-green: #39FF14;
+            --cyan: #00F5FF;
+            --neon-purple: #BF00FF;
+            --neon-pink: #FF0080;
+            --dark: #0A0A0B;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: #fff;
+        }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--neon-green), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(57, 255, 20, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .glow-green {
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+        }
+        
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+        }
+        
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(191, 0, 255, 0.3);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(57, 255, 20, 0.2);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--neon-green), var(--cyan));
+            height: 8px;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .status-online {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { background: #39FF14; }
+            50% { background: #00F5FF; }
+        }
+        
+        .scroll-area {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .scroll-area::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scroll-area::-webkit-scrollbar-thumb {
+            background: #39FF14;
+            border-radius: 3px;
+        }
+
+        .tab-active {
+            background: linear-gradient(90deg, var(--neon-green), var(--cyan));
+            color: #000;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-green-500/20 bg-black/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-r from-green-500 via-cyan-500 to-purple-500 flex items-center justify-center glow-green">
+                        <span class="text-3xl">📦</span>
+                    </div>
+                    <div>
+                        <h1 class="font-headline text-2xl font-bold gradient-text">CENTRO DE COMANDO</h1>
+                        <p class="text-xs text-gray-400">Pack Todo en Uno - Monetización 2026</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden md:block">
+                        <p class="text-xs text-gray-400">Meta 2026</p>
+                        <p class="font-bold text-green-400">$10.000.000/mes</p>
+                    </div>
+                    <div class="flex items-center gap-2 px-4 py-2 bg-green-500/20 rounded-full">
+                        <span class="w-3 h-3 rounded-full bg-green-400 status-online"></span>
+                        <span class="text-sm text-green-400">Sistema Activo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Meta Progress -->
+    <section class="py-6 bg-gradient-to-r from-green-900/20 to-cyan-900/20 border-b border-green-500/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm text-gray-400">Progreso hacia meta mensual</span>
+                <span class="font-bold gradient-text" id="meta-percent">0%</span>
+            </div>
+            <div class="w-full bg-gray-800 rounded-full h-3">
+                <div class="progress-bar" id="meta-bar" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between mt-2 text-xs text-gray-500">
+                <span>$0</span>
+                <span>$2.500.000</span>
+                <span>$5.000.000</span>
+                <span>$7.500.000</span>
+                <span>$10.000.000</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Cards -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Ventas Hoy -->
+                <div class="card rounded-2xl p-6 card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-3xl">💰</span>
+                        <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">HOY</span>
+                    </div>
+                    <p class="text-3xl font-bold gradient-text" id="ventas-hoy">$0</p>
+                    <p class="text-xs text-gray-400 mt-1">Ventas del día</p>
+                    <p class="text-sm text-gray-500 mt-2"><span id="ventas-count">0</span> transacciones</p>
+                </div>
+                
+                <!-- Ingresos Mes -->
+                <div class="card rounded-2xl p-6 card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-3xl">📊</span>
+                        <span class="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-xs">MES</span>
+                    </div>
+                    <p class="text-3xl font-bold text-cyan-400" id="ingresos-mes">$0</p>
+                    <p class="text-xs text-gray-400 mt-1">Ingresos del mes</p>
+                    <p class="text-sm text-gray-500 mt-2">Meta: $10.000.000</p>
+                </div>
+                
+                <!-- Leads -->
+                <div class="card rounded-2xl p-6 card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-3xl">👥</span>
+                        <span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs">TOTAL</span>
+                    </div>
+                    <p class="text-3xl font-bold text-purple-400" id="total-leads">0</p>
+                    <p class="text-xs text-gray-400 mt-1">Leads capturados</p>
+                    <p class="text-sm text-gray-500 mt-2"><span id="leads-hoy">0</span> nuevos hoy</p>
+                </div>
+                
+                <!-- Contenido -->
+                <div class="card rounded-2xl p-6 card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-3xl">📦</span>
+                        <span class="px-2 py-1 bg-pink-500/20 text-pink-400 rounded-full text-xs">DRIVE</span>
+                    </div>
+                    <p class="text-3xl font-bold text-pink-400">580GB+</p>
+                    <p class="text-xs text-gray-400 mt-1">Contenido digital</p>
+                    <p class="text-sm text-gray-500 mt-2">6 categorías activas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Tabs -->
+    <section class="py-6">
+        <div class="max-w-7xl mx-auto px-6">
+            <!-- Tabs -->
+            <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+                <button onclick="showTab('ventas')" class="tab-btn px-6 py-3 bg-white/5 border border-green-500/30 rounded-full font-medium tab-active" data-tab="ventas">
+                    💰 Ventas
+                </button>
+                <button onclick="showTab('productos')" class="tab-btn px-6 py-3 bg-white/5 border border-green-500/30 rounded-full font-medium" data-tab="productos">
+                    📦 Productos
+                </button>
+                <button onclick="showTab('leads')" class="tab-btn px-6 py-3 bg-white/5 border border-green-500/30 rounded-full font-medium" data-tab="leads">
+                    👥 Leads
+                </button>
+                <button onclick="showTab('automatizacion')" class="tab-btn px-6 py-3 bg-white/5 border border-green-500/30 rounded-full font-medium" data-tab="automatizacion">
+                    ⚡ Automatización
+                </button>
+                <button onclick="showTab('contenido')" class="tab-btn px-6 py-3 bg-white/5 border border-green-500/30 rounded-full font-medium" data-tab="contenido">
+                    🎬 Contenido
+                </button>
+            </div>
+
+            <!-- Tab: Ventas -->
+            <div id="tab-ventas" class="tab-content">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Chart -->
+                    <div class="card rounded-2xl p-6">
+                        <h3 class="font-headline text-xl font-bold mb-4">📈 Ventas Últimos 7 Días</h3>
+                        <canvas id="salesChart" height="200"></canvas>
+                    </div>
+                    
+                    <!-- Últimas Ventas -->
+                    <div class="card rounded-2xl p-6">
+                        <h3 class="font-headline text-xl font-bold mb-4">🕐 Últimas Transacciones</h3>
+                        <div class="scroll-area space-y-3" id="ventas-lista">
+                            <div class="text-center text-gray-500 py-8">
+                                <p class="text-4xl mb-2">📭</p>
+                                <p>Sin ventas aún</p>
+                                <p class="text-xs mt-1">Las transacciones aparecerán aquí</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="mt-6 grid md:grid-cols-3 gap-4">
+                    <button onclick="simularVenta()" class="card p-6 rounded-2xl text-center hover:border-green-500/50 transition">
+                        <span class="text-3xl mb-2 block">🧪</span>
+                        <span class="font-medium">Simular Venta</span>
+                        <p class="text-xs text-gray-500 mt-1">Prueba el sistema</p>
+                    </button>
+                    <button onclick="exportarVentas()" class="card p-6 rounded-2xl text-center hover:border-cyan-500/50 transition">
+                        <span class="text-3xl mb-2 block">📊</span>
+                        <span class="font-medium">Exportar Reporte</span>
+                        <p class="text-xs text-gray-500 mt-1">Descarga Excel/CSV</p>
+                    </button>
+                    <a href="index.html" target="_blank" class="card p-6 rounded-2xl text-center hover:border-purple-500/50 transition">
+                        <span class="text-3xl mb-2 block">🛒</span>
+                        <span class="font-medium">Ver Catálogo</span>
+                        <p class="text-xs text-gray-500 mt-1">Abre landing page</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tab: Productos -->
+            <div id="tab-productos" class="tab-content hidden">
+                <div class="grid md:grid-cols-3 gap-4">
+                    <!-- Historietas -->
+                    <div class="card rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-4xl">📖</span>
+                            <div>
+                                <h4 class="font-bold">Historietas</h4>
+                                <p class="text-sm text-green-400">+70.000 archivos</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Parte 1</span>
+                                <a href="https://drive.google.com/drive/folders/1Gny7qO30-nCP76IXi6iwZ5lLmEEehz3L" target="_blank" class="text-cyan-400 hover:underline">125 colecciones</a>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Parte 2</span>
+                                <a href="https://drive.google.com/drive/folders/1w1mebh4ba8iEj9mmkV_8zmXngfQpwhrP" target="_blank" class="text-cyan-400 hover:underline">44 colecciones</a>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Parte 3</span>
+                                <a href="https://drive.google.com/drive/folders/1OXhn4ZlFaxjhOXkdnWgQt2PeqDReV2iS" target="_blank" class="text-cyan-400 hover:underline">112 colecciones</a>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <p class="text-xs text-gray-500">Precio sugerido: <span class="text-green-400">$99.000</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Álbumes -->
+                    <div class="card rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-4xl">💾</span>
+                            <div>
+                                <h4 class="font-bold">Álbumes Retro</h4>
+                                <p class="text-sm text-green-400">31 álbumes</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Colecciones</span>
+                                <span class="text-cyan-400">31 Min, Pokémon...</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Drive</span>
+                                <a href="https://drive.google.com/drive/folders/1R3KBP2HoQwiMWGGyOw0tpyC49bdO41_-" target="_blank" class="text-cyan-400 hover:underline">Ver carpeta</a>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <p class="text-xs text-gray-500">Precio sugerido: <span class="text-green-400">$49.000</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Cómics -->
+                    <div class="card rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-4xl">🦸</span>
+                            <div>
+                                <h4 class="font-bold">Cómics</h4>
+                                <p class="text-sm text-green-400">+5.000 cómics</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Marvel</span>
+                                <span class="text-cyan-400">✓</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">DC Comics</span>
+                                <span class="text-cyan-400">✓</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Drive</span>
+                                <a href="https://drive.google.com/drive/folders/1yrth6NyK9iO7nQmiQCmB2BmvpLsh9YBV" target="_blank" class="text-cyan-400 hover:underline">Ver carpeta</a>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <p class="text-xs text-gray-500">Precio sugerido: <span class="text-green-400">$79.000</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Series -->
+                    <div class="card rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-4xl">📺</span>
+                            <div>
+                                <h4 class="font-bold">Series</h4>
+                                <p class="text-sm text-green-400">200+ series</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Retro</span>
+                                <span class="text-cyan-400">Star Trek, CHiPs...</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Animadas</span>
+                                <span class="text-cyan-400">Looney Tunes...</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Modernas</span>
+                                <span class="text-cyan-400">Arrow, Flash...</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <p class="text-xs text-gray-500">Precio sugerido: <span class="text-green-400">$59.000</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Anime -->
+                    <div class="card rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-4xl">🍜</span>
+                            <div>
+                                <h4 class="font-bold">Anime</h4>
+                                <p class="text-sm text-green-400">Pack completo</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Dragon Ball</span>
+                                <span class="text-cyan-400">✓</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Naruto</span>
+                                <span class="text-cyan-400">✓</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">One Piece</span>
+                                <span class="text-cyan-400">✓</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <p class="text-xs text-gray-500">Precio sugerido: <span class="text-green-400">$69.000</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Películas -->
+                    <div class="card rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-4xl">🎬</span>
+                            <div>
+                                <h4 class="font-bold">Películas</h4>
+                                <p class="text-sm text-green-400">580+ películas</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Disney/Pixar</span>
+                                <span class="text-cyan-400">✓</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Marvel/DC</span>
+                                <span class="text-cyan-400">✓</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">1080p Latino</span>
+                                <span class="text-cyan-400">✓</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <p class="text-xs text-gray-500">Precio sugerido: <span class="text-green-400">$79.000</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pack Completo -->
+                <div class="mt-6 card rounded-2xl p-6 border-2 border-green-500/50 glow-green">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <span class="text-5xl">🎁</span>
+                            <div>
+                                <h4 class="font-headline text-2xl font-bold gradient-text">PACK TODO EN UNO</h4>
+                                <p class="text-gray-400">Todo el contenido por $99.000 CLP</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="text-right">
+                                <p class="text-sm text-gray-400">Precio regular</p>
+                                <p class="text-2xl font-bold line-through text-gray-500">$149.000</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-400">Precio oferta</p>
+                                <p class="text-3xl font-bold text-green-400">$99.000</p>
+                            </div>
+                            <button onclick="comprarPack()" class="px-8 py-4 bg-gradient-to-r from-green-500 to-cyan-500 text-black font-bold rounded-xl hover:scale-105 transition">
+                                🚀 VENDER AHORA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Leads -->
+            <div id="tab-leads" class="tab-content hidden">
+                <div class="grid md:grid-cols-3 gap-4 mb-6">
+                    <div class="card rounded-2xl p-6 text-center">
+                        <p class="text-4xl mb-2">📧</p>
+                        <p class="text-2xl font-bold text-cyan-400" id="leads-email">0</p>
+                        <p class="text-sm text-gray-400">Email capturados</p>
+                    </div>
+                    <div class="card rounded-2xl p-6 text-center">
+                        <p class="text-4xl mb-2">💬</p>
+                        <p class="text-2xl font-bold text-green-400" id="leads-wa">0</p>
+                        <p class="text-sm text-gray-400">WhatsApp contacts</p>
+                    </div>
+                    <div class="card rounded-2xl p-6 text-center">
+                        <p class="text-4xl mb-2">🎯</p>
+                        <p class="text-2xl font-bold text-purple-400" id="leads-convert">0%</p>
+                        <p class="text-sm text-gray-400">Tasa conversión</p>
+                    </div>
+                </div>
+
+                <!-- Lista de Leads -->
+                <div class="card rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-headline text-xl font-bold">📋 Registro de Leads</h3>
+                        <button onclick="exportarLeads()" class="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition">
+                            📥 Exportar
+                        </button>
+                    </div>
+                    <div class="scroll-area" id="leads-lista">
+                        <table class="w-full text-sm">
+                            <thead class="text-left text-gray-400 border-b border-white/10">
+                                <tr>
+                                    <th class="pb-3">Nombre</th>
+                                    <th class="pb-3">Email</th>
+                                    <th class="pb-3">WhatsApp</th>
+                                    <th class="pb-3">Estado</th>
+                                    <th class="pb-3">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leads-tbody">
+                                <tr>
+                                    <td colspan="5" class="py-8 text-center text-gray-500">
+                                        Sin leads capturados aún
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Form Captura Lead -->
+                <div class="mt-6 card rounded-2xl p-6">
+                    <h3 class="font-headline text-lg font-bold mb-4">➕ Agregar Lead Manualmente</h3>
+                    <div class="grid md:grid-cols-4 gap-4">
+                        <input type="text" id="lead-nombre" placeholder="Nombre" class="px-4 py-3 bg-white/5 border border-green-500/30 rounded-xl focus:outline-none focus:border-green-500">
+                        <input type="email" id="lead-email" placeholder="Email" class="px-4 py-3 bg-white/5 border border-green-500/30 rounded-xl focus:outline-none focus:border-green-500">
+                        <input type="tel" id="lead-whatsapp" placeholder="WhatsApp" class="px-4 py-3 bg-white/5 border border-green-500/30 rounded-xl focus:outline-none focus:border-green-500">
+                        <button onclick="agregarLead()" class="px-6 py-3 bg-gradient-to-r from-green-500 to-cyan-500 text-black font-bold rounded-xl hover:scale-105 transition">
+                            Agregar Lead
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Automatización -->
+            <div id="tab-automatizacion" class="tab-content hidden">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Workflow Status -->
+                    <div class="card rounded-2xl p-6">
+                        <h3 class="font-headline text-xl font-bold mb-6">⚡ Workflows Activos</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-3 h-3 rounded-full bg-green-400 pulse"></span>
+                                    <span>Pago Detectado</span>
+                                </div>
+                                <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">Activo</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-3 h-3 rounded-full bg-green-400 pulse"></span>
+                                    <span>Envío de Acceso</span>
+                                </div>
+                                <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">Activo</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-3 h-3 rounded-full bg-green-400 pulse"></span>
+                                    <span>Registro CRM</span>
+                                </div>
+                                <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">Activo</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                                    <span>Notificación WhatsApp</span>
+                                </div>
+                                <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-sm">Pendiente</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Config Payment -->
+                    <div class="card rounded-2xl p-6">
+                        <h3 class="font-headline text-xl font-bold mb-6">💳 Configuración de Pago</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Link de Pago MercadoPago</label>
+                                <input type="text" id="mp-link" value="https://mercadopago.com/checkout..." class="w-full px-4 py-3 bg-white/5 border border-green-500/30 rounded-xl focus:outline-none focus:border-green-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Webhook URL (n8n)</label>
+                                <input type="text" id="webhook-url" value="https://tu-n8n.com/webhook/pack-venta" class="w-full px-4 py-3 bg-white/5 border border-green-500/30 rounded-xl focus:outline-none focus:border-green-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Plantilla Acceso Drive</label>
+                                <input type="text" id="drive-template" value="https://drive.google.com/drive/folders/XXXXX" class="w-full px-4 py-3 bg-white/5 border border-green-500/30 rounded-xl focus:outline-none focus:border-green-500 text-sm">
+                            </div>
+                            <button onclick="guardarConfig()" class="w-full py-3 bg-gradient-to-r from-green-500 to-cyan-500 text-black font-bold rounded-xl hover:scale-105 transition">
+                                💾 Guardar Configuración
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- n8n Workflow Preview -->
+                <div class="mt-6 card rounded-2xl p-6">
+                    <h3 class="font-headline text-xl font-bold mb-4">🔄 Flujo de Automatización</h3>
+                    <div class="flex items-center justify-between overflow-x-auto pb-4">
+                        <div class="flex items-center gap-4">
+                            <div class="text-center px-4">
+                                <div class="w-16 h-16 rounded-full bg-blue-500/20 border-2 border-blue-500 flex items-center justify-center text-2xl mb-2">💳</div>
+                                <p class="text-xs">Pago MP</p>
+                            </div>
+                            <div class="text-2xl text-gray-500">→</div>
+                            <div class="text-center px-4">
+                                <div class="w-16 h-16 rounded-full bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center text-2xl mb-2">⚡</div>
+                                <p class="text-xs">n8n Webhook</p>
+                            </div>
+                            <div class="text-2xl text-gray-500">→</div>
+                            <div class="text-center px-4">
+                                <div class="w-16 h-16 rounded-full bg-purple-500/20 border-2 border-purple-500 flex items-center justify-center text-2xl mb-2">📧</div>
+                                <p class="text-xs">Email Drive</p>
+                            </div>
+                            <div class="text-2xl text-gray-500">→</div>
+                            <div class="text-center px-4">
+                                <div class="w-16 h-16 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center text-2xl mb-2">💬</div>
+                                <p class="text-xs">WA Roberto</p>
+                            </div>
+                            <div class="text-2xl text-gray-500">→</div>
+                            <div class="text-center px-4">
+                                <div class="w-16 h-16 rounded-full bg-pink-500/20 border-2 border-pink-500 flex items-center justify-center text-2xl mb-2">📊</div>
+                                <p class="text-xs">CRM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Contenido -->
+            <div id="tab-contenido" class="tab-content hidden">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Drive Links -->
+                    <div class="card rounded-2xl p-6">
+                        <h3 class="font-headline text-xl font-bold mb-4">📁 Enlaces de Drive</h3>
+                        <div class="space-y-3">
+                            <a href="https://drive.google.com/drive/folders/1Gny7qO30-nCP76IXi6iwZ5lLmEEehz3L" target="_blank" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                                <span class="text-2xl">📖</span>
+                                <div>
+                                    <p class="font-medium">Historietas - Parte 1</p>
+                                    <p class="text-xs text-gray-500">125 colecciones</p>
+                                </div>
+                            </a>
+                            <a href="https://drive.google.com/drive/folders/1w1mebh4ba8iEj9mmkV_8zmXngfQpwhrP" target="_blank" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                                <span class="text-2xl">📖</span>
+                                <div>
+                                    <p class="font-medium">Historietas - Parte 2</p>
+                                    <p class="text-xs text-gray-500">44 colecciones</p>
+                                </div>
+                            </a>
+                            <a href="https://drive.google.com/drive/folders/1OXhn4ZlFaxjhOXkdnWgQt2PeqDReV2iS" target="_blank" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                                <span class="text-2xl">📖</span>
+                                <div>
+                                    <p class="font-medium">Historietas - Parte 3</p>
+                                    <p class="text-xs text-gray-500">112 colecciones</p>
+                                </div>
+                            </a>
+                            <a href="https://drive.google.com/drive/folders/1R3KBP2HoQwiMWGGyOw0tpyC49bdO41_-" target="_blank" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                                <span class="text-2xl">💾</span>
+                                <div>
+                                    <p class="font-medium">Álbumes Retro</p>
+                                    <p class="text-xs text-gray-500">31 álbumes</p>
+                                </div>
+                            </a>
+                            <a href="https://drive.google.com/drive/folders/1yrth6NyK9iO7nQmiQCmB2BmvpLsh9YBV" target="_blank" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                                <span class="text-2xl">🦸</span>
+                                <div>
+                                    <p class="font-medium">Cómics</p>
+                                    <p class="text-xs text-gray-500">+5.000 cómics</p>
+                                </div>
+                            </a>
+                            <a href="https://drive.google.com/drive/folders/1NSOnyaShql3VeWQ0CAW-edMKUDtxTLdk" target="_blank" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                                <span class="text-2xl">📺</span>
+                                <div>
+                                    <p class="font-medium">Series Retro</p>
+                                    <p class="text-xs text-gray-500">200+ series</p>
+                                </div>
+                            </a>
+                            <a href="https://drive.google.com/drive/folders/1PupNcRkVrXhZ1oeKXJmOKbG8rQW7m_Nr" target="_blank" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                                <span class="text-2xl">🍜</span>
+                                <div>
+                                    <p class="font-medium">Anime</p>
+                                    <p class="text-xs text-gray-500">Pack completo</p>
+                                </div>
+                            </a>
+                            <a href="https://drive.google.com/drive/folders/1cc0Z_G5RAqJneyocZ7cIyCr-H-6gIOkp" target="_blank" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                                <span class="text-2xl">🎬</span>
+                                <div>
+                                    <p class="font-medium">Películas - Parte 1</p>
+                                    <p class="text-xs text-gray-500">300 películas</p>
+                                </div>
+                            </a>
+                            <a href="https://drive.google.com/drive/folders/1kqVchG16UhrRsOWdGeqKhFdnmE3YqLK3" target="_blank" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                                <span class="text-2xl">🎬</span>
+                                <div>
+                                    <p class="font-medium">Películas - Parte 2</p>
+                                    <p class="text-xs text-gray-500">280 películas</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Estadísticas de Contenido -->
+                    <div class="card rounded-2xl p-6">
+                        <h3 class="font-headline text-xl font-bold mb-4">📊 Resumen del Contenido</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>Historietas</span>
+                                    <span class="text-green-400">281 colecciones</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>Álbumes</span>
+                                    <span class="text-cyan-400">31 álbumes</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-cyan-500 h-2 rounded-full" style="width: 31%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>Cómics</span>
+                                    <span class="text-purple-400">+5.000</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-purple-500 h-2 rounded-full" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>Series</span>
+                                    <span class="text-pink-400">200+</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-pink-500 h-2 rounded-full" style="width: 67%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>Películas</span>
+                                    <span class="text-yellow-400">580+</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 97%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 p-4 bg-gradient-to-r from-green-500/10 to-cyan-500/10 rounded-xl border border-green-500/20">
+                            <p class="text-center font-bold gradient-text">TOTAL APROXIMADO</p>
+                            <p class="text-center text-4xl font-bold mt-2">580GB+</p>
+                            <p class="text-center text-gray-400 text-sm mt-1">de contenido digital premium</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-green-500/20 mt-12">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-gray-500">🚀 Centro de Comando - Pack Todo en Uno</p>
+            <p class="text-xs text-gray-600 mt-1">Monetización 2026 | Meta: $10M/mes</p>
+        </div>
+    </footer>
+
+    <!-- Modal Compra -->
+    <div id="modal-compra" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-[#111] border border-green-500/30 rounded-2xl p-8 max-w-md w-full">
+            <h3 class="font-headline text-2xl font-bold gradient-text mb-4">🎉 ¡Venta Registrada!</h3>
+            <p class="text-gray-400 mb-6">La venta ha sido registrada en el sistema.</p>
+            <div class="bg-white/5 p-4 rounded-xl mb-6">
+                <p class="text-sm text-gray-300">💰 Pack Todo en Uno</p>
+                <p class="text-2xl font-bold text-green-400">$99.000 CLP</p>
+            </div>
+            <button onclick="cerrarModal()" class="w-full py-3 bg-gradient-to-r from-green-500 to-cyan-500 text-black font-bold rounded-xl">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        let ventas = [];
+        let leads = [];
+        let totalIngresos = 0;
+        let totalLeads = 0;
+
+        // Load from localStorage
+        function loadData() {
+            const savedVentas = localStorage.getItem('pack_ventas');
+            const savedLeads = localStorage.getItem('pack_leads');
+            if (savedVentas) ventas = JSON.parse(savedVentas);
+            if (savedLeads) leads = JSON.parse(savedLeads);
+            
+            totalIngresos = ventas.reduce((sum, v) => sum + v.monto, 0);
+            totalLeads = leads.length;
+            
+            updateStats();
+            renderVentas();
+            renderLeads();
+        }
+
+        function saveData() {
+            localStorage.setItem('pack_ventas', JSON.stringify(ventas));
+            localStorage.setItem('pack_leads', JSON.stringify(leads));
+        }
+
+        // Update Stats
+        function updateStats() {
+            const hoy = new Date().toDateString();
+            const ventasHoy = ventas.filter(v => new Date(v.fecha).toDateString() === hoy);
+            const ingresosHoy = ventasHoy.reduce((sum, v) => sum + v.monto, 0);
+            const leadsHoy = leads.filter(l => new Date(l.fecha).toDateString() === hoy).length;
+
+            document.getElementById('ventas-hoy').textContent = '$' + ingresosHoy.toLocaleString('es-CL');
+            document.getElementById('ventas-count').textContent = ventasHoy.length;
+            document.getElementById('ingresos-mes').textContent = '$' + totalIngresos.toLocaleString('es-CL');
+            document.getElementById('total-leads').textContent = totalLeads;
+            document.getElementById('leads-hoy').textContent = leadsHoy;
+            document.getElementById('leads-email').textContent = leads.filter(l => l.email).length;
+            document.getElementById('leads-wa').textContent = leads.filter(l => l.whatsapp).length;
+            
+            // Meta progress
+            const percent = Math.min((totalIngresos / 10000000) * 100, 100);
+            document.getElementById('meta-percent').textContent = percent.toFixed(1) + '%';
+            document.getElementById('meta-bar').style.width = percent + '%';
+        }
+
+        // Render Ventas
+        function renderVentas() {
+            const container = document.getElementById('ventas-lista');
+            if (ventas.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <p class="text-4xl mb-2">📭</p>
+                        <p>Sin ventas aún</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = ventas.slice().reverse().slice(0, 10).map(v => `
+                <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">${v.tipo === 'pack' ? '🎁' : '📦'}</span>
+                        <div>
+                            <p class="font-medium">${v.cliente || 'Cliente'}</p>
+                            <p class="text-xs text-gray-500">${new Date(v.fecha).toLocaleString('es-CL')}</p>
+                        </div>
+                    </div>
+                    <span class="font-bold text-green-400">$${v.monto.toLocaleString('es-CL')}</span>
+                </div>
+            `).join('');
+        }
+
+        // Render Leads
+        function renderLeads() {
+            const tbody = document.getElementById('leads-tbody');
+            if (leads.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-gray-500">Sin leads capturados aún</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = leads.slice().reverse().map(l => `
+                <tr class="border-b border-white/5">
+                    <td class="py-3">${l.nombre || '-'}</td>
+                    <td class="py-3">${l.email || '-'}</td>
+                    <td class="py-3">${l.whatsapp || '-'}</td>
+                    <td class="py-3"><span class="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">${l.estado || 'Nuevo'}</span></td>
+                    <td class="py-3 text-gray-500 text-xs">${new Date(l.fecha).toLocaleDateString('es-CL')}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Simulate Sale
+        function simularVenta() {
+            const nombres = ['Carlos M.', 'María G.', 'Juan P.', 'Ana L.', 'Pedro R.', 'Sofía N.', 'Diego C.'];
+            const venta = {
+                id: 'VEN-' + Date.now(),
+                cliente: nombres[Math.floor(Math.random() * nombres.length)],
+                monto: 99000,
+                tipo: 'pack',
+                fecha: new Date().toISOString()
+            };
+            ventas.push(venta);
+            totalIngresos += venta.monto;
+            saveData();
+            updateStats();
+            renderVentas();
+            
+            // Show modal
+            document.getElementById('modal-compra').classList.remove('hidden');
+            document.getElementById('modal-compra').classList.add('flex');
+        }
+
+        // Buy Pack
+        function comprarPack() {
+            window.open('https://wa.me/56964681874?text=Hola%20Roberto,%20quiero%20comprar%20el%20Pack%20Todo%20en%20Uno%20de%20$99.000', '_blank');
+        }
+
+        // Add Lead
+        function agregarLead() {
+            const nombre = document.getElementById('lead-nombre').value;
+            const email = document.getElementById('lead-email').value;
+            const whatsapp = document.getElementById('lead-whatsapp').value;
+            
+            if (!nombre && !email && !whatsapp) {
+                alert('Ingresa al menos un dato del lead');
+                return;
+            }
+            
+            const lead = {
+                id: 'LEAD-' + Date.now(),
+                nombre,
+                email,
+                whatsapp,
+                estado: 'Nuevo',
+                fecha: new Date().toISOString()
+            };
+            leads.push(lead);
+            totalLeads++;
+            saveData();
+            updateStats();
+            renderLeads();
+            
+            // Clear inputs
+            document.getElementById('lead-nombre').value = '';
+            document.getElementById('lead-email').value = '';
+            document.getElementById('lead-whatsapp').value = '';
+        }
+
+        // Exportar
+        function exportarVentas() {
+            const csv = 'ID,Cliente,Monto,Tipo,Fecha\n' + 
+                ventas.map(v => `${v.id},${v.cliente || ''},${v.monto},${v.tipo},${v.fecha}`).join('\n');
+            downloadFile(csv, 'ventas_pack.csv', 'text/csv');
+        }
+
+        function exportarLeads() {
+            const csv = 'ID,Nombre,Email,WhatsApp,Estado,Fecha\n' + 
+                leads.map(l => `${l.id},${l.nombre || ''},${l.email || ''},${l.whatsapp || ''},${l.estado || ''},${l.fecha}`).join('\n');
+            downloadFile(csv, 'leads_pack.csv', 'text/csv');
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+        }
+
+        // Tabs
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
+            
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('tab-active');
+        }
+
+        // Modal
+        function cerrarModal() {
+            document.getElementById('modal-compra').classList.add('hidden');
+            document.getElementById('modal-compra').classList.remove('flex');
+        }
+
+        // Guardar Config
+        function guardarConfig() {
+            const config = {
+                mpLink: document.getElementById('mp-link').value,
+                webhookUrl: document.getElementById('webhook-url').value,
+                driveTemplate: document.getElementById('drive-template').value
+            };
+            localStorage.setItem('pack_config', JSON.stringify(config));
+            alert('✅ Configuración guardada');
+        }
+
+        // Sales Chart
+        function initChart() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            const dias = [];
+            const datos = [];
+            
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                dias.push(d.toLocaleDateString('es-CL', { weekday: 'short' }));
+                
+                const diaStr = d.toDateString();
+                const ventasDia = ventas.filter(v => new Date(v.fecha).toDateString() === diaStr);
+                datos.push(ventasDia.reduce((sum, v) => sum + v.monto, 0) / 1000);
+            }
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dias,
+                    datasets: [{
+                        label: 'Miles de CLP',
+                        data: datos,
+                        backgroundColor: 'rgba(57, 255, 20, 0.5)',
+                        borderColor: '#39FF14',
+                        borderWidth: 1,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#9CA3AF' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#9CA3AF' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load config
+        function loadConfig() {
+            const saved = localStorage.getItem('pack_config');
+            if (saved) {
+                const config = JSON.parse(saved);
+                document.getElementById('mp-link').value = config.mpLink || '';
+                document.getElementById('webhook-url').value = config.webhookUrl || '';
+                document.getElementById('drive-template').value = config.driveTemplate || '';
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            initChart();
+            loadConfig();
+        });
+    </script>
+</body>
+</html>
