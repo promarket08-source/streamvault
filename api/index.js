@@ -402,13 +402,16 @@ app.get('/access', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📱 MercadoPago configured`);
-    if (botEnabled) {
-        console.log(`📱 Telegram Bot enabled`);
-    }
-});
+// Solo para desarrollo local, no Vercel
+if (process.env.VERCEL === undefined) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`📱 MercadoPago configured`);
+        if (botEnabled) {
+            console.log(`📱 Telegram Bot enabled`);
+        }
+    });
+}
 
 // ============ TELEGRAM BOT WEBHOOK ============
 // Webhook para recibir mensajes de Telegram
@@ -575,12 +578,17 @@ app.post('/api/chat/web', async (req, res) => {
     res.json({ response: 'Mensaje recibido. Te responderé en breve.' });
 });
 
-// Reporte diario a Telegram
-setInterval(async () => {
-    const msg = `📊 <b>REPORTE DIARIO - StreamVault</b>\n\n` +
-        `💰 Ventas: ${ventasHoy}\n` +
-        `💬 Chats: ${chatSessions.size}\n` +
-        `🕐 ${new Date().toLocaleString('es-CL')}`;
-    await sendToTelegram(TELEGRAM_ADMIN_CHAT_ID, msg);
-}, 24 * 60 * 60 * 1000);
+// Reporte diario a Telegram (solo en servidor local, no Vercel)
+if (process.env.VERCEL === undefined) {
+    setInterval(async () => {
+        const msg = `📊 <b>REPORTE DIARIO - StreamVault</b>\n\n` +
+            `💰 Ventas: ${ventasHoy}\n` +
+            `💬 Chats: ${chatSessions.size}\n` +
+            `🕐 ${new Date().toLocaleString('es-CL')}`;
+        await sendToTelegram(TELEGRAM_ADMIN_CHAT_ID, msg);
+    }, 24 * 60 * 60 * 1000);
+}
+
+// Export for Vercel
+module.exports = app;
 
