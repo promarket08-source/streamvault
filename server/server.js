@@ -206,7 +206,7 @@ app.post('/api/create-preference', async (req, res) => {
                 phone: { number: phone }
             },
             external_reference: paymentId,
-            notification_url: `${BASE_URL}/server/api/webhook`,
+            notification_url: `${BASE_URL}/api/webhook`,
             back_urls: {
                 success: `${BASE_URL}/success.html?payment=${paymentId}`,
                 failure: `${BASE_URL}/failure.html`,
