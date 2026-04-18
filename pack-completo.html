@@ -219,6 +219,27 @@
         description: 'Acceso total a todo el contenido'
     };
 
+    // Debug function to test API
+    async function testAPI() {
+        try {
+            const response = await fetch('/api/create-preference/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: 'test@test.com',
+                    phone: '+56912345678',
+                    productId: 'pack-total'
+                })
+            });
+            const data = await response.json();
+            console.log('API Response:', data);
+            alert('API Response: ' + JSON.stringify(data));
+        } catch (error) {
+            console.error('API Error:', error);
+            alert('API Error: ' + error.message);
+        }
+    }
+
     function openCheckout() {
         document.getElementById('checkoutModal').classList.remove('hidden');
         document.getElementById('checkoutModal').classList.add('flex');
@@ -243,7 +264,7 @@
         btn.disabled = true;
         
         try {
-            const response = await fetch('/api/create-preference', {
+            const response = await fetch('/api/create-preference/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -261,10 +282,10 @@
             if (data.init_point) {
                 window.location.href = data.init_point;
             } else {
-                alert('Error al procesar pago. Por favor contacta soporte.');
+                alert('Error: ' + JSON.stringify(data));
             }
         } catch (error) {
-            alert('Error de conexión. Por favor intenta nuevamente.');
+            alert('Error de conexión: ' + error.message);
         }
         
         btn.innerHTML = '<i class="fas fa-credit-card"></i> PAGAR CON MERCADO PAGO';
