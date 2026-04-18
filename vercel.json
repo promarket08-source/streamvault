@@ -27,14 +27,5 @@
       "src": "/(.*)",
       "dest": "index.html"
     }
-  ],
-  "env": {
-    "TELEGRAM_BOT_TOKEN": "@telegram-bot-token",
-    "TELEGRAM_ADMIN_CHAT_ID": "@telegram-admin-chat-id",
-    "FIREBASE_API_KEY": "@firebase-api-key",
-    "FIREBASE_DB_URL": "@firebase-db-url",
-    "MP_ACCESS_TOKEN": "@mp-access-token",
-    "N8N_WEBHOOK_URL": "@n8n-webhook-url",
-    "BASE_URL": "@base-url"
-  }
+  ]
 }
