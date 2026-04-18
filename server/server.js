@@ -93,7 +93,7 @@ app.use(cors({
 // CONFIGURACIÓN
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || 'TEST-3995262250590857-041417-517c4813229810d837a479d0063af4cf-1203544880';
 const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || '';
-const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+const BASE_URL = process.env.BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'secret-key-123';
 
 // Configurar MercadoPago
