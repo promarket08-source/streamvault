@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamVault - Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-white p-10">
+
+    <h1 class="text-3xl mb-10">TEST - Botón Lista Completa</h1>
+
+    <!-- BOTÓN DE PRUEBA SIMPLE -->
+    <button onclick="abrirModal()" class="bg-green-500 px-6 py-3 rounded text-white font-bold">
+        🎯 CLICK AQUÍ PARA PROBAR
+    </button>
+
+    <!-- MODAL -->
+    <div id="miModal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 p-6 rounded-xl max-w-md w-full border border-green-500">
+            <h2 id="modalTitulo" class="text-xl font-bold text-green-400 mb-4">Título</h2>
+            <div id="modalContenido" class="text-sm space-y-2 max-h-80 overflow-y-auto"></div>
+            <button onclick="cerrarModal()" class="mt-4 bg-red-500 px-4 py-2 rounded text-white">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+    function abrirModal() {
+        alert('El onclick funciona!');
+        document.getElementById('miModal').classList.remove('hidden');
+    }
+    
+    function cerrarModal() {
+        document.getElementById('miModal').classList.add('hidden');
+    }
+    </script>
+
+</body>
+</html>

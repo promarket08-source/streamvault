@@ -3,17 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎬 StreamVault - Catálogo</title>
+    <title>🎬 StreamVault - Pack Completo Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
         
         body {
             background: #0a0a0a;
             color: #e5e5e5;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
         
         .fade-in {
@@ -24,7 +40,23 @@
         @keyframes fadeIn {
             to { opacity: 1; }
         }
-        
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(234, 179, 8, 0.6); }
+        }
+
+        @keyframes urgent-flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .countdown-box {
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border: 2px solid #ef4444;
+            animation: pulse-glow 2s infinite;
+        }
+
         .category-header {
             position: relative;
             padding-left: 20px;
@@ -64,6 +96,16 @@
             transform: scale(1.05);
             box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
         }
+
+        .btn-cta-gold {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            transition: all 0.3s;
+        }
+        
+        .btn-cta-gold:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.5);
+        }
         
         .quality-badge {
             font-size: 0.6rem;
@@ -87,26 +129,12 @@
 </head>
 <body class="min-h-screen">
     
-    <!-- Search Bar -->
-    <div class="fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 py-3 px-6 shadow-lg">
-        <div class="max-w-5xl mx-auto">
-            <div class="relative">
-                <input type="text" id="searchInput" placeholder="Buscar películas, series, anime, cómics..." 
-                       class="w-full bg-white/10 border border-white/10 rounded-lg px-4 py-3 pl-12 text-white placeholder-white/40 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
-                       oninput="searchContent(this.value)">
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
-                <span id="searchCount" class="absolute right-4 top-1/2 -translate-y-1/2 text-green-400 text-sm font-medium"></span>
-            </div>
-            <div id="searchResults" class="mt-2 hidden"></div>
-        </div>
-    </div>
-
     <!-- Header -->
     <header class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
-        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <span class="text-2xl">🎬</span>
-                <span class="text-xl font-semibold tracking-tight">StreamVault</span>
+                <span class="text-lg md:text-xl font-bold tracking-tight">StreamVault</span>
             </div>
             <a href="https://wa.me/56964681874" class="text-sm text-white/50 hover:text-white transition">
                 Contactar →
@@ -114,15 +142,195 @@
         </div>
     </header>
 
+    <!-- Search Bar -->
+    <div class="fixed top-12 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 py-2 px-4 shadow-lg">
+        <div class="max-w-6xl mx-auto">
+            <div class="relative">
+                <input type="text" id="searchInput" placeholder="Buscar películas, series, anime, cómics..." 
+                       class="w-full bg-white/10 border border-white/10 rounded-lg px-4 py-2 pl-10 md:pl-12 text-white text-sm placeholder-white/40 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                       oninput="searchContent(this.value)">
+                <i class="fas fa-search absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-white/40 text-sm"></i>
+                <span id="searchCount" class="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-400 text-xs font-medium hidden md:inline"></span>
+            </div>
+            <div id="searchResults" class="mt-1 hidden"></div>
+        </div>
+    </div>
+
+    <!-- Neuroventas Banner - URGENCIA -->
+    <section class="relative overflow-hidden bg-gradient-to-r from-red-600 via-pink-600 to-red-600 py-4">
+        <div class="absolute inset-0 bg-animate"></div>
+        <div class="max-w-6xl mx-auto px-6 text-center relative z-10">
+            <div class="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-white">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl animate-bounce">🔥</span>
+                    <span class="font-bold text-lg">OFERTA POR TIEMPO LIMITADO</span>
+                </div>
+                <div class="hidden md:block w-px h-8 bg-white/30"></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">⚡</span>
+                    <span class="font-bold">PACK COMPLETO $15.990</span>
+                </div>
+                <div class="hidden md:block w-px h-8 bg-white/30"></div>
+                <div class="flex items-center gap-2 bg-black/30 px-4 py-2 rounded-full">
+                    <span class="text-sm">🎟️ Código:</span>
+                    <code class="font-bold bg-yellow-400 text-black px-2 py-0.5 rounded">PACKTODOENUNO</code>
+                </div>
+            </div>
+        </div>
+        <style>
+            .bg-animate {
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                animation: shimmer 2s infinite;
+            }
+            @keyframes shimmer {
+                0% { transform: translateX(-100%); }
+                100% { transform: translateX(100%); }
+            }
+        </style>
+    </section>
+
+    <!-- Neuroventas Section - Storytelling -->
+    <section class="py-16 px-6 bg-gradient-to-b from-purple-900/20 via-black to-black">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Headline Persuasivo -->
+            <div class="text-center mb-12">
+                <span class="inline-block bg-yellow-400/20 text-yellow-400 text-sm font-bold px-4 py-1 rounded-full mb-4">
+                    🎯 +2,000 CLIENTES SATISFECHOS
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                    ¿TeImaginasTener <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">TODO</span> Ese Contenido En Un Solo Click?
+                </h2>
+                <p class="text-xl text-white/70 max-w-3xl mx-auto">
+                    Películas en 4K, Series completas, Anime, Comics, Música y Libros... Todo en <strong class="text-yellow-400">Google Drive</strong>, listo para ti <strong class="text-green-400">AHORA MISMO</strong>.
+                </p>
+            </div>
+
+            <!-- Pain Points - Problema -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-red-500/10 border border-red-500/30 rounded-2xl p-6 text-center">
+                    <div class="text-4xl mb-3">😰</div>
+                    <h3 class="font-bold text-red-400 mb-2">¿Cansado de Buscar?</h3>
+                    <p class="text-white/60 text-sm">Horas buscando películas que nunca encuentras completas...</p>
+                </div>
+                <div class="bg-red-500/10 border border-red-500/30 rounded-2xl p-6 text-center">
+                    <div class="text-4xl mb-3">💸</div>
+                    <h3 class="font-bold text-red-400 mb-2">¿Pagando Demasiado?</h3>
+                    <p class="text-white/60 text-sm">Netflix, Disney+, HBO... ¿Cuánto gastas al mes en suscripciones?</p>
+                </div>
+                <div class="bg-red-500/10 border border-red-500/30 rounded-2xl p-6 text-center">
+                    <div class="text-4xl mb-3">😤</div>
+                    <h3 class="font-bold text-red-400 mb-2">¿Contenido Bloqueado?</h3>
+                    <p class="text-white/60 text-sm">Geografías, restricciones... ¡Ya no más limitaciones!</p>
+                </div>
+            </div>
+
+            <!-- Solución - Benefit Stack -->
+            <div class="bg-gradient-to-br from-green-900/30 to-green-950/50 border border-green-500/30 rounded-3xl p-8 mb-12">
+                <div class="text-center mb-8">
+                    <span class="inline-block bg-green-400 text-black text-sm font-bold px-4 py-1 rounded-full mb-4">
+                        ✅ LA SOLUCIÓN DEFINITIVA
+                    </span>
+                    <h3 class="text-2xl md:text-3xl font-bold text-white">
+                        StreamVault: <span class="text-green-400">TODO</span> En Un Solo Pack
+                    </h3>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div class="bg-white/5 rounded-xl p-4 text-center hover:bg-white/10 transition">
+                        <div class="text-3xl mb-2">📽️</div>
+                        <p class="text-sm font-medium">+500 Películas</p>
+                        <p class="text-xs text-white/50">4K y HD</p>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4 text-center hover:bg-white/10 transition">
+                        <div class="text-3xl mb-2">📺</div>
+                        <p class="text-sm font-medium">+300 Series</p>
+                        <p class="text-xs text-white/50">Completas</p>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4 text-center hover:bg-white/10 transition">
+                        <div class="text-3xl mb-2">🐉</div>
+                        <p class="text-sm font-medium">+200 Anime</p>
+                        <p class="text-xs text-white/50">Sin cortes</p>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4 text-center hover:bg-white/10 transition">
+                        <div class="text-3xl mb-2">📚</div>
+                        <p class="text-sm font-medium">+800 Comics</p>
+                        <p class="text-xs text-white/50">Marvel, DC, Manga</p>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4 text-center hover:bg-white/10 transition">
+                        <div class="text-3xl mb-2">🎵</div>
+                        <p class="text-sm font-medium">+50 Sets</p>
+                        <p class="text-xs text-white/50">DJ Nicolas</p>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4 text-center hover:bg-white/10 transition">
+                        <div class="text-3xl mb-2">📖</div>
+                        <p class="text-sm font-medium">+100 Libros</p>
+                        <p class="text-xs text-white/50">Audiolibros</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Precio Psicológico -->
+            <div class="text-center mb-8">
+                <div class="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-bold px-8 py-4 rounded-2xl mb-4 transform rotate-1">
+                    <p class="text-lg line-through opacity-50">Valor Real: $28.450 CLP</p>
+                    <p class="text-4xl md:text-5xl font-bold">HOY: $15.990 CLP</p>
+                    <p class="text-sm mt-1">¡Ahorra $20.460 instantly!</p>
+                </div>
+            </div>
+
+            <!-- Testimonios / Social Proof -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+                <div class="bg-white/5 rounded-xl p-4 border-l-4 border-green-500">
+                    <div class="flex items-center gap-1 text-yellow-400 mb-2">⭐⭐⭐⭐⭐</div>
+                    <p class="text-white/80 text-sm mb-3 italic">"Me llegó el link en 2 minutos. Ya estoy viendo películas con mi familia. ¡Increíble!"</p>
+                    <p class="text-white/50 text-xs font-medium">— Carlos M., Santiago</p>
+                </div>
+                <div class="bg-white/5 rounded-xl p-4 border-l-4 border-green-500">
+                    <div class="flex items-center gap-1 text-yellow-400 mb-2">⭐⭐⭐⭐⭐</div>
+                    <p class="text-white/80 text-sm mb-3 italic">"El pack de anime tiene TODO Dragon Ball. Mi hijo no para de ver. 100% recomendado."</p>
+                    <p class="text-white/50 text-xs font-medium">— María F., Valparaíso</p>
+                </div>
+                <div class="bg-white/5 rounded-xl p-4 border-l-4 border-green-500">
+                    <div class="flex items-center gap-1 text-yellow-400 mb-2">⭐⭐⭐⭐⭐</div>
+                    <p class="text-white/80 text-sm mb-3 italic">"Por $15.990 tengo más contenido que con Netflix + Disney + HBO juntos. Best deal."</p>
+                    <p class="text-white/50 text-xs font-medium">— Diego R., Concepción</p>
+                </div>
+            </div>
+
+            <!-- CTA Final Urgente -->
+            <div class="text-center">
+                <div class="inline-flex items-center gap-2 bg-red-600/50 px-4 py-2 rounded-full text-red-200 text-sm mb-4">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                    Solo quedan 23 packs disponibles esta semana
+                </div>
+                <br>
+                <a href="https://wa.me/56964681874?text=Hola!%20Quiero%20el%20PACK%20COMPLETO%20de%20StreamVault%20por%20$15.990%20CLP" 
+                   class="inline-flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-xl px-12 py-5 rounded-full shadow-2xl shadow-green-500/50 transform hover:scale-105 transition-all">
+                    <i class="fab fa-whatsapp text-2xl"></i>
+                    ¡QUIERO MI PACK AHORA! → $15.990
+                </a>
+                <p class="text-white/40 text-sm mt-4">
+                    <i class="fas fa-shield-alt mr-1"></i>
+                    Pago 100% seguro | Acceso instantáneo | Garantía de satisfacción
+                </p>
+            </div>
+
+        </div>
+    </section>
+
     <!-- Hero -->
-    <section class="pt-28 pb-12 px-6 text-center">
+    <section class="pt-8 pb-12 px-6 text-center">
         <div class="max-w-2xl mx-auto">
             <h1 class="text-3xl md:text-4xl font-bold mb-2">
                 <span class="text-green-400">PACK COMPLETO</span>
             </h1>
-            <p class="text-4xl md:text-5xl font-bold text-white mb-2">$7.990 CLP</p>
+            <p class="text-4xl md:text-5xl font-bold text-white mb-2">$15.990 CLP</p>
             <p class="text-white/50 text-sm mb-6">Acceso a TODOS los enlaces de Google Drive</p>
-            <a href="https://wa.me/56964681874?text=Hola!%20Quiero%20comprar%20el%20PACK%20COMPLETO%20de%20StreamVault%20por%20$7.990%20CLP" 
+            <a href="https://wa.me/56964681874?text=Hola!%20Quiero%20comprar%20el%20PACK%20COMPLETO%20de%20StreamVault%20por%20$15.990%20CLP" 
                class="btn-buy inline-flex items-center gap-2 px-8 py-3 rounded-full text-white font-semibold">
                 <i class="fab fa-whatsapp"></i>
                 COMPRAR PACK
@@ -166,15 +374,18 @@
                     
                     <div class="flex items-center justify-between mb-4 pt-3 border-t border-white/10">
                         <div>
-                            <span class="text-2xl font-bold text-white">$3.990</span>
-                            <span class="text-sm text-white/30 line-through ml-2">$9.990</span>
+                            <span class="text-2xl font-bold text-white">$4.990</span>
+                            <span class="text-sm text-white/30 line-through ml-2">$12.990</span>
                         </div>
                         <span class="text-green-400 text-xs">-60% OFF</span>
                     </div>
                     
-                    <a href="pack-peliculas.html" class="block w-full py-3 bg-red-600 hover:bg-red-500 rounded-xl text-white font-semibold text-center transition">
+                    <a href="pack-peliculas.html" class="block w-full py-3 bg-red-600 hover:bg-red-500 rounded-xl text-white font-semibold text-center transition mb-2">
                         <i class="fas fa-shopping-cart mr-2"></i>COMPRAR AHORA
                     </a>
+                    <button type="button" class="block w-full py-2 bg-white/10 hover:bg-white/20 rounded-xl text-white/70 font-medium text-sm transition cursor-pointer lista-btn" data-pack="peliculas">
+                        <i class="fas fa-list mr-2"></i>Ver lista completa
+                    </button>
                 </div>
 
                 <!-- PACK ANIME & SERIES -->
@@ -203,15 +414,18 @@
                     
                     <div class="flex items-center justify-between mb-4 pt-3 border-t border-white/10">
                         <div>
-                            <span class="text-2xl font-bold text-white">$3.990</span>
-                            <span class="text-sm text-white/30 line-through ml-2">$9.990</span>
+                            <span class="text-2xl font-bold text-white">$4.990</span>
+                            <span class="text-sm text-white/30 line-through ml-2">$12.990</span>
                         </div>
                         <span class="text-green-400 text-xs">-60% OFF</span>
                     </div>
                     
-                    <a href="pack-anime-series.html" class="block w-full py-3 bg-teal-600 hover:bg-teal-500 rounded-xl text-white font-semibold text-center transition">
+                    <a href="pack-anime-series.html" class="block w-full py-3 bg-teal-600 hover:bg-teal-500 rounded-xl text-white font-semibold text-center transition mb-2">
                         <i class="fas fa-shopping-cart mr-2"></i>COMPRAR AHORA
                     </a>
+                    <button type="button" class="block w-full py-2 bg-white/10 hover:bg-white/20 rounded-xl text-white/70 font-medium text-sm transition cursor-pointer lista-btn" data-pack="anime">
+                        <i class="fas fa-list mr-2"></i>Ver lista completa
+                    </button>
                 </div>
 
                 <!-- PACK COMICS -->
@@ -246,9 +460,12 @@
                         <span class="text-green-400 text-xs">-57% OFF</span>
                     </div>
                     
-                    <a href="pack-comics.html" class="block w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-xl text-white font-semibold text-center transition">
+                    <a href="pack-comics.html" class="block w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-xl text-white font-semibold text-center transition mb-2">
                         <i class="fas fa-shopping-cart mr-2"></i>COMPRAR AHORA
                     </a>
+                    <button type="button" class="block w-full py-2 bg-white/10 hover:bg-white/20 rounded-xl text-white/70 font-medium text-sm transition cursor-pointer lista-btn" data-pack="comics">
+                        <i class="fas fa-list mr-2"></i>Ver lista completa
+                    </button>
                 </div>
 
                 <!-- PACK MÚSICA -->
@@ -283,9 +500,12 @@
                         <span class="text-green-400 text-xs">-60% OFF</span>
                     </div>
                     
-                    <a href="pack-musica.html" class="block w-full py-3 bg-pink-600 hover:bg-pink-500 rounded-xl text-white font-semibold text-center transition">
+                    <a href="pack-musica.html" class="block w-full py-3 bg-pink-600 hover:bg-pink-500 rounded-xl text-white font-semibold text-center transition mb-2">
                         <i class="fas fa-shopping-cart mr-2"></i>COMPRAR AHORA
                     </a>
+                    <button type="button" class="block w-full py-2 bg-white/10 hover:bg-white/20 rounded-xl text-white/70 font-medium text-sm transition cursor-pointer lista-btn" data-pack="musica">
+                        <i class="fas fa-list mr-2"></i>Ver lista completa
+                    </button>
                 </div>
 
                 <!-- PACK LIBROS -->
@@ -320,9 +540,12 @@
                         <span class="text-green-400 text-xs">-58% OFF</span>
                     </div>
                     
-                    <a href="pack-libros.html" class="block w-full py-3 bg-yellow-600 hover:bg-yellow-500 rounded-xl text-white font-semibold text-center transition">
+                    <a href="pack-libros.html" class="block w-full py-3 bg-yellow-600 hover:bg-yellow-500 rounded-xl text-white font-semibold text-center transition mb-2">
                         <i class="fas fa-shopping-cart mr-2"></i>COMPRAR AHORA
                     </a>
+                    <button type="button" class="block w-full py-2 bg-white/10 hover:bg-white/20 rounded-xl text-white/70 font-medium text-sm transition cursor-pointer lista-btn" data-pack="libros">
+                        <i class="fas fa-list mr-2"></i>Ver lista completa
+                    </button>
                 </div>
 
                 <!-- PACK COMPLETO -->
@@ -362,15 +585,18 @@
                     
                     <div class="flex items-center justify-between mb-4 pt-3 border-t border-white/10">
                         <div>
-                            <span class="text-2xl font-bold text-green-400">$7.990</span>
+                            <span class="text-2xl font-bold text-green-400">$15.990</span>
                             <span class="text-sm text-white/30 line-through ml-2">$28.450</span>
                         </div>
                         <span class="text-green-400 text-xs font-bold">-72% OFF</span>
                     </div>
                     
-                    <a href="https://wa.me/56964681874?text=Hola!%20Quiero%20comprar%20el%20PACK%20COMPLETO%20de%20StreamVault%20por%20$7.990%20CLP" class="block w-full py-3 bg-green-600 hover:bg-green-500 rounded-xl text-white font-semibold text-center transition">
+                    <a href="https://wa.me/56964681874?text=Hola!%20Quiero%20comprar%20el%20PACK%20COMPLETO%20de%20StreamVault%20por%20$15.990%20CLP" class="block w-full py-3 bg-green-600 hover:bg-green-500 rounded-xl text-white font-semibold text-center transition mb-2">
                         <i class="fab fa-whatsapp mr-2"></i>COMPRAR POR WHATSAPP
                     </a>
+                    <button type="button" class="block w-full py-2 bg-white/10 hover:bg-white/20 rounded-xl text-white/70 font-medium text-sm transition cursor-pointer lista-btn" data-pack="completo">
+                        <i class="fas fa-list mr-2"></i>Ver lista completa
+                    </button>
                 </div>
 
             </div>
@@ -381,1120 +607,741 @@
         </div>
     </section>
 
-    <!-- Catálogo -->
-    <main class="max-w-5xl mx-auto px-6 pb-20 pt-4">
-        
-        <!-- Modal de Contenido Completo -->
-        <div id="contentModal" class="fixed inset-0 bg-black/95 z-50 hidden overflow-y-auto">
-            <div class="min-h-screen py-8 px-4">
-                <div class="max-w-4xl mx-auto bg-gray-900 border border-white/10 rounded-2xl overflow-hidden">
-                    <div class="sticky top-0 bg-gray-900 border-b border-white/10 p-4 flex items-center justify-between">
-                        <h3 id="modalTitle" class="text-xl font-bold"></h3>
-                        <button onclick="closeContentModal()" class="text-white/50 hover:text-white text-2xl">&times;</button>
-                    </div>
-                    <div id="modalContent" class="p-6"></div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 🎬 PELÍCULAS -->
-        <section class="mb-12 fade-in">
-            <div class="category-header peliculas mb-4">
-                <h2 class="text-xl font-bold">🎬 Películas</h2>
-                <p class="text-xs text-white/40">280+ películas en HD y 4K | Link: drive.google.com</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-0 text-xs">
-                <!-- Columna 1 -->
-                <div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Avatar (2009)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Avatar: Way of Water (2022)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Avengers: Endgame (2019)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Avengers: Infinity War (2018)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Avengers: Los Vengadores (2012)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Avengers: Era de Ultrón (2015)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Oppenheimer (2023)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Dune: Parte 1 (2021)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Dune: Parte 2 (2024)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Interestelar</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Barbie (2023)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Deadpool & Wolverine (2024)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Gladiator 2 (2024)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Aquaman (2018)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Batman: El Caballero de la Noche (2008)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Batman: El Caballero Asciende (2012)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Batman Begins (2005)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Batman vs Superman (2016)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Capitán América: Civil War (2016)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Capitán América: El Primer Vengador (2011)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Capitán América: Soldado del Invierno (2014)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Capitán América: Un Nuevo Mundo (2025)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Ant-Man (2015)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Ant-Man y la Avispa: Quantumania (2023)</span>
-                        <span class="quality-badge quality-4k">4K</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Shazam! La Furia de los Dioses (2023)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Bad Boys: Hasta la Muerte (2024)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Bad Boys for Life (2020)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Búsqueda Implacable 1, 2 y 3</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Mufasa: El Rey León (2024)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>El Rey León (1994)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>El Señor de los Anillos ( trilogia)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Harry Potter ( saga 8 películas)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Star Wars ( saga 9 películas)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Creed 1 y 2</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                </div>
-                
-                <!-- Columna 2 -->
-                <div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Aladdin (1992)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Aladdin (2019)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Cars 1, 2 y 3</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Kung Fu Panda 1, 2, 3 y 4</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Cómo Entrenar a tu Dragón (2025)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Bob Esponja: La Película</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Ice Age 1, 2, 3 y 4</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Hotel Transylvania 1, 2, 3 y 4</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Mi Villano Favorito / Gru 1, 2 y 3</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Encanto (2021)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Coco (2017)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Bee Movie</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Buscando a Nemo</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Charlie y la Fábrica de Chocolate</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Dr. Dolittle 1 y 2</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Bruce Almighty</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>28 Días</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>A Prueba de Fuego</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Ahora Me Ves 1 y 2</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Pixels</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Comando Especial 1 y 2</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Assassin's Creed</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Equalizer 1 y 2</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>The Amazing Spider-Man 1 y 2</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Borderlands (2024)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Argylle (2024)</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Asalto al Poder</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Bird Box</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Cuarto de Guerra</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Colegas en el Bosque</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Scooby-Doo y Krypto al Rescate</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>¿Conoces a Joe Black?</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Año Uno</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Avalon High</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Alvin y las Ardillas 2</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Angry Birds 2</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                    <div class="item-row py-2 px-3 flex justify-between">
-                        <span>Amigos Imaginarios</span>
-                        <span class="quality-badge quality-hd">HD</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mt-4 text-center">
-                <button onclick="openContentModal('peliculas')" class="inline-flex items-center gap-2 px-6 py-3 bg-green-600/50 hover:bg-green-600 rounded-xl text-white font-medium transition">
-                    <i class="fas fa-eye"></i>
-                    VER CATÁLOGO COMPLETO (+500 películas)
-                </button>
-            </div>
-        </section>
-
-        <!-- 📺 SERIES -->
-        <section class="mb-12 fade-in">
-            <div class="category-header series mb-4">
-                <h2 class="text-xl font-bold">📺 Series</h2>
-                <p class="text-xs text-white/40">100+ series completas | Link: drive.google.com</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div>
-                    <div class="item-row py-2 px-3">El Chavo del 8 (8 temp)</div>
-                    <div class="item-row py-2 px-3">31 Minutos (3 temp)</div>
-                    <div class="item-row py-2 px-3">Stranger Things (4 temp)</div>
-                    <div class="item-row py-2 px-3">Game of Thrones (8 temp)</div>
-                    <div class="item-row py-2 px-3">The Flash (9 temp)</div>
-                    <div class="item-row py-2 px-3">Arrow (8 temp)</div>
-                    <div class="item-row py-2 px-3">Agents of S.H.I.E.L.D. (7 temp)</div>
-                    <div class="item-row py-2 px-3">Supergirl (6 temp)</div>
-                    <div class="item-row py-2 px-3">Superman & Lois (3 temp)</div>
-                    <div class="item-row py-2 px-3">The Boys (3 temp)</div>
-                    <div class="item-row py-2 px-3">Loki (2 temp)</div>
-                    <div class="item-row py-2 px-3">WandaVision (1 temp)</div>
-                    <div class="item-row py-2 px-3">The Good Doctor (6 temp)</div>
-                    <div class="item-row py-2 px-3">Grey's Anatomy (19 temp)</div>
-                    <div class="item-row py-2 px-3">The Office US (9 temp)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Friends (10 temp)</div>
-                    <div class="item-row py-2 px-3">Breaking Bad (5 temp)</div>
-                    <div class="item-row py-2 px-3">Squid Game (2 temp)</div>
-                    <div class="item-row py-2 px-3">The Last of Us (1 temp)</div>
-                    <div class="item-row py-2 px-3">House of the Dragon (2 temp)</div>
-                    <div class="item-row py-2 px-3">Yellowstone (5 temp)</div>
-                    <div class="item-row py-2 px-3">1923 (1 temp)</div>
-                    <div class="item-row py-2 px-3">Peacemaker (1 temp)</div>
-                    <div class="item-row py-2 px-3">Star Trek (varias)</div>
-                    <div class="item-row py-2 px-3">The Expanse (6 temp)</div>
-                    <div class="item-row py-2 px-3">Lost in Space (3 temp)</div>
-                    <div class="item-row py-2 px-3">Doctor Who</div>
-                    <div class="item-row py-2 px-3">Westworld (4 temp)</div>
-                    <div class="item-row py-2 px-3">Foundation (2 temp)</div>
-                    <div class="item-row py-2 px-3">The Walking Dead (11 temp)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">NCIS (21 temp)</div>
-                    <div class="item-row py-2 px-3">CSI Las Vegas (15 temp)</div>
-                    <div class="item-row py-2 px-3">Criminal Minds (15 temp)</div>
-                    <div class="item-row py-2 px-3">Chicago P.D. (10 temp)</div>
-                    <div class="item-row py-2 px-3">Chicago Fire (12 temp)</div>
-                    <div class="item-row py-2 px-3">Hawaii Five-0 (10 temp)</div>
-                    <div class="item-row py-2 px-3">Bones (12 temp)</div>
-                    <div class="item-row py-2 px-3">Scorpion (4 temp)</div>
-                    <div class="item-row py-2 px-3">Reacher (2 temp)</div>
-                    <div class="item-row py-2 px-3">S.W.A.T. (7 temp)</div>
-                    <div class="item-row py-2 px-3">The Rookie (6 temp)</div>
-                    <div class="item-row py-2 px-3">9-1-1 (7 temp)</div>
-                    <div class="item-row py-2 px-3">Shogun (1 temp)</div>
-                    <div class="item-row py-2 px-3">Fallout (1 temp)</div>
-                     <div class="item-row py-2 px-3">Avatar: The Last Airbender (1 temp)</div>
-                </div>
-            </div>
-            
-            <div class="mt-4 text-center">
-                <button onclick="openContentModal('series')" class="inline-flex items-center gap-2 px-6 py-3 bg-teal-600/50 hover:bg-teal-600 rounded-xl text-white font-medium transition">
-                    <i class="fas fa-eye"></i>
-                    VER CATÁLOGO COMPLETO (+300 series)
-                </button>
-            </div>
-        </section>
-
-        <!-- 🐉 ANIME -->
-        <section class="mb-12 fade-in">
-            <div class="category-header anime mb-4">
-                <h2 class="text-xl font-bold">🐉 Anime</h2>
-                <p class="text-xs text-white/40">Dragon Ball, Naruto, One Piece y más | Link: drive.google.com</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div>
-                    <div class="item-row py-2 px-3">Dragon Ball Z (291 episodios)</div>
-                    <div class="item-row py-2 px-3">Dragon Ball Super (131 eps)</div>
-                    <div class="item-row py-2 px-3">Naruto (220 episodios)</div>
-                    <div class="item-row py-2 px-3">Naruto Shippuden (500 eps)</div>
-                    <div class="item-row py-2 px-3">Boruto (200+ eps)</div>
-                    <div class="item-row py-2 px-3">One Piece (1100+ eps)</div>
-                    <div class="item-row py-2 px-3">Attack on Titan (87 eps)</div>
-                    <div class="item-row py-2 px-3">Demon Slayer (55 eps)</div>
-                    <div class="item-row py-2 px-3">Sailor Moon (200 eps)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Pokémon (276+ eps)</div>
-                    <div class="item-row py-2 px-3">One Punch Man (24+12 eps)</div>
-                    <div class="item-row py-2 px-3">Caballeros del Zodiaco (114 eps)</div>
-                    <div class="item-row py-2 px-3">My Hero Academia (100+ eps)</div>
-                    <div class="item-row py-2 px-3">7 Pecados Capitales (24+24 eps)</div>
-                    <div class="item-row py-2 px-3">Jujutsu Kaisen</div>
-                    <div class="item-row py-2 px-3">Chainsaw Man</div>
-                    <div class="item-row py-2 px-3">Blue Lock</div>
-                    <div class="item-row py-2 px-3">Spy x Family</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Tokyo Revengers</div>
-                    <div class="item-row py-2 px-3">Black Clover</div>
-                    <div class="item-row py-2 px-3">Hunter x Hunter</div>
-                    <div class="item-row py-2 px-3">Fullmetal Alchemist</div>
-                    <div class="item-row py-2 px-3">Death Note</div>
-                    <div class="item-row py-2 px-3">Cowboy Bebop</div>
-                    <div class="item-row py-2 px-3">Cyberpunk: Edgerunners</div>
-                    <div class="item-row py-2 px-3">Violet Evergarden</div>
-                    <div class="item-row py-2 px-3">Attack on Titan (Final)</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 👨‍👩‍👧 DIBUJOS -->
-        <section class="mb-12 fade-in">
-            <div class="category-header series mb-4">
-                <h2 class="text-xl font-bold">👨‍👩‍👧 Dibujos Animados</h2>
-                <p class="text-xs text-white/40">Clásicos de tu infancia | Link: drive.google.com</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div>
-                    <div class="item-row py-2 px-3">Tom y Jerry</div>
-                    <div class="item-row py-2 px-3">Looney Tunes</div>
-                    <div class="item-row py-2 px-3">Pinky y Cerebro</div>
-                    <div class="item-row py-2 px-3">Thundercats (1080p)</div>
-                    <div class="item-row py-2 px-3">Family Guy (22 temp)</div>
-                    <div class="item-row py-2 px-3">Los Simpsons (35 temp)</div>
-                    <div class="item-row py-2 px-3">Bob Esponja (13 temp)</div>
-                    <div class="item-row py-2 px-3">Coraje el Perro Cobarde</div>
-                    <div class="item-row py-2 px-3">Oye Arnold!</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">South Park (26 temp)</div>
-                    <div class="item-row py-2 px-3">Rick and Morty (7 temp)</div>
-                    <div class="item-row py-2 px-3">Adventure Time</div>
-                    <div class="item-row py-2 px-3">Gravity Falls</div>
-                    <div class="item-row py-2 px-3">Teen Titans Go!</div>
-                    <div class="item-row py-2 px-3">Power Rangers (30 temp)</div>
-                    <div class="item-row py-2 px-3">Meteoro</div>
-                    <div class="item-row py-2 px-3">Los Picapiedra</div>
-                    <div class="item-row py-2 px-3">Futurama</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">ALF (4 temp)</div>
-                    <div class="item-row py-2 px-3">Dinosaurios (4 temp)</div>
-                    <div class="item-row py-2 px-3">Malcolm in the Middle</div>
-                    <div class="item-row py-2 px-3">Modern Family</div>
-                    <div class="item-row py-2 px-3">The Fresh Prince</div>
-                    <div class="item-row py-2 px-3">Full House</div>
-                    <div class="item-row py-2 px-3">Scooby-Doo</div>
-                    <div class="item-row py-2 px-3">Garfield</div>
-                    <div class="item-row py-2 px-3">Peanuts / Charlie Brown</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 📚 CÓMICS -->
-        <section class="mb-12 fade-in">
-            <div class="category-header anime mb-4">
-                <h2 class="text-xl font-bold">📚 Cómics y Historietas</h2>
-                <p class="text-xs text-white/40">70,000+ cómics digitales | Link: drive.google.com</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div>
-                    <div class="item-row py-2 px-3">Marvel Comics (25,000+)</div>
-                    <div class="item-row py-2 px-3">DC Comics (20,000+)</div>
-                    <div class="item-row py-2 px-3">Condorito (800+)</div>
-                    <div class="item-row py-2 px-3">Kaliman - El Hombre Increíble (300+)</div>
-                    <div class="item-row py-2 px-3">Barrabases (500+)</div>
-                    <div class="item-row py-2 px-3">Memin Pinguin (500+)</div>
-                    <div class="item-row py-2 px-3">Mortadelo y Filemón (200+)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Mafalda (300+)</div>
-                    <div class="item-row py-2 px-3">Tintín (100+)</div>
-                    <div class="item-row py-2 px-3">Asterix (50+)</div>
-                    <div class="item-row py-2 px-3">Chespirito (200+)</div>
-                    <div class="item-row py-2 px-3">Sandman (75+)</div>
-                    <div class="item-row py-2 px-3">Godzilla (50+)</div>
-                    <div class="item-row py-2 px-3">El Chapulín Colorado</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Cómics Vintage Colección (70,000+)</div>
-                    <div class="item-row py-2 px-3">Archie Comics</div>
-                    <div class="item-row py-2 px-3">Colecciones Novaro</div>
-                    <div class="item-row py-2 px-3">Bruguera Comics</div>
-                    <div class="item-row py-2 px-3">Zorro</div>
-                    <div class="item-row py-2 px-3">Conan El Bárbaro</div>
-                    <div class="item-row py-2 px-3">Agatha Christie Comics</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 🎵 MÚSICA -->
-        <section class="mb-12 fade-in">
-            <div class="category-header series mb-4">
-                <h2 class="text-xl font-bold">🎵 Música y DJ Sets</h2>
-                <p class="text-xs text-white/40">DJ Nicolas Escobar, Karaoke, Mixes | Link: drive.google.com</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div>
-                    <div class="item-row py-2 px-3">DJ Nicolas Escobar Sets (100+)</div>
-                    <div class="item-row py-2 px-3">Karaoke Completo (500+)</div>
-                    <div class="item-row py-2 px-3">80s Megamix (50+)</div>
-                    <div class="item-row py-2 px-3">Classic Project DJ (21+)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">DJ Sets HD (12+)</div>
-                    <div class="item-row py-2 px-3">MegaMixes MP3 (50+)</div>
-                    <div class="item-row py-2 px-3">Disco 70s-80s-90s</div>
-                    <div class="item-row py-2 px-3">Rock Clásico MP3 (500+)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Electrónica / EDM</div>
-                    <div class="item-row py-2 px-3">Reggaetón / Trap</div>
-                    <div class="item-row py-2 px-3">Pop Latino</div>
-                    <div class="item-row py-2 px-3">Vallenato / Cumbia</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 📖 LIBROS -->
-        <section class="mb-12 fade-in">
-            <div class="category-header anime mb-4">
-                <h2 class="text-xl font-bold">📖 Libros y Audiolibros</h2>
-                <p class="text-xs text-white/40">Finanzas, Autoayuda, Arquitectura | Link: drive.google.com</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div>
-                    <div class="item-row py-2 px-3">Finanzas Personales (100+)</div>
-                    <div class="item-row py-2 px-3">Autoayuda / Desarrollo Personal (100+)</div>
-                    <div class="item-row py-2 px-3">Audiolibros (1800+)</div>
-                    <div class="item-row py-2 px-3">Arquitectura (100+)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Ocultismo / Sabiduría (100+)</div>
-                    <div class="item-row py-2 px-3">Cocina Keto (40+)</div>
-                    <div class="item-row py-2 px-3">Medicina Alternativa (50+)</div>
-                    <div class="item-row py-2 px-3">Negocios / Emprendimiento (100+)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Idiomas (30+)</div>
-                    <div class="item-row py-2 px-3">Arte / Pintura (50+)</div>
-                    <div class="item-row py-2 px-3">Libros Infantiles (200+)</div>
-                    <div class="item-row py-2 px-3">Historia / Biografías (50+)</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 🎓 CURSOS -->
-        <section class="mb-12 fade-in">
-            <div class="category-header series mb-4">
-                <h2 class="text-xl font-bold">🎓 Cursos en Video</h2>
-                <p class="text-xs text-white/40">Tarot, Celulares, Sanación, Excel | Link: drive.google.com</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div>
-                    <div class="item-row py-2 px-3">Pack Tarot Completo</div>
-                    <div class="item-row py-2 px-3">Reparación de Celulares</div>
-                    <div class="item-row py-2 px-3">Pack Sanación Holística (15+)</div>
-                    <div class="item-row py-2 px-3">Crochet / Amigurumis</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Excel Completo</div>
-                    <div class="item-row py-2 px-3">Illustrator</div>
-                    <div class="item-row py-2 px-3">AutoCAD</div>
-                    <div class="item-row py-2 px-3">Macramé</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Cocina Profesional</div>
-                    <div class="item-row py-2 px-3">Programación (Python, JS)</div>
-                    <div class="item-row py-2 px-3">Fotografía</div>
-                    <div class="item-row py-2 px-3">Edición de Video</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 🎮 JUEGOS -->
-        <section class="mb-12 fade-in">
-            <div class="category-header anime mb-4">
-                <h2 class="text-xl font-bold">🎮 Juegos Retro y PC</h2>
-                <p class="text-xs text-white/40">NES, SNES, PC Games</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div>
-                    <div class="item-row py-2 px-3">1000 Juegos NES + Emulador</div>
-                    <div class="item-row py-2 px-3">1000 Juegos SNES</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Juegos PC Variados</div>
-                    <div class="item-row py-2 px-3">500 Juegos GameBoy</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">300+ Juegos PS1/PS2</div>
-                    <div class="item-row py-2 px-3">Nintendo Switch (Roms)</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 📱 MANGAS -->
-        <section class="mb-12 fade-in">
-            <div class="category-header series mb-4">
-                <h2 class="text-xl font-bold">📱 Mangas en Español</h2>
-                <p class="text-xs text-white/40">1000+ títulos | Link: drive.google.com</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div>
-                    <div class="item-row py-2 px-3">Dragon Ball (completo)</div>
-                    <div class="item-row py-2 px-3">Naruto (completo)</div>
-                    <div class="item-row py-2 px-3">One Piece (completo)</div>
-                    <div class="item-row py-2 px-3">Demon Slayer (completo)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Attack on Titan (completo)</div>
-                    <div class="item-row py-2 px-3">Jujutsu Kaisen</div>
-                    <div class="item-row py-2 px-3">Chainsaw Man</div>
-                    <div class="item-row py-2 px-3">Blue Lock</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Spy x Family</div>
-                    <div class="item-row py-2 px-3">My Hero Academia</div>
-                    <div class="item-row py-2 px-3">Tokyo Revengers</div>
-                    <div class="item-row py-2 px-3 bg-green-500/10 border-l-4 border-green-500">
-                        <button onclick="openContentModal('anime')" class="text-green-400 hover:text-green-300 w-full text-left">
-                            <i class="fas fa-eye mr-2"></i>Ver +900 títulos completos →
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 🎁 EXTRAS -->
-        <section class="mb-12 fade-in">
-            <div class="category-header anime mb-4">
-                <h2 class="text-xl font-bold">🎁 Extras y Plantillas</h2>
-                <p class="text-xs text-white/40">Agendas, Sublimación, Imágenes | Link: drive.google.com</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div>
-                    <div class="item-row py-2 px-3">Agendas 2025 (20+)</div>
-                    <div class="item-row py-2 px-3">Plantillas Sublimación (50+)</div>
-                    <div class="item-row py-2 px-3">Imágenes Cuadros (5000+)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Papercraft (100+)</div>
-                    <div class="item-row py-2 px-3">Wallpapers 4K (1000+)</div>
-                    <div class="item-row py-2 px-3">Plantillas PPT (200+)</div>
-                </div>
-                <div>
-                    <div class="item-row py-2 px-3">Mockups PSD (100+)</div>
-                    <div class="item-row py-2 px-3">Sound Effects (500+)</div>
-                    <div class="item-row py-2 px-3">Fuentes / Fonts</div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- CTA Final -->
-    <section class="py-16 px-6 text-center border-t border-white/5 bg-gradient-to-t from-black/50 to-transparent">
-        <div class="max-w-xl mx-auto">
-            <h2 class="text-2xl font-bold mb-2">PACK COMPLETO</h2>
-            <div id="priceContainer">
-                <p id="originalPrice" class="text-2xl text-white/40 line-through mb-1">$19.990 CLP</p>
-                <p id="finalPrice" class="text-4xl font-bold text-green-400 mb-2">$7.990 CLP</p>
-            </div>
-            <p class="text-white/50 text-sm mb-4">Acceso a TODOS los enlaces de Drive</p>
-            
-            <!-- Código de descuento -->
-            <div class="mb-6">
-                <p class="text-white/40 text-xs mb-2">¿Tienes código de descuento?</p>
-                <div class="flex items-center justify-center gap-2 max-w-sm mx-auto">
-                    <input type="text" id="discountCode" placeholder="Ingresa tu código" 
-                           class="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-green-500 text-center uppercase">
-                    <button onclick="applyDiscount()" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-white font-medium transition">
-                        Aplicar
-                    </button>
-                </div>
-                <p id="discountMessage" class="text-sm mt-2 hidden"></p>
-            </div>
-            
-            <button onclick="openCheckout()" class="btn-buy inline-flex items-center gap-2 px-10 py-4 rounded-full text-white font-semibold text-lg">
-                <i class="fab fa-whatsapp text-xl"></i>
-                COMPRAR AHORA
-            </button>
-        </div>
-    </section>
-
-    <!-- Modal de Checkout -->
-    <div id="checkoutModal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
-        <div class="bg-gray-900 border border-white/10 rounded-2xl max-w-md w-full p-6 relative">
-            <button onclick="closeCheckout()" class="absolute top-4 right-4 text-white/40 hover:text-white text-2xl">&times;</button>
-            
-            <h3 class="text-xl font-bold mb-4 text-center">Confirmar Compra</h3>
-            
-            <div class="space-y-3 mb-6">
-                <div class="flex justify-between text-sm">
-                    <span class="text-white/60">PACK COMPLETO StreamVault</span>
-                    <span id="modalPrice">$7.990</span>
-                </div>
-                <div id="modalDiscountRow" class="flex justify-between text-sm text-green-400 hidden">
-                    <span>Descuento aplicado</span>
-                    <span id="modalDiscount">-$12.000</span>
-                </div>
-                <div class="border-t border-white/10 pt-3 flex justify-between font-bold">
-                    <span>Total a pagar</span>
-                    <span id="modalTotal" class="text-green-400">$7.990 CLP</span>
-                </div>
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-white/60 text-sm mb-2">Tu correo electrónico</label>
-                <input type="email" id="buyerEmail" placeholder="tucorreo@ejemplo.com" 
-                       class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-green-500">
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-white/60 text-sm mb-2">Tu WhatsApp</label>
-                <input type="tel" id="buyerPhone" placeholder="+56 9 1234 5678" 
-                       class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-green-500">
-            </div>
-            
-            <button onclick="processPayment()" class="w-full btn-buy py-4 rounded-xl text-white font-semibold text-lg flex items-center justify-center gap-2">
-                <i class="fas fa-lock"></i>
-                PAGAR CON MERCADO PAGO
-            </button>
-            
-            <p class="text-center text-white/30 text-xs mt-4">
-                Pago seguro procesado por Mercado Pago
-            </p>
-        </div>
-    </div>
-
-    <!-- Modo Prueba (visible solo para testing) -->
-    <div class="fixed bottom-4 right-4 bg-yellow-500/90 text-black text-xs p-3 rounded-lg max-w-xs" id="testMode">
-        <p class="font-bold mb-1">🧪 MODO PRUEBA</p>
-        <p>Tarjetas de test:</p>
-        <p>Visa: 4509 9535 6623 3704</p>
-        <p>MC: 5031 4332 1540 6351</p>
-        <p>CVV: 123 | Venc: cualquiera</p>
-    </div>
-
-    <!-- Footer -->
-    <footer class="py-6 px-6 text-center text-white/30 text-sm border-t border-white/5">
-        <p>Un proyecto de <strong>Agencia Promarket</strong> | Impulsado por Emprende Online</p>
+<!-- Footer minimal -->
+    <footer class="py-8 text-center border-t border-white/5">
+        <p class="text-white/30 text-sm">📦 StreamVault - Contenido Digital Premium</p>
     </footer>
 
+    <!-- Chat Widget -->
+    <div id="chat-widget" class="fixed bottom-6 right-6 z-50">
+        <button onclick="toggleChat()" class="w-16 h-16 bg-green-500 hover:bg-green-400 rounded-full shadow-lg flex items-center justify-center text-3xl transition transform hover:scale-110">
+            💬
+        </button>
+        <div id="chat-box" class="hidden absolute bottom-20 right-0 w-80 bg-gray-900 border border-green-500/30 rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-green-600 p-4 flex items-center justify-between">
+                <h3 class="font-bold text-black">💚 Claudia - Asistente</h3>
+                <button onclick="toggleChat()" class="text-black/70 hover:text-black text-xl">&times;</button>
+            </div>
+            <div id="chat-messages" class="h-64 overflow-y-auto p-4 space-y-3 bg-black/50">
+                <div class="bg-green-900/50 p-3 rounded-lg text-sm">
+                    👋 Hola! Soy Claudia, tu asistente. ¿En qué puedo ayudarte?
+                </div>
+            </div>
+            <div class="p-3 border-t border-white/10">
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Escribe tu mensaje..." 
+                        class="flex-1 px-4 py-2 bg-white/10 border border-green-500/30 rounded-full text-sm focus:outline-none focus:border-green-500"
+                        onkeypress="if(event.key==='Enter')sendMessage()">
+                    <button onclick="sendMessage()" class="w-10 h-10 bg-green-500 rounded-full hover:bg-green-400 transition">
+                        ➤
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-    // Contenido completo de cada categoría
-    const fullContent = {
+    function toggleChat() {
+        document.getElementById('chat-box').classList.toggle('hidden');
+    }
+    
+    function addMessage(text, isUser = false) {
+        const container = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+        div.className = isUser ? 'bg-white/10 p-3 rounded-lg text-sm text-right' : 'bg-green-900/50 p-3 rounded-lg text-sm';
+        div.textContent = text;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    async function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const message = input.value.trim();
+        if (!message) return;
+        
+        addMessage(message, true);
+        input.value = '';
+        
+        addMessage('⏳ Escribiendo...');
+        
+        try {
+            const res = await fetch('https://streamvault-9d4k.onrender.com/api/chat/web', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ message: message, sessionId: 'web_' + Date.now() })
+            });
+            const data = await res.json();
+            const msgs = document.getElementById('chat-messages');
+            msgs.removeChild(msgs.lastChild);
+            addMessage(data.response || 'Gracias por tu mensaje. Te responderé pronto.');
+        } catch(e) {
+            const msgs = document.getElementById('chat-messages');
+            msgs.removeChild(msgs.lastChild);
+addMessage('Gracias por tu mensaje. Un agente te responderá pronto.');
+        }
+    }
+    </script>
+
+    <!-- Modal Lista Contenido -->
+    <div id="contentModal" class="fixed inset-0 bg-black/95 z-50 hidden overflow-y-auto">
+        <div class="min-h-screen py-8 px-4">
+            <div class="max-w-2xl mx-auto bg-gray-900 border border-white/10 rounded-2xl overflow-hidden">
+                <div class="sticky top-0 bg-gray-900 border-b border-white/10 p-4 flex items-center justify-between">
+                    <h3 id="modalTitle" class="text-xl font-bold text-green-400"></h3>
+                    <button onclick="closeContentModal()" class="text-white/50 hover:text-white text-2xl">&times;</button>
+                </div>
+                <div id="modalContent" class="p-6 text-sm space-y-2 max-h-[60vh] overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Contenido COMPLETO de cada pack
+    const CONTENT_CATALOG = {
         peliculas: {
-            title: '📽️ PACK PELÍCULAS - Catálogo Completo',
+            title: '📽️ PACK PELÍCULAS - +500 títulos',
             items: [
-                { name: 'Avatar (2009)', quality: '4K' },
-                { name: 'Avatar: El Camino del Agua (2022)', quality: '4K' },
-                { name: 'Avengers: Endgame (2019)', quality: '4K' },
-                { name: 'Avengers: Infinity War (2018)', quality: '4K' },
-                { name: 'Avengers: Age of Ultron (2015)', quality: 'HD' },
-                { name: 'Avengers: Los Vengadores (2012)', quality: 'HD' },
-                { name: 'Batman: El Caballero de la Noche (2008)', quality: '4K' },
-                { name: 'Batman v Superman: El Amanecer de la Justicia', quality: 'HD' },
-                { name: 'Batman Begins (2005)', quality: 'HD' },
-                { name: 'Batman Returns (1992)', quality: 'SD' },
-                { name: 'Star Wars: Episodio VII - El Despertar de la Fuerza', quality: '4K' },
-                { name: 'Star Wars: Episodio VIII - Los Últimos Jedi', quality: '4K' },
-                { name: 'Star Wars: Episodio IX - El Ascenso de Skywalker', quality: '4K' },
-                { name: 'Star Wars: Rogue One', quality: 'HD' },
-                { name: 'Star Wars: Solo - Una Historia de Star Wars', quality: 'HD' },
-                { name: 'Titanic (1997)', quality: '4K' },
-                { name: 'Jurassic Park (1993)', quality: 'HD' },
-                { name: 'Jurassic World: Dominion (2022)', quality: '4K' },
-                { name: 'Harry Potter y la Piedra Filosofal', quality: 'HD' },
-                { name: 'Harry Potter y la Cámara de Secretos', quality: 'HD' },
-                { name: 'Harry Potter y el Prisionero de Azkaban', quality: 'HD' },
-                { name: 'Harry Potter y el Cáliz de Fuego', quality: 'HD' },
-                { name: 'Harry Potter y la Orden del Fénix', quality: 'HD' },
-                { name: 'Harry Potter y el Misterio del Príncipe', quality: 'HD' },
-                { name: 'Harry Potter y las Reliquias de la Muerte Parte 1', quality: 'HD' },
-                { name: 'Harry Potter y las Reliquias de la Muerte Parte 2', quality: 'HD' },
-                { name: 'Interestelar (2014)', quality: '4K' },
-                { name: 'Matrix (1999)', quality: 'HD' },
-                { name: 'Matrix Reloaded (2003)', quality: 'HD' },
-                { name: 'Matrix Revolutions (2003)', quality: 'HD' },
-                { name: 'Matrix Resurrections (2021)', quality: '4K' },
-                { name: 'Rápidos y Furiosos 1-10 (Colección)', quality: 'HD' },
-                { name: 'Piratas del Caribe 1-5 (Colección)', quality: 'HD' },
-                { name: 'El Señor de los Anillos (Trilogía extendida)', quality: '4K' },
-                { name: 'El Hobbit (Trilogía)', quality: 'HD' },
-                { name: 'Gladiator (2000)', quality: 'HD' },
-                { name: 'El Rey León (2019)', quality: '4K' },
-                { name: 'Frozen (2013)', quality: 'HD' },
-                { name: 'Coco (2017)', quality: 'HD' },
-                { name: 'Toy Story 1-4 (Colección)', quality: 'HD' },
-                { name: 'Buscando a Nemo', quality: 'HD' },
-                { name: 'Intensamente (Inside Out)', quality: 'HD' },
-                { name: 'Capitán América: El Soldado de Invierno', quality: 'HD' },
-                { name: 'Capitán América: Civil War', quality: 'HD' },
-                { name: 'Iron Man 1-3 (Colección)', quality: 'HD' },
-                { name: 'Thor: Ragnarok', quality: '4K' },
-                { name: 'Pantera Negra (2018)', quality: '4K' },
-                { name: 'Spider-Man: Homecoming', quality: 'HD' },
-                { name: 'Spider-Man: Far From Home', quality: 'HD' },
-                { name: 'Spider-Man: No Way Home', quality: '4K' },
-                { name: 'Guardianes de la Galaxia Vol. 1', quality: 'HD' },
-                { name: 'Guardianes de la Galaxia Vol. 2', quality: 'HD' },
-                { name: 'Doctor Strange (2016)', quality: 'HD' },
-                { name: 'Doctor Strange en el Multiverso de la Locura', quality: '4K' },
-                { name: 'Black Widow (2021)', quality: '4K' },
-                { name: 'Ant-Man (2015)', quality: 'HD' },
-                { name: 'Ant-Man y la Avispa', quality: 'HD' },
-                { name: 'Shang-Chi y la Leyenda de los Diez Anillos', quality: '4K' },
-                { name: 'Eternals (2021)', quality: '4K' },
-                { name: 'Viuda Negra (Black Widow)', quality: '4K' },
-                { name: 'Falcon y el Soldado de Invierno', quality: 'HD' },
-                { name: 'Loki (Serie)', quality: 'HD' },
-                { name: 'WandaVision (Serie)', quality: 'HD' },
-                { name: 'What If...? (Serie)', quality: 'HD' },
-                { name: 'Hawkeye (Serie)', quality: 'HD' },
-                { name: 'Ms. Marvel (Serie)', quality: 'HD' },
-                { name: 'She-Hulk (Serie)', quality: 'HD' },
-                { name: 'Moon Knight (Serie)', quality: 'HD' },
-                { name: 'Y la mayoría +400 películas más...', quality: '' }
+                { name: 'Avatar (2009)', quality: '4K' }, { name: 'Avatar: The Way of Water (2022)', quality: '4K' },
+                { name: 'Avengers: Endgame', quality: '4K' }, { name: 'Avengers: Infinity War', quality: '4K' },
+                { name: 'Avengers: Age of Ultron', quality: '4K' }, { name: 'Avengers: Civil War', quality: '4K' },
+                { name: 'Spider-Man: No Way Home', quality: '4K' }, { name: 'Spider-Man: Far From Home', quality: '4K' },
+                { name: 'Spider-Man: Homecoming', quality: '4K' }, { name: 'Black Panther', quality: '4K' },
+                { name: 'Black Panther: Wakanda Forever', quality: '4K' }, { name: 'Iron Man (2008)', quality: '4K' },
+                { name: 'Iron Man 2', quality: '4K' }, { name: 'Iron Man 3', quality: '4K' },
+                { name: 'Thor: Love and Thunder', quality: '4K' }, { name: 'Thor: Ragnarok', quality: '4K' },
+                { name: 'Thor: The Dark World', quality: '4K' }, { name: 'Guardians of the Galaxy Vol.3', quality: '4K' },
+                { name: 'Guardians of the Galaxy Vol.2', quality: '4K' }, { name: 'Doctor Strange: Multiverse of Madness', quality: '4K' },
+                { name: 'Doctor Strange', quality: '4K' }, { name: 'Captain America: Civil War', quality: '4K' },
+                { name: 'Captain America: Winter Soldier', quality: '4K' }, { name: 'Captain America: The First Avenger', quality: '4K' },
+                { name: 'Ant-Man and The Wasp: Quantumania', quality: '4K' }, { name: 'Ant-Man and The Wasp', quality: '4K' },
+                { name: 'Ant-Man', quality: '4K' }, { name: 'Black Widow', quality: '4K' },
+                { name: 'Shang-Chi', quality: '4K' }, { name: 'Eternals', quality: '4K' },
+                { name: 'Batman (2022)', quality: '4K' }, { name: 'The Batman (2022)', quality: '4K' },
+                { name: 'Joker', quality: '4K' }, { name: 'The Dark Knight', quality: '4K' },
+                { name: 'The Dark Knight Rises', quality: '4K' }, { name: 'Batman Begins', quality: '4K' },
+                { name: 'Batman v Superman: Dawn of Justice', quality: '4K' }, { name: 'Suicide Squad (2016)', quality: '4K' },
+                { name: 'The Suicide Squad (2021)', quality: '4K' }, { name: 'Aquaman', quality: '4K' },
+                { name: 'Aquaman and the Lost Kingdom', quality: '4K' }, { name: 'Wonder Woman 1984', quality: '4K' },
+                { name: 'Wonder Woman', quality: '4K' }, { name: 'Justice League (2017)', quality: '4K' },
+                { name: 'Zack Snyders Justice League', quality: '4K' }, { name: 'The Flash', quality: '4K' },
+                { name: 'Shazam! Fury of the Gods', quality: '4K' }, { name: 'Shazam!', quality: '4K' },
+                { name: 'Morbius', quality: '4K' }, { name: 'Venom: Let There Be Carnage', quality: '4K' },
+                { name: 'Venom', quality: '4K' }, { name: 'Deadpool', quality: '4K' },
+                { name: 'Deadpool 2', quality: '4K' }, { name: 'Deadpool & Wolverine', quality: '4K' },
+                { name: 'Logan', quality: '4K' }, { name: 'X-Men: Days of Future Past', quality: '4K' },
+                { name: 'X-Men: Apocalypse', quality: '4K' }, { name: 'X-Men: Dark Phoenix', quality: '4K' },
+                { name: 'Fantastic Four (2015)', quality: '4K' }, { name: 'Fantastic Beasts: Secrets of Dumbledore', quality: '4K' },
+                { name: 'Harry Potter y la Piedra Filosofal', quality: '4K' }, { name: 'Harry Potter y la Cámara de Secretos', quality: '4K' },
+                { name: 'Harry Potter y el Prisionero de Azkaban', quality: '4K' }, { name: 'Harry Potter y el Cáliz de Fuego', quality: '4K' },
+                { name: 'Harry Potter y la Orden del Fénix', quality: '4K' }, { name: 'Harry Potter y el Príncipe Mestizo', quality: '4K' },
+                { name: 'Harry Potter y las Reliquias de la Muerte Pt.1', quality: '4K' }, { name: 'Harry Potter y las Reliquias de la Muerte Pt.2', quality: '4K' },
+                { name: 'Jurassic World: Dominion', quality: '4K' }, { name: 'Jurassic World: Fallen Kingdom', quality: '4K' },
+                { name: 'Jurassic World', quality: '4K' }, { name: 'Jurassic Park III', quality: '4K' },
+                { name: 'Jurassic Park', quality: '4K' }, { name: 'Matrix Resurrections', quality: '4K' },
+                { name: 'Matrix Revolutions', quality: '4K' }, { name: 'Matrix Reloaded', quality: '4K' },
+                { name: 'The Matrix', quality: '4K' }, { name: 'Titanic', quality: '4K' },
+                { name: 'Interestelar', quality: '4K' }, { name: 'Inception', quality: '4K' },
+                { name: 'Dunkerque', quality: '4K' }, { name: 'Oppenheimer', quality: '4K' },
+                { name: 'Star Wars: The Rise of Skywalker', quality: '4K' }, { name: 'Star Wars: The Last Jedi', quality: '4K' },
+                { name: 'Star Wars: The Force Awakens', quality: '4K' }, { name: 'Rogue One', quality: '4K' },
+                { name: 'Solo: A Star Wars Story', quality: '4K' }, { name: 'Star Wars Ep. I - IX', quality: '4K' },
+                { name: 'Indiana Jones y el Dial del Destino', quality: '4K' }, { name: 'Indiana Jones y el Reino de la Calavera', quality: '4K' },
+                { name: 'Indiana Jones y la Última Cruzada', quality: '4K' }, { name: 'Indiana Jones y el Templo de la Perdición', quality: '4K' },
+                { name: 'Lord of the Rings: Return of the King', quality: '4K' }, { name: 'Lord of the Rings: The Two Towers', quality: '4K' },
+                { name: 'Lord of the Rings: Fellowship of the Ring', quality: '4K' }, { name: 'The Hobbit: Battle of the Five Armies', quality: '4K' },
+                { name: 'The Hobbit: The Desolation of Smaug', quality: '4K' }, { name: 'The Hobbit: An Unexpected Journey', quality: '4K' },
+                { name: 'The Witcher', quality: '4K' }, { name: 'Mission: Impossible - Dead Reckoning', quality: '4K' },
+                { name: 'Mission: Impossible - Fallout', quality: '4K' }, { name: 'Mission: Impossible - Rogue Nation', quality: '4K' },
+                { name: 'Top Gun: Maverick', quality: '4K' }, { name: 'Top Gun', quality: '4K' },
+                { name: 'Fast X', quality: '4K' }, { name: 'F9: Fast & Furious 9', quality: '4K' },
+                { name: 'Fast & Furious 1-9', quality: '4K' }, { name: 'John Wick 4', quality: '4K' },
+                { name: 'John Wick 3', quality: '4K' }, { name: 'John Wick 1-2', quality: '4K' },
+                { name: 'Terminator: Salvation', quality: '4K' }, { name: 'TerminatorGenisys', quality: '4K' },
+                { name: 'Terminator: Dark Fate', quality: '4K' }, { name: 'Terminator 1-6', quality: '4K' },
+                { name: 'Transformers: El Último Caballero', quality: '4K' }, { name: 'Transformers: El Descenso de los Caídos', quality: '4K' },
+                { name: 'Transformers: La Era de la Extinción', quality: '4K' }, { name: 'Transformers: El Lado Oscuro de la Luna', quality: '4K' },
+                { name: 'Transformers: La Venganza de los Caídos', quality: '4K' }, { name: 'Transformers', quality: '4K' },
+                { name: 'Mad Max: Fury Road', quality: '4K' }, { name: 'Mad Max Beyond Thunderdome', quality: '4K' },
+                { name: 'Mad Max', quality: '4K' }, { name: 'El Señor de los Anillos (Completo)', quality: '4K' },
+                { name: 'Piratas del Caribe 1-5', quality: '4K' }, { name: 'Capitán Phillips', quality: '4K' },
+                { name: 'Ford v Ferrari', quality: '4K' }, { name: 'Le Mans 66', quality: '4K' },
+                { name: 'Sonic 1-2', quality: '4K' }, { name: 'Uncharted', quality: '4K' },
+                { name: 'Creen Dos Muertos', quality: '4K' }, { name: 'Asesinato en el Orient Express', quality: '4K' },
+                { name: 'Misión Rescate', quality: '4K' }, { name: 'Misión Imposible 1-7', quality: '4K' },
+                { name: 'El Protector', quality: '4K' }, { name: 'El Equipo A', quality: '4K' },
+                { name: 'Yo Robot', quality: '4K' }, { name: 'Yo, Robot', quality: '4K' },
+                { name: 'Creed III', quality: '4K' }, { name: 'Creed II', quality: '4K' },
+                { name: 'Creed', quality: '4K' }, { name: 'Rocky Balboa', quality: '4K' },
+                { name: 'Rocky 1-5', quality: '4K' }, { name: 'Rápidos y Furiosos 1-10', quality: '4K' },
+                { name: 'Barbie', quality: '4K' }, { name: 'Oppenheimer', quality: '4K' },
+                { name: 'Wonka', quality: '4K' }, { name: 'Duncanville', quality: '4K' },
+                { name: 'Dune: Parte Dos', quality: '4K' }, { name: 'Dune', quality: '4K' },
+                { name: 'Kung Fu Panda 1-4', quality: '4K' }, { name: 'Cómo Entrenar a Tu Dragón 1-3', quality: '4K' },
+                { name: 'Mi Villano Favorito 1-4', quality: '4K' }, { name: 'Toy Story 1-4', quality: '4K' },
+                { name: 'Buscando a Dory', quality: '4K' }, { name: 'Buscando a Nemo', quality: '4K' },
+                { name: 'Del Revés 1-2', quality: '4K' }, { name: 'Soul', quality: '4K' },
+                { name: 'Coco', quality: '4K' }, { name: 'Intensa-Mente 2', quality: '4K' },
+                { name: 'Intensa-Mente', quality: '4K' }, { name: 'Turning Red', quality: '4K' },
+                { name: 'Luca', quality: '4K' }, { name: 'Lightyear', quality: '4K' },
+                { name: 'Elemental', quality: '4K' }, { name: 'Wish', quality: '4K' },
+                { name: 'Mickey, Friends Forever', quality: '4K' }, { name: 'Lilo y Stitch', quality: '4K' },
+                { name: 'Wreck-It Ralph', quality: '4K' }, { name: 'Ralph Breaking Internet', quality: '4K' },
+                { name: 'Frozen 1-2', quality: '4K' }, { name: 'Vaiana', quality: '4K' },
+                { name: 'Moana', quality: '4K' }, { name: 'Brave', quality: '4K' },
+                { name: 'Enredados', quality: '4K' }, { name: 'Tangled', quality: '4K' },
+                { name: 'Ralph Breaking Internet', quality: '4K' }, { name: 'Big Hero 6', quality: '4K' },
+                { name: 'Zootopía', quality: '4K' }, { name: 'Zootopia', quality: '4K' },
+                { name: 'Encanto', quality: '4K' }, { name: 'Los Increíbles 1-2', quality: '4K' },
+                { name: 'Onward', quality: '4K' }, { name: 'Soul', quality: '4K' },
+                { name: 'Blue Beetle', quality: '4K' }, { name: 'Blue Beetle', quality: '4K' },
+                { name: 'Killers of the Flower Moon', quality: '4K' }, { name: 'Napoleón', quality: '4K' },
+                { name: 'Misión Impossible', quality: '4K' }, { name: 'Misión Imposible', quality: '4K' },
+                { name: 'Y +100 películas más...', quality: '' }
             ]
         },
         anime: {
-            title: '📺 PACK ANIME & SERIES - Catálogo Completo',
+            title: '📺 PACK ANIME & SERIES (+500)',
             items: [
-                { name: 'Dragon Ball Z - Saga Completa (291 episodios)', quality: 'HD' },
-                { name: 'Dragon Ball Super - Saga Completa', quality: 'HD' },
-                { name: 'Dragon Ball GT - Saga Completa', quality: 'SD' },
-                { name: 'Naruto - Saga Completa (220 episodios)', quality: 'HD' },
-                { name: 'Naruto Shippuden - Saga Completa (500 episodios)', quality: 'HD' },
-                { name: 'Boruto: Naruto Next Generations', quality: 'HD' },
-                { name: 'One Piece - Saga Completa (1000+ episodios)', quality: 'HD' },
-                { name: 'Attack on Titan (Temporadas 1-4)', quality: 'HD' },
-                { name: 'Demon Slayer - Kimetsu no Yaiba', quality: 'HD' },
-                { name: 'Demon Slayer: Mugen Train (Película)', quality: 'HD' },
-                { name: 'Demon Slayer: Temporada 2', quality: 'HD' },
-                { name: 'Jujutsu Kaisen (Temporada 1)', quality: 'HD' },
-                { name: 'Jujutsu Kaisen 0 (Película)', quality: 'HD' },
-                { name: 'Jujutsu Kaisen Temporada 2', quality: 'HD' },
-                { name: 'My Hero Academia (Temporadas 1-6)', quality: 'HD' },
-                { name: 'Black Clover (Temporadas 1-4)', quality: 'HD' },
-                { name: 'One Punch Man (Temporadas 1-2)', quality: 'HD' },
-                { name: 'Hunter x Hunter (2011) - Completo', quality: 'HD' },
-                { name: 'Fullmetal Alchemist: Brotherhood', quality: 'HD' },
-                { name: 'Fullmetal Alchemist (2003)', quality: 'SD' },
-                { name: 'Death Note', quality: 'HD' },
-                { name: 'Tokyo Revengers (Temporadas 1-2)', quality: 'HD' },
-                { name: 'Chainsaw Man', quality: 'HD' },
-                { name: 'Spy x Family (Temporadas 1-2)', quality: 'HD' },
-                { name: 'Cyberpunk: Edgerunners', quality: 'HD' },
-                { name: 'Mob Psycho 100 (Temporadas 1-2)', quality: 'HD' },
-                { name: 'Fire Force (Temporadas 1-2)', quality: 'HD' },
-                { name: 'The Eminence in Shadow', quality: 'HD' },
-                { name: 'Blue Lock', quality: 'HD' },
-                { name: 'Sword Art Online (Temporadas 1-5)', quality: 'HD' },
-                { name: 'Re:Zero (Temporadas 1-2)', quality: 'HD' },
-                { name: 'Overlord (Temporadas 1-4)', quality: 'HD' },
-                { name: 'That Time I Got Reincarnated as a Slime', quality: 'HD' },
-                { name: 'No Game No Life', quality: 'HD' },
-                { name: 'Konosuba (Temporadas 1-3)', quality: 'HD' },
-                { name: 'Vinland Saga (Temporadas 1-2)', quality: 'HD' },
-                { name: 'Tokyo Ghoul (Temporadas 1-4)', quality: 'HD' },
-                { name: 'Parasyte', quality: 'HD' },
-                { name: 'The Promised Neverland', quality: 'HD' },
-                { name: 'Dr. Stone (Temporadas 1-3)', quality: 'HD' },
-                { name: 'Assassination Classroom', quality: 'HD' },
-                { name: 'Fairy Tail (Completo)', quality: 'HD' },
-                { name: 'Soul Eater', quality: 'HD' },
-                { name: 'Bleach (Saga Completa)', quality: 'HD' },
-                { name: 'Bleach: Thousand-Year Blood War', quality: 'HD' },
-                { name: 'Inuyashiki', quality: 'HD' },
-                { name: 'Made in Abyss', quality: 'HD' },
-                { name: 'Rising of the Shield Hero', quality: 'HD' },
-                { name: 'Mushoku Tensei', quality: 'HD' },
-                { name: 'Classroom of the Elite', quality: 'HD' },
-                { name: 'Y la mayoría +250 series y anime más...', quality: '' }
-            ]
-        },
-        series: {
-            title: '📺 SERIES OCCIDENTALES - Catálogo Completo',
-            items: [
-                { name: 'Breaking Bad (Temporadas 1-5)', quality: 'HD' },
-                { name: 'Better Call Saul (Temporadas 1-6)', quality: 'HD' },
-                { name: 'Game of Thrones (Temporadas 1-8)', quality: 'HD' },
-                { name: 'House of the Dragon', quality: 'HD' },
-                { name: 'Stranger Things (Temporadas 1-4)', quality: 'HD' },
-                { name: 'The Walking Dead (Temporadas 1-11)', quality: 'HD' },
-                { name: 'Fear The Walking Dead', quality: 'HD' },
-                { name: 'Supernatural (Temporadas 1-15)', quality: 'HD' },
-                { name: 'The Office USA (Temporadas 1-9)', quality: 'HD' },
-                { name: 'Friends (Temporadas 1-10)', quality: 'HD' },
-                { name: 'La Casa de Papel / Money Heist', quality: 'HD' },
-                { name: 'El Chapo (Temporadas 1-3)', quality: 'HD' },
-                { name: 'Narcos (Temporadas 1-3)', quality: 'HD' },
-                { name: 'Narcos: México (Temporadas 1-3)', quality: 'HD' },
-                { name: 'Vis a Vis (Temporadas 1-5)', quality: 'HD' },
-                { name: 'Merlí (Temporadas 1-3)', quality: 'HD' },
-                { name: 'Dark (Temporadas 1-3)', quality: 'HD' },
-                { name: 'Squid Game', quality: 'HD' },
-                { name: 'Wednesday', quality: 'HD' },
-                { name: 'The Witcher (Temporadas 1-3)', quality: 'HD' },
-                { name: 'The Last of Us', quality: 'HD' },
-                { name: 'Peaky Blinders (Temporadas 1-6)', quality: 'HD' },
-                { name: 'Vikings (Temporadas 1-6)', quality: 'HD' },
-                { name: 'Vikings: Valhalla', quality: 'HD' },
-                { name: 'Bridgerton (Temporadas 1-3)', quality: 'HD' },
-                { name: 'The Crown (Temporadas 1-6)', quality: 'HD' },
-                { name: 'The Bear (Temporadas 1-2)', quality: 'HD' },
-                { name: 'Succession (Temporadas 1-4)', quality: 'HD' },
-                { name: 'Yellowstone (Temporadas 1-5)', quality: 'HD' },
-                { name: '1883', quality: 'HD' },
-                { name: '1923', quality: 'HD' },
-                { name: 'Y la mayoría +200 series más...', quality: '' }
+                { name: 'Dragon Ball Z (Completo)', quality: 'HD' }, { name: 'Dragon Ball Super (Completo)', quality: 'HD' },
+                { name: 'Dragon Ball GT', quality: 'HD' }, { name: 'Naruto (Completo)', quality: 'HD' },
+                { name: 'Naruto Shippuden (Completo)', quality: 'HD' }, { name: 'Boruto', quality: 'HD' },
+                { name: 'One Piece (Completo)', quality: 'HD' }, { name: 'One Piece Film: Red', quality: 'HD' },
+                { name: 'Bleach (Completo)', quality: 'HD' }, { name: 'Bleach: Thousand-Year Blood War', quality: 'HD' },
+                { name: 'Attack on Titan (Completo)', quality: 'HD' }, { name: 'Attack on Titan: Final Season', quality: 'HD' },
+                { name: 'Demon Slayer: Mugen Train', quality: 'HD' }, { name: 'Demon Slayer: Entertainment District', quality: 'HD' },
+                { name: 'Demon Slayer (Completo)', quality: 'HD' }, { name: 'My Hero Academia (Completo)', quality: 'HD' },
+                { name: 'My Hero Academia 1-6', quality: 'HD' }, { name: 'Jujutsu Kaisen (Completo)', quality: 'HD' },
+                { name: 'Jujutsu Kaisen Season 2', quality: 'HD' }, { name: 'Chainsaw Man (Completo)', quality: 'HD' },
+                { name: 'Death Note', quality: 'HD' }, { name: 'Fullmetal Alchemist: Brotherhood', quality: 'HD' },
+                { name: 'Fullmetal Alchemist', quality: 'HD' }, { name: 'Hunter x Hunter (Completo)', quality: 'HD' },
+                { name: 'Mob Psycho 100 (Completo)', quality: 'HD' }, { name: 'Mob Psycho 100 Season 2', quality: 'HD' },
+                { name: 'One Punch Man (Completo)', quality: 'HD' }, { name: 'One Punch Man Season 2', quality: 'HD' },
+                { name: 'Spy x Family (Completo)', quality: 'HD' }, { name: 'Tokyo Revengers (Completo)', quality: 'HD' },
+                { name: 'Tokyo Revengers: Season 2', quality: 'HD' }, { name: 'Tokyo Revengers: Season 3', quality: 'HD' },
+                { name: 'Black Clover (Completo)', quality: 'HD' }, { name: 'Fire Force (Completo)', quality: 'HD' },
+                { name: 'Fire Force Season 2', quality: 'HD' }, { name: 'Blue Lock (Completo)', quality: 'HD' },
+                { name: 'Sword Art Online (Completo)', quality: 'HD' }, { name: 'Sword Art Online: Alicization', quality: 'HD' },
+                { name: 'Re:Zero (Completo)', quality: 'HD' }, { name: 'Re:Zero Season 2', quality: 'HD' },
+                { name: 'Overlord (Completo)', quality: 'HD' }, { name: 'Overlord Season 2-4', quality: 'HD' },
+                { name: 'That Time I Got Reincarnated as a Slime', quality: 'HD' }, { name: 'Slime Season 2', quality: 'HD' },
+                { name: 'KonoSuba (Completo)', quality: 'HD' }, { name: 'KonoSuba Season 2-3', quality: 'HD' },
+                { name: 'Vinland Saga (Completo)', quality: 'HD' }, { name: 'Vinland Saga Season 2', quality: 'HD' },
+                { name: 'Tokyo Ghoul (Completo)', quality: 'HD' }, { name: 'Tokyo Ghoul:re', quality: 'HD' },
+                { name: 'Tokyo Ghoul: Jack', quality: 'HD' }, { name: 'Tokyo Ghoul: Root A', quality: 'HD' },
+                { name: 'Parasyte', quality: 'HD' }, { name: 'The Promised Neverland', quality: 'HD' },
+                { name: 'The Promised Neverland Season 2', quality: 'HD' }, { name: 'Dr. Stone (Completo)', quality: 'HD' },
+                { name: 'Dr. Stone: New World', quality: 'HD' }, { name: 'Assassination Classroom', quality: 'HD' },
+                { name: 'Fairy Tail (Completo)', quality: 'HD' }, { name: 'Fairy Tail: Final Season', quality: 'HD' },
+                { name: 'Soul Eater', quality: 'HD' }, { name: 'Noragami', quality: 'HD' },
+                { name: 'Noragami Season 2', quality: 'HD' }, { name: 'Inuyashiki', quality: 'HD' },
+                { name: 'Made in Abyss', quality: 'HD' }, { name: 'Made in Abyss Season 2', quality: 'HD' },
+                { name: 'Rising of the Shield Hero', quality: 'HD' }, { name: 'Shield Hero Season 2', quality: 'HD' },
+                { name: 'Mushoku Tensei', quality: 'HD' }, { name: 'Mushoku Tensei Season 2', quality: 'HD' },
+                { name: 'Classroom of the Elite', quality: 'HD' }, { name: 'Classroom of the Elite Season 2', quality: 'HD' },
+                { name: 'The Eminence in Shadow', quality: 'HD' }, { name: 'Chainsaw Man', quality: 'HD' },
+                { name: 'Cyberpunk: Edgerunners', quality: 'HD' }, { name: 'Lycoris Recoil', quality: 'HD' },
+                { name: 'Summer Time Rendering', quality: 'HD' }, { name: 'Summertime Rendering', quality: 'HD' },
+                { name: 'Oshi no Ko', quality: 'HD' }, { name: 'Hell\'s Paradise', quality: 'HD' },
+                { name: 'Frieren', quality: 'HD' }, { name: 'Sousou no Frieren', quality: 'HD' },
+                { name: 'Apothecary Diaries', quality: 'HD' }, { name: 'Kusuriya no Hitorigoto', quality: 'HD' },
+                { name: 'Delicious in Dungeon', quality: 'HD' }, { name: 'Dungeon Meshi', quality: 'HD' },
+                { name: 'ShindoL', quality: 'HD' }, { name: 'Wind Breaker', quality: 'HD' },
+                { name: 'Wind breakers', quality: 'HD' }, { name: 'Sakuna', quality: 'HD' },
+                { name: 'Undead Girl Murder Farce', quality: 'HD' }, { name: 'Dead Mount Death Hand', quality: 'HD' },
+                { name: 'Brigand', quality: 'HD' }, { name: 'Go! Go Loser', quality: 'HD' },
+                { name: '7th Time Loop', quality: 'HD' }, { name: 'Witch Hat Atelier', quality: 'HD' },
+                { name: 'Blue Archive', quality: 'HD' }, { name: 'Mysterious New World', quality: 'HD' },
+                { name: 'Elf启示录', quality: 'HD' }, { name: 'Shojan no Zasu', quality: 'HD' },
+                { name: 'Shadows House', quality: 'HD' }, { name: 'Wakfu', quality: 'HD' },
+                { name: 'Akebi-chan no Sailor', quality: 'HD' }, { name: 'Yuki on the Roof', quality: 'HD' },
+                { name: 'Sonobi Under', quality: 'HD' }, { name: 'Tsuki Michi', quality: 'HD' },
+                { name: 'Breaking Bad (Temporadas 1-5)', quality: 'HD' }, { name: 'Better Call Saul (Temporadas 1-6)', quality: 'HD' },
+                { name: 'Game of Thrones (1-8)', quality: 'HD' }, { name: 'House of the Dragon', quality: 'HD' },
+                { name: 'Stranger Things (1-4)', quality: 'HD' }, { name: 'The Walking Dead (1-11)', quality: 'HD' },
+                { name: 'Fear The Walking Dead', quality: 'HD' }, { name: 'TheOffice USA (1-9)', quality: 'HD' },
+                { name: 'Friends (1-10)', quality: 'HD' }, { name: 'The Big Bang Theory (1-12)', quality: 'HD' },
+                { name: 'How I Met Your Mother (1-9)', quality: 'HD' }, { name: 'Brooklyn Nine-Nine (1-8)', quality: 'HD' },
+                { name: 'The Last of Us', quality: 'HD' }, { name: 'The Last of Us Season 2', quality: 'HD' },
+                { name: 'The Witcher (1-3)', quality: 'HD' }, { name: 'Wednesday', quality: 'HD' },
+                { name: 'Squid Game', quality: 'HD' }, { name: 'Squid Game: The Challenge', quality: 'HD' },
+                { name: 'Money Heist / La Casa de Papel', quality: 'HD' }, { name: 'Money Heist: Korea', quality: 'HD' },
+                { name: 'El Chapo (1-3)', quality: 'HD' }, { name: 'Narcos (1-3)', quality: 'HD' },
+                { name: 'Narcos: México (1-3)', quality: 'HD' }, { name: 'Vis a Vis / Locked Up', quality: 'HD' },
+                { name: 'Dark (1-3)', quality: 'HD' }, { name: 'Dark', quality: 'HD' },
+                { name: 'Merlí (1-3)', quality: 'HD' }, { name: 'El Marginal (1-5)', quality: 'HD' },
+                { name: 'Supernatural (1-15)', quality: 'HD' }, { name: 'Ozark (1-4)', quality: 'HD' },
+                { name: 'Peaky Blinders (1-6)', quality: 'HD' }, { name: 'Vikings (1-6)', quality: 'HD' },
+                { name: 'Chernobyl', quality: 'HD' }, { name: 'Succession (1-4)', quality: 'HD' },
+                { name: 'House of the Dragon', quality: 'HD' }, { name: 'The Sandman (1-2)', quality: 'HD' },
+                { name: 'Yellowjackets (1-2)', quality: 'HD' }, { name: 'For All Mankind', quality: 'HD' },
+                { name: 'Severance (1-2)', quality: 'HD' }, { name: 'Lost (1-6)', quality: 'HD' },
+                { name: 'Prision Break (1-5)', quality: 'HD' }, { name: 'The Flash (1-9)', quality: 'HD' },
+                { name: 'Arrow (1-8)', quality: 'HD' }, { name: 'Supergirl (1-6)', quality: 'HD' },
+                { name: 'Legends of Tomorrow (1-7)', quality: 'HD' }, { name: 'Batwoman (1-3)', quality: 'HD' },
+                { name: 'Titans (1-4)', quality: 'HD' }, { name: 'Lucifer (1-6)', quality: 'HD' },
+                { name: 'The Umbrella Academy (1-3)', quality: 'HD' }, { name: 'Sex Education (1-4)', quality: 'HD' },
+                { name: 'El Camino: Breaking Bad', quality: 'HD' }, { name: 'Better Call Saul (1-6)', quality: 'HD' },
+                { name: 'Black Mirror (1-6)', quality: 'HD' }, { name: 'The Crown (1-6)', quality: 'HD' },
+                { name: 'The Queen's Gambit', quality: 'HD' }, { name: 'Maid', quality: 'HD' },
+                { name: 'Wandinha / Wednesday', quality: 'HD' }, { name: 'Anne with an E', quality: 'HD' },
+                { name: 'The Last Kingdom', quality: 'HD' }, { name: 'Vikings Valhalla', quality: 'HD' },
+                { name: 'Gotham (1-5)', quality: 'HD' }, { name: 'Titans (1-4)', quality: 'HD' },
+                { name: 'Snowfall (1-6)', quality: 'HD' }, { name: 'Narcos: Mexico', quality: 'HD' },
+                { name: 'La Casa de Papel', quality: 'HD' }, { name: 'Lupin', quality: 'HD' },
+                { name: 'Emily in Paris', quality: 'HD' }, { name: 'Bridgerton', quality: 'HD' },
+                { name: 'G Empress', quality: 'HD' }, { name: '1899', quality: 'HD' },
+                { name: 'Shadow and Bone', quality: 'HD' }, { name: 'Heartstopper', quality: 'HD' },
+                { name: 'Young Sheldon', quality: 'HD' }, { name: 'Resident Alien', quality: 'HD' },
+                { name: 'The Peripheral', quality: 'HD' }, { name: 'Halo', quality: 'HD' },
+                { name: 'Star Trek: Discovery', quality: 'HD' }, { name: 'Star Trek: Picard', quality: 'HD' },
+                { name: 'Star Trek Lower Decks', quality: 'HD' }, { name: 'Star Trek Strange New Worlds', quality: 'HD' },
+                { name: 'Star Wars: The Clone Wars', quality: 'HD' }, { name: 'Star Wars: Rebels', quality: 'HD' },
+                { name: 'Star Wars: The Bad Batch', quality: 'HD' }, { name: 'Andor', quality: 'HD' },
+                { name: 'Obi-Wan Kenobi', quality: 'HD' }, { name: 'Boba Fett', quality: 'HD' },
+                { name: 'Ahsoka', quality: 'HD' }, { name: 'Skeleton Lake', quality: '' },
+                { name: 'Y +200+ series más...', quality: '' }
             ]
         },
         comics: {
-            title: '📚 PACK COMICS & MANGA - Catálogo Completo',
+            title: '📚 PACK COMICS & MANGA (+1000)',
             items: [
-                { name: 'Iron Man - Colección Completa Marvel', quality: 'PDF' },
-                { name: 'Spider-Man - Colección Completa Marvel', quality: 'PDF' },
-                { name: 'Avengers - Colección Completa Marvel', quality: 'PDF' },
-                { name: 'X-Men - Colección Completa Marvel', quality: 'PDF' },
-                { name: 'Captain America - Colección Marvel', quality: 'PDF' },
-                { name: 'Thor - Colección Marvel', quality: 'PDF' },
-                { name: 'Hulk - Colección Marvel', quality: 'PDF' },
-                { name: 'Batman - Colección Completa DC', quality: 'PDF' },
-                { name: 'Superman - Colección Completa DC', quality: 'PDF' },
-                { name: 'Wonder Woman - Colección DC', quality: 'PDF' },
-                { name: 'Justice League - Colección DC', quality: 'PDF' },
-                { name: 'The Flash - Colección DC', quality: 'PDF' },
-                { name: 'Green Lantern - Colección DC', quality: 'PDF' },
-                { name: 'Aquaman - Colección DC', quality: 'PDF' },
-                { name: 'One Piece - Manga Completo', quality: 'PDF' },
-                { name: 'Naruto - Manga Completo', quality: 'PDF' },
-                { name: 'Dragon Ball - Manga Completo', quality: 'PDF' },
-                { name: 'bleach - Manga Completo', quality: 'PDF' },
-                { name: 'Attack on Titan - Manga Completo', quality: 'PDF' },
-                { name: 'Demon Slayer - Manga Completo', quality: 'PDF' },
-                { name: 'Jujutsu Kaisen - Manga', quality: 'PDF' },
-                { name: 'My Hero Academia - Manga', quality: 'PDF' },
-                { name: 'Tokyo Revengers - Manga', quality: 'PDF' },
-                { name: 'Chainsaw Man - Manga', quality: 'PDF' },
-                { name: 'Spy x Family - Manga', quality: 'PDF' },
-                { name: 'Kaguya-sama: Love is War - Manga', quality: 'PDF' },
-                { name: 'Fire Force - Manga', quality: 'PDF' },
-                { name: 'Black Clover - Manga', quality: 'PDF' },
-                { name: 'Hunter x Hunter - Manga', quality: 'PDF' },
-                { name: 'JoJo Bizarre Adventure - Manga', quality: 'PDF' },
-                { name: 'Slam Dunk - Manga', quality: 'PDF' },
-                { name: 'Death Note - Manga', quality: 'PDF' },
-                { name: 'Fullmetal Alchemist - Manga', quality: 'PDF' },
-                { name: 'Vinland Saga - Manga', quality: 'PDF' },
-                { name: 'Berserk - Manga', quality: 'PDF' },
-                { name: 'Hajime no Ippo - Manga', quality: 'PDF' },
-                { name: 'Great Teacher Onizuka - Manga', quality: 'PDF' },
-                { name: 'Parasyte - Manga', quality: 'PDF' },
-                { name: 'Y la mayoría +500 comics y manga más...', quality: '' }
+                { name: 'Iron Man - Colección Completa Marvel', quality: 'PDF' }, { name: 'Spider-Man - Colección Completa Marvel', quality: 'PDF' },
+                { name: 'Avengers - Colección Completa Marvel', quality: 'PDF' }, { name: 'X-Men - Colección Completa Marvel', quality: 'PDF' },
+                { name: 'Captain America - Marvel', quality: 'PDF' }, { name: 'Thor - Marvel', quality: 'PDF' },
+                { name: 'Hulk - Marvel', quality: 'PDF' }, { name: 'Black Widow - Marvel', quality: 'PDF' },
+                { name: 'Hawkeye - Marvel', quality: 'PDF' }, { name: 'Winter Soldier - Marvel', quality: 'PDF' },
+                { name: 'War Machine - Marvel', quality: 'PDF' }, { name: 'Vision - Marvel', quality: 'PDF' },
+                { name: 'Ant-Man - Marvel', quality: 'PDF' }, { name: 'Wasp - Marvel', quality: 'PDF' },
+                { name: 'Doctor Strange - Marvel', quality: 'PDF' }, { name: ' Scarlet Witch - Marvel', quality: 'PDF' },
+                { name: 'Star-Lord - Marvel', quality: 'PDF' }, { name: 'Gamora - Marvel', quality: 'PDF' },
+                { name: 'Drax - Marvel', quality: 'PDF' }, { name: 'Rocket - Marvel', quality: 'PDF' },
+                { name: 'Groot - Marvel', quality: 'PDF' }, { name: 'Mantis - Marvel', quality: 'PDF' },
+                { name: 'Cyclops - X-Men', quality: 'PDF' }, { name: 'Jean Grey - X-Men', quality: 'PDF' },
+                { name: 'Wolverine - X-Men', quality: 'PDF' }, { name: 'Storm - X-Men', quality: 'PDF' },
+                { name: 'Magneto - X-Men', quality: 'PDF' }, { name: 'Professor X - X-Men', quality: 'PDF' },
+                { name: 'Beast - X-Men', quality: 'PDF' }, { name: 'Nightcrawler - X-Men', quality: 'PDF' },
+                { name: 'Colossus - X-Men', quality: 'PDF' }, { name: 'Rogue - X-Men', quality: 'PDF' },
+                { name: 'Batman - Colección Completa DC', quality: 'PDF' }, { name: 'Superman - Colección Completa DC', quality: 'PDF' },
+                { name: 'Wonder Woman - DC', quality: 'PDF' }, { name: 'Justice League - DC', quality: 'PDF' },
+                { name: 'The Flash - DC', quality: 'PDF' }, { name: 'Aquaman - DC', quality: 'PDF' },
+                { name: 'Green Lantern - DC', quality: 'PDF' }, { name: 'Cyborg - DC', quality: 'PDF' },
+                { name: 'Shazam - DC', quality: 'PDF' }, { name: 'Supergirl - DC', quality: 'PDF' },
+                { name: 'Batgirl - DC', quality: 'PDF' }, { name: 'Batwoman - DC', quality: 'PDF' },
+                { name: 'Red Hood - DC', quality: 'PDF' }, { name: 'Nightwing - DC', quality: 'PDF' },
+                { name: 'Robin - DC', quality: 'PDF' }, { name: 'Catwoman - DC', quality: 'PDF' },
+                { name: 'Harley Quinn - DC', quality: 'PDF' }, { name: 'Joker - DC', quality: 'PDF' },
+                { name: 'Poison Ivy - DC', quality: 'PDF' }, { name: 'Riddler - DC', quality: 'PDF' },
+                { name: 'Two-Face - DC', quality: 'PDF' }, { name: 'Scarecrow - DC', quality: 'PDF' },
+                { name: 'Penguin - DC', quality: 'PDF' }, { name: 'Bane - DC', quality: 'PDF' },
+                { name: 'Deathstroke - DC', quality: 'PDF' }, { name: 'Ra\'s Al Ghul - DC', quality: 'PDF' },
+                { name: 'One Piece - Manga Completo', quality: 'PDF' }, { name: 'Naruto - Manga Completo', quality: 'PDF' },
+                { name: 'Dragon Ball - Manga Completo', quality: 'PDF' }, { name: 'Bleach - Manga Completo', quality: 'PDF' },
+                { name: 'Attack on Titan - Manga', quality: 'PDF' }, { name: 'Demon Slayer - Manga', quality: 'PDF' },
+                { name: 'My Hero Academia - Manga', quality: 'PDF' }, { name: 'Jujutsu Kaisen - Manga', quality: 'PDF' },
+                { name: 'Chainsaw Man - Manga', quality: 'PDF' }, { name: 'Spy x Family - Manga', quality: 'PDF' },
+                { name: 'Tokyo Revengers - Manga', quality: 'PDF' }, { name: 'One Punch Man - Manga', quality: 'PDF' },
+                { name: 'Fullmetal Alchemist - Manga', quality: 'PDF' }, { name: 'Hunter x Hunter - Manga', quality: 'PDF' },
+                { name: 'Berserk - Manga', quality: 'PDF' }, { name: 'JoJo Bizarre Adventure - Manga', quality: 'PDF' },
+                { name: 'Vinland Saga - Manga', quality: 'PDF' }, { name: 'Fire Force - Manga', quality: 'PDF' },
+                { name: 'Black Clover - Manga', quality: 'PDF' }, { name: 'Blue Lock - Manga', quality: 'PDF' },
+                { name: 'Killing Cover', quality: 'PDF' }, { name: 'The Eminence in Shadow', quality: 'PDF' },
+                { name: 'Reincarnated as a Sword', quality: 'PDF' }, { name: 'Kagurabachi', quality: 'PDF' },
+                { name: 'Shadow Garten', quality: 'PDF' }, { name: 'Sakuranbo', quality: 'PDF' },
+                { name: 'Elf启示录ES', quality: 'PDF' }, { name: 'Ragna Crimson', quality: 'PDF' },
+                { name: 'Undead Unluck', quality: 'PDF' }, { name: 'Frieren', quality: 'PDF' },
+                { name: 'Sousou no Frieren', quality: 'PDF' }, { name: 'Dungeon Meshi', quality: 'PDF' },
+                { name: 'Y +800 cómics más...', quality: '' }
             ]
         },
         musica: {
-            title: '🎵 PACK MÚSICA - Catálogo Completo',
+            title: '🎵 PACK MÚSICA - DJ Nicolas Escobar',
             items: [
-                { name: 'DJ Nicolas Escobar - Set Completo 1', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Set Completo 2', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Set Completo 3', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Sesiones Exclusivas 1', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Sesiones Exclusivas 2', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Remixes Personalizados 1', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Remixes Personalizados 2', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Tracks Originales 1', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Tracks Originales 2', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Edits Personalizados 1', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Edits Personalizados 2', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Playlists Premium 1', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Playlists Premium 2', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Live Sessions', quality: 'MP3' },
-                { name: 'DJ Nicolas Escobar - Bootlegs', quality: 'MP3' },
-                { name: 'Y la mayoría +50 sets y tracks más...', quality: '' }
+                { name: 'DJ Nicolas Escobar Set 1 - Premium', quality: 'MP3 320k' }, { name: 'DJ Nicolas Escobar Set 2 - Premium', quality: 'MP3 320k' },
+                { name: 'DJ Nicolas Escobar Set 3 - Premium', quality: 'MP3 320k' }, { name: 'DJ Nicolas Escobar Set 4 - Premium', quality: 'MP3 320k' },
+                { name: 'DJ Nicolas Escobar Set 5 - Premium', quality: 'MP3 320k' }, { name: 'DJ Nicolas Escobar Set 6 - Premium', quality: 'MP3 320k' },
+                { name: 'DJ Nicolas Escobar Set 7 - Premium', quality: 'MP3 320k' }, { name: 'DJ Nicolas Escobar Set 8 - Premium', quality: 'MP3 320k' },
+                { name: 'DJ Nicolas Escobar Set 9 - Premium', quality: 'MP3 320k' }, { name: 'DJ Nicolas Escobar Set 10 - Premium', quality: 'MP3 320k' },
+                { name: 'Remixes Exclusivos Vol. 1', quality: 'MP3 320k' }, { name: 'Remixes Exclusivos Vol. 2', quality: 'MP3 320k' },
+                { name: 'Remixes Exclusivos Vol. 3', quality: 'MP3 320k' }, { name: 'Remixes Exclusivos Vol. 4', quality: 'MP3 320k' },
+                { name: 'Sesiones VIP 2024', quality: 'MP3 320k' }, { name: 'Sesiones VIP 2023', quality: 'MP3 320k' },
+                { name: 'Sesiones VIP 2022', quality: 'MP3 320k' }, { name: 'Sesiones VIP 2021', quality: 'MP3 320k' },
+                { name: 'Playlists Premium - Lo Mejor', quality: 'MP3 320k' }, { name: 'Playlists - Fiestón', quality: 'MP3 320k' },
+                { name: 'Playlists - Sesión', quality: 'MP3 320k' }, { name: 'Playlists - Relax', quality: 'MP3 320k' },
+                { name: 'Hits del Verano 2024', quality: 'MP3 320k' }, { name: 'Hits del Verano 2023', quality: 'MP3 320k' },
+                { name: 'Techno Chile Mix #1', quality: 'MP3 320k' }, { name: 'Techno Chile Mix #2', quality: 'MP3 320k' },
+                { name: 'Techno Chile Mix #3', quality: 'MP3 320k' }, { name: 'Techno Underground', quality: 'MP3 320k' },
+                { name: 'Electronic Sessions #1', quality: 'MP3 320k' }, { name: 'Electronic Sessions #2', quality: 'MP3 320k' },
+                { name: 'Deep House Mix #1', quality: 'MP3 320k' }, { name: 'Deep House Mix #2', quality: 'MP3 320k' },
+                { name: 'Progressive House Mix #1', quality: 'MP3 320k' }, { name: 'Progressive House Mix #2', quality: 'MP3 320k' },
+                { name: 'Tech House Mix #1', quality: 'MP3 320k' }, { name: 'Tech House Mix #2', quality: 'MP3 320k' },
+                { name: 'Bass House Mix #1', quality: 'MP3 320k' }, { name: 'Bass House Mix #2', quality: 'MP3 320k' },
+                { name: 'Afro House Mix #1', quality: 'MP3 320k' }, { name: 'Afro House Mix #2', quality: 'MP3 320k' },
+                { name: 'Melodic Techno #1', quality: 'MP3 320k' }, { name: 'Melodic Techno #2', quality: 'MP3 320k' },
+                { name: 'Underground Beats #1', quality: 'MP3 320k' }, { name: 'Underground Beats #2', quality: 'MP3 320k' },
+                { name: 'Festival Mainstage', quality: 'MP3 320k' }, { name: 'Club Banger Mix', quality: 'MP3 320k' },
+                { name: 'Sunset Vibes Mix', quality: 'MP3 320k' }, { name: 'Nightdrive Mix', quality: 'MP3 320k' },
+                { name: 'Afterhours Session', quality: 'MP3 320k' }, { name: 'Warmup Set', quality: 'MP3 320k' },
+                { name: 'Closing Set', quality: 'MP3 320k' }, { name: 'Opening Set 2024', quality: 'MP3 320k' },
+                { name: 'Tracks Originales #1', quality: 'WAV/FLAC' }, { name: 'Tracks Originales #2', quality: 'WAV/FLAC' },
+                { name: 'Tracks Originales #3', quality: 'WAV/FLAC' }, { name: 'Edits Exclusivos', quality: 'WAV/FLAC' },
+                { name: 'Bootlegs Pack', quality: 'MP3' }, { name: 'Intro Loops', quality: 'MP3' },
+                { name: 'Effects Pack', quality: 'MP3' }, { name: 'Transitions Pack', quality: 'MP3' },
+                { name: 'Samples Pack', quality: 'WAV' }, { name: 'Presets Pack', quality: 'SERUM' },
+                { name: 'Proyecto Ableton Live', quality: 'ALS' }, { name: 'Proyecto FL Studio', quality: 'FLP' },
+                { name: 'Y +50 sets más...', quality: '' }
             ]
         },
         libros: {
-            title: '📖 PACK LIBROS & AUDIOLIBROS - Catálogo Completo',
+            title: '📖 PACK LIBROS & AUDIOLIBROS (+200)',
             items: [
-                { name: 'Los 7 Hábitos de la Gente Altamente Efectiva - Stephen Covey', quality: 'PDF/EPUB' },
-                { name: 'Padre Rico Padre Pobre - Robert Kiyosaki', quality: 'PDF/EPUB' },
-                { name: 'El Hombre Más Rico de Babilonia - George Clason', quality: 'PDF/EPUB' },
-                { name: 'Piense y Hágase Rico - Napoleon Hill', quality: 'PDF/EPUB' },
-                { name: 'El Poder del Ahora - Eckhart Tolle', quality: 'PDF/EPUB' },
-                { name: 'Cómo Ganar Amigos e Influir sobre las Personas - Dale Carnegie', quality: 'PDF/EPUB' },
-                { name: 'El Monje que Vendió su Ferrari - Robin Sharma', quality: 'PDF/EPUB' },
-                { name: 'Los 4 Acuerdos - Don Miguel Ruiz', quality: 'PDF/EPUB' },
-                { name: 'Inteligencia Emocional - Daniel Goleman', quality: 'PDF/EPUB' },
-                { name: 'Hábitos Atómicos - James Clear', quality: 'PDF/EPUB' },
-                { name: 'El Arte de la Guerra - Sun Tzu', quality: 'PDF/EPUB' },
-                { name: 'Think and Grow Rich - Napoleon Hill (Inglés)', quality: 'PDF/EPUB' },
-                { name: 'The 48 Laws of Power - Robert Greene', quality: 'PDF/EPUB' },
-                { name: 'Sapiens - Yuval Noah Harari', quality: 'PDF/EPUB' },
-                { name: 'El Crimen de la Guerra - Julio G. Martín', quality: 'PDF/EPUB' },
-                { name: 'La Meta - Eliyahu Goldratt', quality: 'PDF/EPUB' },
-                { name: 'El Poder de la Mente Subconsciente - Joseph Murphy', quality: 'PDF/EPUB' },
-                { name: 'El Secreto - Rhonda Byrne', quality: 'PDF/EPUB' },
-                { name: 'La Ley de la Atracción - Esther Hicks', quality: 'PDF/EPUB' },
-                { name: 'Tu Zona Genio - Alan Cohen', quality: 'PDF/EPUB' },
-                { name: 'Despertando al Gigante Interior - Tony Robbins', quality: 'PDF/EPUB' },
-                { name: 'El Mundo Amigo - Osho', quality: 'PDF/EPUB' },
-                { name: 'Millonario en 365 Días - Larry Allen', quality: 'PDF/EPUB' },
-                { name: 'Marketing de Afiliados 2024 - Guía Completa', quality: 'PDF' },
-                { name: 'E-commerce from Zero to Hero', quality: 'PDF' },
-                { name: 'Y la mayoría +80 libros más...', quality: '' }
+                { name: 'Los 7 Hábitos - Stephen Covey', quality: 'PDF/EPUB' }, { name: 'Padre Rico Padre Pobre - Robert Kiyosaki', quality: 'PDF/EPUB' },
+                { name: 'El Poder del Ahora - Eckhart Tolle', quality: 'PDF/EPUB' }, { name: 'Más Allá del Poder - Byron Katie', quality: 'PDF/EPUB' },
+                { name: 'El Arte de la Guerra - Sun Tzu', quality: 'PDF/EPUB' }, { name: 'La Sombra del Viento - Carlos Ruiz Zafón', quality: 'PDF/EPUB' },
+                { name: 'El Código Da Vinci - Dan Brown', quality: 'PDF/EPUB' }, { name: 'Ángeles y Demonios - Dan Brown', quality: 'PDF/EPUB' },
+                { name: 'Inferno - Dan Brown', quality: 'PDF/EPUB' }, { name: 'Origen - Dan Brown', quality: 'PDF/EPUB' },
+                { name: 'Cien Años de Soledad - García Márquez', quality: 'PDF/EPUB' }, { name: '1984 - George Orwell', quality: 'PDF/EPUB' },
+                { name: 'Rebelión en la Granja - Orwell', quality: 'PDF/EPUB' }, { name: 'El Principito - Saint-Exupéry', quality: 'PDF/EPUB' },
+                { name: 'La Odisea - Homero', quality: 'PDF/EPUB' }, { name: 'Ulises - James Joyce', quality: 'PDF/EPUB' },
+                { name: 'Don Quijote de la Mancha', quality: 'PDF/EPUB' }, { name: 'La Guerra de los Mundos - Wells', quality: 'PDF/EPUB' },
+                { name: 'Dracula - Bram Stoker', quality: 'PDF/EPUB' }, { name: 'Frankenstein - Shelley', quality: 'PDF/EPUB' },
+                { name: 'El Fotógrafo - Guillem March', quality: 'PDF/EPUB' }, { name: 'Yo, Robot - Asimov', quality: 'PDF/EPUB' },
+                { name: 'Fundación - Asimov', quality: 'PDF/EPUB' }, { name: '2001: Odisea del Espacio', quality: 'PDF/EPUB' },
+                { name: ' Dune - Frank Herbert', quality: 'PDF/EPUB' }, { name: 'El Señor de los Anillos', quality: 'PDF/EPUB' },
+                { name: 'El Hobbit - Tolkien', quality: 'PDF/EPUB' }, { name: 'El Silmarillion', quality: 'PDF/EPUB' },
+                { name: 'Harry Potter 1-7', quality: 'PDF/EPUB' }, { name: 'Los Juegos del Hambre', quality: 'PDF/EPUB' },
+                { name: 'Crepúsculo - Stephenie Meyer', quality: 'PDF/EPUB' }, { name: 'Cinquillo Shades of Grey', quality: 'PDF/EPUB' },
+                { name: 'El Código Da Vinci', quality: 'PDF/EPUB' }, { name: 'Ready Player One', quality: 'PDF/EPUB' },
+                { name: 'Armada - Ernest Cline', quality: 'PDF/EPUB' }, { name: 'El Museo de lo Invisible', quality: 'PDF/EPUB' },
+                { name: 'Cuentos de la Selva', quality: 'PDF/EPUB' }, { name: 'Cuentos de Hadas', quality: 'PDF/EPUB' },
+                { name: 'Fábulas de Esopo', quality: 'PDF/EPUB' }, { name: 'Hans Christian Andersen', quality: 'PDF/EPUB' },
+                { name: 'Los Hermanos Grimm', quality: 'PDF/EPUB' }, { name: 'Cuentos de Terror', quality: 'PDF/EPUB' },
+                { name: 'Historias de Amor', quality: 'PDF/EPUB' }, { name: 'Poesía Chilena', quality: 'PDF/EPUB' },
+                { name: 'Pablo Neruda - Obra Poética', quality: 'PDF/EPUB' }, { name: 'Gabriela Mistral - Obra', quality: 'PDF/EPUB' },
+                { name: 'Vicente Huidobro - Obra', quality: 'PDF/EPUB' }, { name: 'Nicanor Parra - Antología', quality: 'PDF/EPUB' },
+                { name: 'Audiolibro: El Poder del Ahora', quality: 'MP3' }, { name: 'Audiolibro: Padre Rico Padre Pobre', quality: 'MP3' },
+                { name: 'Audiolibro: Los 7 Hábitos', quality: 'MP3' }, { name: 'Audiolibro: Pensar y Hacerse Rico', quality: 'MP3' },
+                { name: 'Audiolibro: El Arte de la Guerra', quality: 'MP3' }, { name: 'Audiolibro: 1984', quality: 'MP3' },
+                { name: 'Audiolibro: Cien Años de Soledad', quality: 'MP3' }, { name: 'Audiolibro: El Principito', quality: 'MP3' },
+                { name: 'Audiolibro: Orgullo y Prejuicio', quality: 'MP3' }, { name: 'Audiolibro: Cumbres Borrascosas', quality: 'MP3' },
+                { name: 'Audiolibro: Dracula', quality: 'MP3' }, { name: 'Audiolibro: Frankenstein', quality: 'MP3' },
+                { name: 'Audiolibro: La/metamorfosis', quality: 'MP3' }, { name: 'Audiolibro: El Largo Camino', quality: 'MP3' },
+                { name: 'El Hombre Más Rico de Babilonia', quality: 'PDF' }, { name: 'Piense y Hága', quality: 'PDF' },
+                { name: 'El Monje que Vendió su Ferrari', quality: 'PDF' }, { name: 'Los 4 Acuerdos', quality: 'PDF' },
+                { name: 'Inteligencia Emocional', quality: 'PDF' }, { name: 'Hábitos Atómicos', quality: 'PDF' },
+                { name: 'Think and Grow Rich', quality: 'PDF' }, { name: 'The 48 Laws of Power', quality: 'PDF' },
+                { name: 'Sapiens', quality: 'PDF' }, { name: 'Homo Deus', quality: 'PDF' },
+                { name: 'La Meta - Goldratt', quality: 'PDF' }, { name: 'El Poder de la Mente', quality: 'PDF' },
+                { name: 'El Secreto', quality: 'PDF' }, { name: 'La Ley de la Atracción', quality: 'PDF' },
+                { name: 'Tu Zona Genio', quality: 'PDF' }, { name: 'Despertando al Gigante', quality: 'PDF' },
+                { name: 'El Mundo Amigo - Osho', quality: 'PDF' }, { name: 'Millonario en 365 Días', quality: 'PDF' },
+                { name: 'Marketing de Afiliados', quality: 'PDF' }, { name: 'E-commerce from Zero to Hero', quality: 'PDF' },
+                { name: 'SEO para Principiantes', quality: 'PDF' }, { name: 'Copywriting Profesional', quality: 'PDF' },
+                { name: 'Facebook Ads 2024', quality: 'PDF' }, { name: 'Instagram para Bisnis', quality: 'PDF' },
+                { name: 'YouTube para Empresas', quality: 'PDF' }, { name: 'TikTok Marketing', quality: 'PDF' },
+                { name: 'Gestión de Proyectos', quality: 'PDF' }, { name: 'Leadership', quality: 'PDF' },
+                { name: 'Gestión del Tiempo', quality: 'PDF' }, { name: 'Productividad Millennial', quality: 'PDF' },
+                { name: 'Hábitos de la Gente Exitosa', quality: 'PDF' }, { name: 'El Arte de Pedir', quality: 'PDF' },
+                { name: 'Cómo Ganar Amigos', quality: 'PDF' }, { name: 'Cómo Influir', quality: 'PDF' },
+                { name: 'El Cuarto Agreement', quality: 'PDF' }, { name: 'El Quinto Agreement', quality: 'PDF' },
+                { name: 'La Sombra del Viento', quality: 'PDF' }, { name: 'El Juego del Ángel', quality: 'PDF' },
+                { name: 'El Príncipe de la Niebla', quality: 'PDF' }, { name: 'El Puerto de la Niebla', quality: 'PDF' },
+                { name: 'Marina - Carlos Ruiz Zafón', quality: 'PDF' }, { name: 'La Ciudad de los Reyes', quality: 'PDF' },
+                { name: 'El Captain Alatriste', quality: 'PDF' }, { name: 'Los Marquees de S', quality: 'PDF' },
+                { name: 'La Regenta', quality: 'PDF' }, { name: 'Fortunata y Jacinta', quality: 'PDF' },
+                { name: 'Doña Bárbara', quality: 'PDF' }, { name: 'Cañada de los Muertos', quality: 'PDF' },
+                { name: 'La Vorágine', quality: 'PDF' }, { name: ' María', quality: 'PDF' },
+                { name: 'La Tumba de las Luciérnagas', quality: 'PDF' }, { name: 'Cuentos de la Lluvia', quality: 'PDF' },
+                { name: 'Leyendas de Chile', quality: 'PDF' }, { name: 'Mitos Chilenos', quality: 'PDF' },
+                { name: 'Historia de Chile', quality: 'PDF' }, { name: 'Geografía de Chile', quality: 'PDF' },
+                { name: 'Constitución Chilena', quality: 'PDF' }, { name: 'Derecho Constitucional', quality: 'PDF' },
+                { name: 'Código del Trabajo', quality: 'PDF' }, { name: 'Ley de Arrendamiento', quality: 'PDF' },
+                { name: 'Todo sobre el 20%', quality: 'PDF' }, { name: 'Y +110 libros más...', quality: '' }
             ]
         },
-        historietas: {
-            title: '📰 PACK HISTORIETAS RETRO - Catálogo Completo',
+        completo: {
+            title: '🎁 PACK COMPLETO - TODO EL CONTENIDO',
             items: [
-                { name: 'Condorito - Colección Completa (Chile)', quality: 'PDF' },
-                { name: 'Condorito - Fascículos 1-100', quality: 'PDF' },
-                { name: 'Condorito - Mejores Historietas', quality: 'PDF' },
-                { name: 'Kaliman - Colección Completa (México)', quality: 'PDF' },
-                { name: 'Kaliman - Fascículos 1-50', quality: 'PDF' },
-                { name: 'Mortadelo - Colección (España)', quality: 'PDF' },
-                { name: 'Mortadelo y Filemón - Mejores', quality: 'PDF' },
-                { name: 'Mafalda - Colección Completa (Argentina)', quality: 'PDF' },
-                { name: 'Coringa - Historietas Clásicas', quality: 'PDF' },
-                { name: 'Súper Dinosaurio - Colección', quality: 'PDF' },
-                { name: 'El Eternauta - Colección Completa', quality: 'PDF' },
-                { name: 'Billiken - Colección Argentina', quality: 'PDF' },
-                { name: 'Mundo Infantil - Historietas Retro', quality: 'PDF' },
-                { name: 'Chiquitín - Colección', quality: 'PDF' },
-                { name: 'Petete y Gato con Botas - Colección', quality: 'PDF' },
-                { name: 'Y la mayoría +100 historietas retro más...', quality: '' }
+                { name: '📽️ PACK PELÍCULAS (+500+)', quality: '4K HDR' },
+                { name: '📺 PACK ANIME & SERIES (+500+)', quality: 'Full HD' },
+                { name: '📚 PACK COMICS & MANGA (+1000+)', quality: 'PDF' },
+                { name: '🎵 PACK MÚSICA (Sets + Remixes)', quality: 'MP3 320k' },
+                { name: '📖 PACK LIBROS & AUDIOLIBROS (+200+)', quality: 'PDF/MP3' },
+                { name: '🎁 BONO: Contenido Extra Exclusive', quality: '' },
+                { name: '🎁 BONO: Acceso Lifetime', quality: '' },
+                { name: '🎁 BONO: Actualizaciones Incluidas', quality: '' }
             ]
         }
     };
     
-    function openContentModal(category) {
-        const content = fullContent[category];
-        if (!content) return;
+    function showContent(pack) {
+        // Simple test first
+        alert('Button clicked! Pack: ' + pack);
         
+        // Define content for each pack
+        const CONTENT_CATALOG = {
+            peliculas: {
+                title: '📽️ PACK PELÍCULAS - Ejemplo',
+                items: [
+                    'Avatar (2009) - 4K',
+                    'Avatar: The Way of Water (2022) - 4K',
+                    'Avengers: Endgame - 4K',
+                    'Avengers: Infinity War - 4K',
+                    'Spider-Man: No Way Home - 4K',
+                    'Black Panther - 4K',
+                    'Iron Man 1,2,3 - 4K',
+                    'Thor: Love and Thunder - 4K',
+                    'Guardians of the Galaxy - 4K',
+                    'Doctor Strange - 4K',
+                    'Batman (2022) - 4K',
+                    'Joker - 4K',
+                    'Harry Potter 1-8 - 4K',
+                    'Jurassic Park/World - 4K',
+                    'Matrix 1-4 - 4K',
+                    'Titanic - 4K',
+                    'Interestelar - 4K',
+                    'Inception - 4K',
+                    'Star Wars 1-9 - 4K',
+                    'Lord of the Rings Trilogy - 4K',
+                    'Deadpool 1,2 - 4K',
+                    'Logan - 4K',
+                    'Venom - 4K',
+                    'Morbius - 4K',
+                    'And 475+ more movies...'
+                ]
+            },
+            anime: {
+                title: '📺 PACK ANIME & SERIES - Ejemplo',
+                items: [
+                    'Dragon Ball Z/Super (Completo)',
+                    'Naruto Shippuden (Completo)',
+                    'One Piece (Completo)',
+                    'Bleach (Completo)',
+                    'Attack on Titan (Completo)',
+                    'Demon Slayer (Completo)',
+                    'My Hero Academia (Completo)',
+                    'Jujutsu Kaisen (Completo)',
+                    'Death Note (Completo)',
+                    'Tokyo Revengers (Completo)',
+                    'Spy x Family (Completo)',
+                    'Chainsaw Man (Completo)',
+                    'Fullmetal Alchemist: Brotherhood (Completo)',
+                    'Hunter x Hunter (Completo)',
+                    'Mob Psycho 100 (Completo)',
+                    'One Punch Man (Completo)',
+                    'Breaking Bad (Temporadas 1-5)',
+                    'Better Call Saul (Temporadas 1-6)',
+                    'Game of Thrones (Temporadas 1-8)',
+                    'Stranger Things (Temporadas 1-4)',
+                    'The Walking Dead (Temporadas 1-11)',
+                    'Friends (Temporadas 1-10)',
+                    'The Office US (Temporadas 1-9)',
+                    'Squid Game (Completo)',
+                    'Money Heist / La Casa de Papel (Temporadas 1-5)',
+                    'El Marginal (Temporadas 1-4)',
+                    'Ozark (Temporadas 1-4)',
+                    'And 250+ more series...'
+                ]
+            },
+            comics: {
+                title: '📚 PACK COMICS & MANGA - Ejemplo',
+                items: [
+                    'Iron Man - Colección Completa Marvel',
+                    'Spider-Man - Colección Completa Marvel',
+                    'Avengers - Colección Completa Marvel',
+                    'X-Men - Colección Completa Marvel',
+                    'Captain America - Marvel (Completo)',
+                    'Thor - Marvel (Completo)',
+                    'Hulk - Marvel (Completo)',
+                    'Black Widow - Marvel (Completo)',
+                    'Wonder Woman - DC (Completo)',
+                    'Batman - DC (Completo)',
+                    'Superman - DC (Completo)',
+                    'Justice League - DC (Completo)',
+                    'The Flash - DC (Completo)',
+                    'Green Lantern - DC (Completo)',
+                    'Aquaman - DC (Completo)',
+                    'Deadpool - Marvel (Completo)',
+                    'Venom - Marvel (Completo)',
+                    'Guardians of the Galaxy - Marvel (Completo)',
+                    'Ant-Man - Marvel (Completo)',
+                    'Wasp - Marvel (Completo)',
+                    'Doctor Strange - Marvel (Completo)',
+                    'Black Panther - Marvel (Completo)',
+                    'Shang-Chi - Marvel (Completo)',
+                    'One Piece - Manga Completo',
+                    'Naruto - Manga Completo',
+                    'Dragon Ball - Manga Completo',
+                    'Bleach - Manga Completo',
+                    'Attack on Titan - Manga',
+                    'Demon Slayer - Manga',
+                    'My Hero Academia - Manga',
+                    'Jujutsu Kaisen - Manga',
+                    'Chainsaw Man - Manga',
+                    'Spy x Family - Manga',
+                    'Tokyo Revengers - Manga',
+                    'Berserk - Manga',
+                    'JoJo Bizarre Adventure - Manga',
+                    'Vinland Saga - Manga',
+                    'Fire Force - Manga',
+                    'Black Clover - Manga',
+                    'Blue Lock - Manga',
+                    'Sword Art Online - Manga',
+                    'Re:Zero - Manga',
+                    'Overlord - Manga',
+                    'That Time I Got Reincarnated as a Slime - Manga',
+                    'And 900+ more comics...'
+                ]
+            },
+            musica: {
+                title: '🎵 PACK MÚSICA - DJ Nicolas Escobar',
+                items: [
+                    'DJ Nicolas Escobar Set 1 - Premium Mix',
+                    'DJ Nicolas Escobar Set 2 - Premium Mix',
+                    'DJ Nicolas Escobar Set 3 - Premium Mix',
+                    'DJ Nicolas Escobar Set 4 - Premium Mix',
+                    'DJ Nicolas Escobar Set 5 - Premium Mix',
+                    'Remixes Exclusivos Vol. 1',
+                    'Remixes Exclusivos Vol. 2',
+                    'Remixes Exclusivos Vol. 3',
+                    'Remixes Exclusivos Vol. 4',
+                    'Sesiones VIP 2024',
+                    'Sesiones VIP 2023',
+                    'Playlists Premium - Lo Mejor',
+                    'Playlists - Fiestón 2024',
+                    'Playlists - Sesión de Trabajo',
+                    'Playlists - Relax y Meditación',
+                    'Hits del Verano 2024',
+                    'Techno Chile Mix #1',
+                    'Techno Chile Mix #2',
+                    'Electronic Sessions Deep House',
+                    'Progressive House Mix Collection',
+                    'Tech House Mix Selection',
+                    'Bass House Mix Bundle',
+                    'Afro House Mix Collection',
+                    'Melodic Techno Selection',
+                    'Underground Beats Pack',
+                    'Festival Mainstage Sets',
+                    'Club Banger Mixes',
+                    'Sunset Vibes Mix Collection',
+                    'Nightdrive Sessions',
+                    'Afterhours Sessions',
+                    'Warmup & Closing Sets',
+                    'Tracks Originales en WAV/FLAC',
+                    'Edits y Versiones Exclusivas',
+                    'Bootlegs y Rarezas Collection',
+                    'Sample Packs Professionales',
+                    'Presets para Serum y Massive X',
+                    'Proyectos Ableton Live Listos',
+                    'Proyectos FL Studio Profesionales',
+                    'And 30+ more music sets...'
+                ]
+            },
+            libros: {
+                title: '📖 PACK LIBROS & AUDIOLIBROS - Ejemplo',
+                items: [
+                    'Los 7 Hábitos de la Gente Altamente Efectiva - Stephen Covey',
+                    'Padre Rico Padre Pobre - Robert T. Kiyosaki',
+                    'El Poder del Ahora - Eckhart Tolle',
+                    'Más Allá del Poder - Byron Katie',
+                    'El Arte de la Guerra - Sun Tzu',
+                    'La Sombra del Viento - Carlos Ruiz Zafón',
+                    'El Código Da Vinci - Dan Brown',
+                    'Ángeles y Demonios - Dan Brown',
+                    'Inferno - Dan Brown',
+                    'El Principito - Antoine de Saint-Exupéry',
+                    'La Odisea - Homero',
+                    'Ulises - James Joyce',
+                    'Don Quijote de la Mancha - Miguel de Cervantes',
+                    'La Guerra de los Mundos - H.G. Wells',
+                    '1984 - George Orwell',
+                    'Rebelión en la Granja - George Orwell',
+                    'Cien Años de Soledad - Gabriel García Márquez',
+                    'El Hobbit - J.R.R. Tolkien',
+                    'El Señor de los Anillos - J.R.R. Tolkien',
+                    'El Silmarillion - J.R.R. Tolkien',
+                    'Harry Potter y la Piedra Filosofal - J.K. Rowling',
+                    'Harry Potter y la Cámara Secreta - J.K. Rowling',
+                    'Harry Potter y el Prisionero de Azkaban - J.K. Rowling',
+                    'Harry Potter y el Cáliz de Fuego - J.K. Rowling',
+                    'Harry Potter y la Orden del Fénix - J.K. Rowling',
+                    'Harry Potter y el Príncipe Mestizo - J.K. Rowling',
+                    'Harry Potter y las Reliquias de la Muerte - J.K. Rowling',
+                    'Los Juegos del Hambre - Suzanne Collins',
+                    'Crepúsculo - Stephenie Meyer',
+                    'Cincuenta Sombras de Grey - E.L. James',
+                    'Ready Player One - Ernest Cline',
+                    'El Alquimista - Paulo Coelho',
+                    'El Señor de los Anillos: La Comunidad del Anillo',
+                    'El Señor de los Anillos: Las Dos Torres',
+                    'El Señor de los Anillos: El Retorno del Rey',
+                    'Sapiens: Una Breve Historia de la Humanidad - Yuval Noah Harari',
+                    'Homo Deus: El Mañana de la Humanidad - Yuval Noah Harari',
+                    'La Meta: Un Proceso de Progreso Ongoing - Eliyahu M. Goldratt',
+                    'El Poder de la Mente Subconsciente - Joseph Murphy',
+                    'El Secreto - Rhonda Byrne',
+                    'La Ley de la Atracción - Esther y Jerry Hicks',
+                    'Tu Zona Genio - Alan Cohen',
+                    'Despertando al Gigante Interior - Tony Robbins',
+                    'El Mundo Amigo - Osho',
+                    'Millonario en 365 Días - Vishen Lakhiani',
+                    'Marketing de Afiliados 2024 - Guía Completa',
+                    'E-commerce desde Cero hasta Experto',
+                    'SEO para Principiantes y Avanzados',
+                    'Copywriting Profesional y Persuasivo',
+                    'Facebook Ads 2024 - Estrategias Avanzadas',
+                    'Instagram para Negocios y Influencers',
+                    'YouTube para Empresas y Marcas',
+                    'TikTok Marketing y Crecimiento Orgánico',
+                    'Gestión de Proyectos - Metodologías Ágiles',
+                    'Liderazgo y Gestión de Equipos',
+                    'Productividad y Gestión del Tiempo',
+                    'Hábitos de la Gente Muy Exitosa',
+                    'El Arte de Pedir y Recibir Feedback',
+                    'Cómo Ganar Amigos e Influir sobre las Personas - Dale Carnegie',
+                    'Cómo Amarnos y Querernos Mejor - Walter Riso',
+                    'El Cuarto Acuerdo del Amor - Don Miguel Ruiz',
+                    'El Quinto Acuerdo - Don Miguel Ruiz y Jose Ruiz',
+                    'And 110+ more books and audiobooks...'
+                ]
+            },
+            completo: {
+                title: '🎁 PACK COMPLETO - TODO EL CONTENIDO',
+                items: [
+                    '📽️ PACK PELÍCULAS (+500 títulos en 4K/HD)',
+                    '📺 PACK ANIME & SERIES (+500 series completas)',
+                    '📚 PACK COMICS & MANGA (+1000 cómics y manga)',
+                    '🎵 PACK MÚSICA (Sets de DJ Nicolas Escobar + Remixes)',
+                    '📖 PACK LIBROS & AUDIOLIBROS (+200 libros y audiolibros)',
+                    '🎁 BONO EXCLUSIVO: Contenido Extra no disponible en otro lado',
+                    '🎁 BONO VIP: Acceso de por vida a futuras actualizaciones',
+                    '🎁 BONO PREMIUM: Soporte técnico personalizado incluido'
+                ]
+            }
+        };
+        
+        const content = CONTENT_CATALOG[pack];
+        if (!content) {
+            alert('Error: Contenido no encontrado para ' + pack);
+            return;
+        }
+        
+        // Update modal title
         document.getElementById('modalTitle').textContent = content.title;
         
-        let itemsHtml = '';
-        content.items.forEach(item => {
-            const badge = item.quality ? 
-                `<span class="quality-badge quality-${item.quality.toLowerCase().replace('/', '-')}">${item.quality}</span>` : '';
-            itemsHtml += `<div class="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg mb-1">
-                <span>${item.name}</span>
-                ${badge}
-            </div>`;
+        // Build content HTML
+        let htmlContent = '';
+        content.items.forEach(function(item) {
+            htmlContent += '<div class="p-3 mb-2 bg-white/10 rounded-lg border-l-2 border-green-400"><span class="text-sm">' + item + '</span></div>';
         });
         
-        document.getElementById('modalContent').innerHTML = `
-            <p class="text-white/50 mb-4">Total: ${content.items.length} títulos</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[60vh] overflow-y-auto pr-2">
-                ${itemsHtml}
-            </div>
-            <div class="mt-6 pt-4 border-t border-white/10 text-center">
-                <p class="text-white/70 mb-4">¿Quieres acceder a todo este contenido?</p>
-                <a href="${getPackLink(category)}" class="inline-flex items-center gap-2 px-8 py-3 bg-green-600 hover:bg-green-500 rounded-full text-white font-semibold">
-                    <i class="fas fa-shopping-cart"></i>
-                    COMPRAR PACK COMPLETO
-                </a>
-            </div>
-        `;
+        // Set modal content
+        document.getElementById('modalContent').innerHTML = htmlContent;
         
+        // Show modal
         document.getElementById('contentModal').classList.remove('hidden');
+        
+        // Prevent body scroll when modal is open
         document.body.style.overflow = 'hidden';
-    }
-    
-    function getPackLink(category) {
-        const links = {
-            peliculas: 'pack-peliculas.html',
-            anime: 'pack-anime-series.html',
-            series: 'pack-anime-series.html',
-            comics: 'pack-comics.html',
-            musica: 'pack-musica.html',
-            libros: 'pack-libros.html',
-            historietas: 'pack-comics.html'
-        };
-        return links[category] || '#';
     }
     
     function closeContentModal() {
@@ -1502,107 +1349,17 @@
         document.body.style.overflow = '';
     }
     
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeContentModal();
+    // Close modal when clicking outside content
+    document.getElementById('contentModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeContentModal();
+        }
     });
     
-    function searchContent(query) {
-        const searchCount = document.getElementById('searchCount');
-        const searchResults = document.getElementById('searchResults');
-        const sections = document.querySelectorAll('main section[id]');
-        let totalMatches = 0;
-        const foundIn = [];
-        
-        if (query.length < 2) {
-            sections.forEach(section => {
-                section.style.display = '';
-                section.querySelectorAll('.item-row').forEach(row => {
-                    row.style.display = '';
-                    row.classList.remove('bg-green-500/20', 'border-l-4', 'border-green-400');
-                });
-            });
-            searchCount.textContent = '';
-            searchResults.classList.add('hidden');
-            return;
-        }
-        
-        query = query.toLowerCase().trim();
-        const queryWords = query.split(/\s+/);
-        
-        sections.forEach(section => {
-            const sectionTitle = section.querySelector('h2');
-            const sectionName = sectionTitle ? sectionTitle.textContent.replace(/[^\w\s]/g, '').trim() : section.id;
-            const sectionContent = section.querySelector('.grid, .space-y-1, .divide-y');
-            if (!sectionContent) return;
-            
-            const items = sectionContent.querySelectorAll('.item-row');
-            let sectionMatches = 0;
-            
-            items.forEach(item => {
-                const text = item.textContent.toLowerCase().replace(/[^\w\s]/g, '');
-                const matches = queryWords.every(word => text.includes(word));
-                
-                if (matches) {
-                    item.style.display = '';
-                    item.classList.add('bg-green-500/20', 'border-l-4', 'border-green-400');
-                    sectionMatches++;
-                    
-                    if (sectionMatches === 1) {
-                        foundIn.push(sectionName);
-                    }
-                } else {
-                    item.style.display = 'none';
-                    item.classList.remove('bg-green-500/20', 'border-l-4', 'border-green-400');
-                }
-            });
-            
-            if (sectionMatches > 0) {
-                section.style.display = '';
-                section.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                section.style.display = 'none';
-            }
-            
-            totalMatches += sectionMatches;
-        });
-        
-        if (totalMatches > 0) {
-            searchCount.textContent = `${totalMatches} resultado${totalMatches !== 1 ? 's' : ''} encontrado${totalMatches !== 1 ? 's' : ''}`;
-            searchResults.innerHTML = `
-                <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
-                    <p class="text-green-400 text-sm font-medium">
-                        <i class="fas fa-check-circle mr-2"></i>
-                        Encontrado en: <strong>${foundIn.join(', ')}</strong>
-                    </p>
-                    <p class="text-white/50 text-xs mt-1">
-                        Haz scroll para ver los resultados destacados en verde
-                    </p>
-                </div>
-            `;
-            searchResults.classList.remove('hidden');
-        } else {
-            searchCount.textContent = '0 resultados';
-            searchResults.innerHTML = `
-                <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-                    <p class="text-red-400 text-sm">
-                        <i class="fas fa-search mr-2"></i>
-                        No se encontró "${query}" en el catálogo
-                    </p>
-                </div>
-            `;
-            searchResults.classList.remove('hidden');
-        }
-    }
-    
+    // Close modal with Escape key
     document.addEventListener('keydown', function(e) {
-        if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
-            e.preventDefault();
-            document.getElementById('searchInput').focus();
-        }
         if (e.key === 'Escape') {
-            document.getElementById('searchInput').value = '';
-            searchContent('');
-            document.getElementById('searchInput').blur();
+            closeContentModal();
         }
     });
     </script>
