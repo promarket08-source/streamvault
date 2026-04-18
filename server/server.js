@@ -142,6 +142,13 @@ const PRODUCTS = {
         description: 'Acceso a TODOS los enlaces de Drive',
         folderId: 'all',
         folderUrl: null // Se muestran todos los links
+    },
+    'pack-total': {
+        name: 'PACK TOTAL StreamVault',
+        price: 15990,
+        description: 'Acceso TOTAL a todo el contenido + bonuses exclusivos',
+        folderId: 'all',
+        folderUrl: null
     }
 };
 
