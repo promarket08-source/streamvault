@@ -314,12 +314,10 @@
             if (data.init_point) {
                 window.location.href = data.init_point;
             } else {
-                const msg = encodeURIComponent(`Compra ${PACK_DATA.name}\n📧: ${email}\n📱: ${phone}\n💰: $${PACK_DATA.price} CLP`);
-                window.open(`https://wa.me/56964681874?text=${msg}`, '_blank');
+                alert('Error al procesar pago. Intenta nuevamente.');
             }
         } catch (error) {
-            const msg = encodeURIComponent(`Compra ${PACK_DATA.name}\n📧: ${email}\n📱: ${phone}\n💰: $${PACK_DATA.price} CLP`);
-            window.open(`https://wa.me/56964681874?text=${msg}`, '_blank');
+            alert('Error de conexión. Intenta nuevamente.');
         }
         
         btn.innerHTML = '<i class="fas fa-credit-card"></i> PAGAR CON MERCADO PAGO';

@@ -309,13 +309,10 @@
             if (data.init_point) {
                 window.location.href = data.init_point;
             } else {
-                // Fallback: WhatsApp
-                const msg = encodeURIComponent(`Compra PACK PELÍCULAS\n📧: ${email}\n📱: ${phone}\n💰: $3.990 CLP`);
-                window.open(`https://wa.me/56964681874?text=${msg}`, '_blank');
+                alert('Error al procesar pago. Intenta nuevamente.');
             }
         } catch (error) {
-            const msg = encodeURIComponent(`Compra PACK PELÍCULAS\n📧: ${email}\n📱: ${phone}\n💰: $3.990 CLP`);
-            window.open(`https://wa.me/56964681874?text=${msg}`, '_blank');
+            alert('Error de conexión. Intenta nuevamente.');
         }
         
         btn.innerHTML = '<i class="fas fa-credit-card"></i> PAGAR CON MERCADO PAGO';
